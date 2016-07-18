@@ -1,0 +1,680 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="广东工业大学14级网络工程张翔" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="作为一门面向对象的语言，对象是核心中的核心，而又因为 JavaScript 是一门基于原型的面向对象的语言，所以其中的机制不同于其他面向对象语言。本篇博文篇幅会有点长，讲述对象，构造函数的内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 核心学习——对象与构造函数">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/05/13/JavaScript 核心学习——对象与构造函数/index.html">
+<meta property="og:site_name" content="JARVIS's blog">
+<meta property="og:description" content="作为一门面向对象的语言，对象是核心中的核心，而又因为 JavaScript 是一门基于原型的面向对象的语言，所以其中的机制不同于其他面向对象语言。本篇博文篇幅会有点长，讲述对象，构造函数的内容。">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/how-prototypes-work.png">
+<meta property="og:updated_time" content="2016-05-13T07:26:59.288Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 核心学习——对象与构造函数">
+<meta name="twitter:description" content="作为一门面向对象的语言，对象是核心中的核心，而又因为 JavaScript 是一门基于原型的面向对象的语言，所以其中的机制不同于其他面向对象语言。本篇博文篇幅会有点长，讲述对象，构造函数的内容。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+    <title> JavaScript 核心学习——对象与构造函数 // JARVIS's blog </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">JARVIS's blog</span>
+  </a>
+
+
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+    <span class="logo-line-after"><i></i></span>
+
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              JavaScript 核心学习——对象与构造函数
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-05-13T15:26:24+08:00" content="2016-05-13">
+            2016-05-13
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/05/13/JavaScript 核心学习——对象与构造函数/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/13/JavaScript 核心学习——对象与构造函数/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>作为一门面向对象的语言，对象是核心中的核心，而又因为 JavaScript 是一门基于原型的面向对象的语言，所以<br>其中的机制不同于其他面向对象语言。本篇博文篇幅会有点长，讲述对象，构造函数的内容。<br><a id="more"></a></p>
+<h2 id="对象">对象</h2><p>在 JavaScript 中，对象是键值对的集合，它的属性值可以为数字，字符串，甚至是函数。在访问它们的属性的时候，<br>除了常规的 “.” 操作符，还可以通过 “[]” 来访问属性，[] 里面可以使用变量。</p>
+<h3 id="属性特性">属性特性</h3><p>这里所说的属性特性是可配置性 <em>Configurable</em>, 可读性 <em>Writable</em>, 可枚举性 <em>Enumberable</em> 。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">Object</span><span class="class">.defineProperty</span>(obj, prop, &#123;</span><br><span class="line">    <span class="attribute">value</span>: <span class="string">"value"</span>,</span><br><span class="line">    <span class="attribute">configurable</span>: true,</span><br><span class="line">    <span class="attribute">writable</span>: false,</span><br><span class="line">    <span class="attribute">enumberable</span>: true</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>这里配置了一个可配置的，不可写，可枚举的数据属性，其值为 value 。如果想要删除某个对象属性，就应当使用<br>delete 命令，但是如果 configurable 特性设置为 false 的话，就不能被删除。并且如果设置 configurable 属性为<br>false, 那么就不能再配置该对象属性了。</p>
+<h3 id="访问器属性">访问器属性</h3><p>访问器属性是一对函数，[[Get]] 和 [[Set]]。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    a: <span class="number">2</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj, <span class="string">"b"</span>, &#123;</span><br><span class="line">    get: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.a;</span><br><span class="line">    &#125;,</span><br><span class="line">    set: <span class="function"><span class="keyword">function</span>(<span class="params">val</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>._a_ = val + <span class="keyword">this</span>.a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(obj.b);  <span class="comment">//2</span></span><br><span class="line">obj.b = <span class="number">10</span>;</span><br><span class="line"><span class="built_in">console</span>.log(obj.b);  <span class="comment">//2</span></span><br><span class="line"><span class="built_in">console</span>.log(obj._b_);  <span class="comment">//12</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="可访问性与遍历">可访问性与遍历</h3><p>对于可访问性，如果我们设置一个属性的值为 undefinded，但是如果没有设置这个对象属性，返回值也是 undefinded，<br>如何区分两者呢？因此有了 hasOwnProperty() 检查本对象是否有这个属性。<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;</span><br><span class="line">    a: <span class="number">2</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.hasOwnProperty<span class="params">(<span class="string">"a"</span>)</span>;  <span class="comment">//true</span></span><br><span class="line">obj.hasOwnProperty<span class="params">(<span class="string">"b"</span>)</span>;  <span class="comment">//false</span></span><br><span class="line">Object.prototype.hasOwnProperty.call<span class="params">(obj, <span class="string">"a"</span>)</span>;  <span class="comment">//true</span></span><br></pre></td></tr></table></figure></p>
+<p><em>hasOwnProperty</em> 对比于 <em>in</em> 操作符，<em>hasOwnProperty</em> 只会检查本对象有没有，而 <em>in</em> 操作符则会检查包括本对象<br>的原型链中有没有这属性，又因为有一些对象没有进行 <em>propertype</em> 连接操作，因此可能会没有 <em>hasOwnProperty</em> 方法，<br>所以才有了第三个方法使用 <em>call</em> 方法调用。</p>
+<p>对于遍历，遍历对象一般使用 in 操作符，使用 for..in 循环。in 操作符会将原型链中的所有可枚举属性全部遍历。<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//遍历</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> <span class="keyword">prop</span> <span class="keyword">in</span> obj) &#123;</span><br><span class="line">    console.<span class="literal">log</span>(<span class="keyword">prop</span>);  <span class="comment">//属性名</span></span><br><span class="line">    console.<span class="literal">log</span>(obj[<span class="keyword">prop</span>]);  <span class="comment">//属性值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="构造函数">构造函数</h2><p>上面所说的创建一个对象，一般是使用字面量法，但是在实际中，如果每个对象都需要这样编写，代码量将会很庞大，<br>而且各个对象之间也没有什么联系，因此我们会使用构造函数来创建对象。<br>对于构造函数的命名，我们会将函数名的首字母大写，以区分构造函数与一般函数。</p>
+<h3 id="工厂模式">工厂模式</h3><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function <span class="keyword">Person</span>(name, age)&#123;</span><br><span class="line">    var o = new Object();</span><br><span class="line">    o.name = name;</span><br><span class="line">    o.age = age;</span><br><span class="line">    return o;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种模式虽然创建了很多相似的对象，但是对象之间没有联系。</p>
+<h3 id="构造函数模式">构造函数模式</h3><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function <span class="keyword">Person</span>(name, age) &#123;</span><br><span class="line">    this.name = name;</span><br><span class="line">    this.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var person1 = new <span class="keyword">Person</span>(<span class="string">"Jarvis"</span>, 20);</span><br><span class="line">var person2 = new <span class="keyword">Person</span>(<span class="string">"zhangxiang"</span>, 20);</span><br></pre></td></tr></table></figure>
+<p>这里构造函数 Person 通过 new 命令创建了两个对象,与工厂模式不同在于构造函数模式没有返回一个对象，将属性<br>赋给了 this 对象。对象之间的联系在于它们的 constructor 属性都指向了 Person，但是在深入理解上并不是这两个<br>对象的 constructor 属性，这里可以暂时先理解为这样。constructor 属性是构造器属性，可以浅显地理解为这样，<br>两个对象 person1 和 person2 都是被 Person 这个函数构造出来的。<br>构造函数模式是比较好，但是也存在缺点，比如浪费内存，一些共有的属性方法在创建对象的时候都要再创建一次。<br>虽然可以将一些方法写到全局中，让对象去引用，但是这样又污染了全局变量。所以出现了下面的原型模式。<br>关于 new 命令请阅读本人博文 <a href="http://zhangxiang958.github.io/categories/JavaScript/">JavaScript 核心学习—— this 关键字</a>。</p>
+<h3 id="原型模式">原型模式</h3><p>构造函数在创建的时候都已创建一个 <em>prototype</em> 属性，构造函数的 prototype 属性指向一个对象<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function <span class="keyword">Person</span>()&#123;&#125;</span><br><span class="line"><span class="keyword">Person</span>.prototype.name = <span class="string">"Jarvis"</span>;</span><br><span class="line"><span class="keyword">Person</span>.prototype.age = 20;</span><br><span class="line"></span><br><span class="line">var person1 = new <span class="keyword">Person</span>();</span><br><span class="line">var person2 = new <span class="keyword">Person</span>();</span><br><span class="line">console.log(person1.name);  //<span class="string">"Jravis"</span></span><br><span class="line">console.log(person2.name);  //<span class="string">"Jarvis"</span></span><br></pre></td></tr></table></figure></p>
+<p>关系图如下：图为 《JavaScript 高级程序设计》中的原图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/how-prototypes-work.png" alt=""><br>实例对象中的 <strong><strong>proto</strong></strong> 属性指向构造函数的 prototype 。但是并不是所有浏览器都支持<strong><strong>proto</strong></strong> 属性，<br>所以不推荐使用这个属性。<br>对于原型模式，如果在一个对象中没有找到这个属性，那么引擎就会往对象的原型 prototype 上去寻找，这个有点像<br>对象版的作用域链，即原型链，但是由于原型上的属性方法都是共用的，如果是一般属性还好，但是如果是像数组这样<br>的话，如果在一个实例中改动值，那么改动将会体现在全部的对象中，因此原型模式很少会单独使用。</p>
+<h3 id="组合模式">组合模式</h3><p>组合模式，就是将构造函数与原型模式结合起来。将实例特有的属性方法放在构造函数中，将共有属性方法放到原型中。<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function <span class="keyword">Person</span>(name, age, job) &#123;</span><br><span class="line">    this.name = name;</span><br><span class="line">    this.age = age;</span><br><span class="line">    this.job = job;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Persn.prototype = &#123;</span><br><span class="line">    constructor: <span class="keyword">Person</span>,  //为什么要设置 constructor 属性？因为采用字面量创建对象意味着重写，之前的属性都会被清理掉，因此要在字面量里面重新设置</span><br><span class="line">    sayName: function()&#123;</span><br><span class="line">        console.log(this.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var person1 = new <span class="keyword">Person</span>(<span class="string">"jarvis"</span>, 20, <span class="string">"student"</span>);</span><br><span class="line">person1.sayName(); // <span class="string">"jarvis"</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="寄生模式">寄生模式</h3><p>如果想要创建一些特别的对象，比如一些特别的数组对象，但是直接在 Array.prtotype 上设置是不推荐的，因为那样<br>会造成维护困难，因此需要采用寄生模式。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SpecialArray</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="keyword">array</span> = <span class="keyword">new</span> <span class="keyword">Array</span>();</span><br><span class="line">    <span class="keyword">array</span>.push.apply(<span class="keyword">array</span>, arguments);</span><br><span class="line">    <span class="keyword">array</span>.toPied = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> this.join(<span class="string">","</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">array</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> values = <span class="keyword">new</span> SpecialArray();</span><br><span class="line">values.toPied();</span><br></pre></td></tr></table></figure></p>
+<p>这样的好处是可以拓展对象的方法而不影响原生对象，但是这样不好之处在于这样创建出来的对象与构造函数之间没有<br>联系，与构造函数的 prototype 也没有关系，这样就和工厂模式的缺点是一样的。</p>
+<h3 id="动态原型模式">动态原型模式</h3><p>动态原型模式的出现是为了解决构造函数与原型独立开来的问题的。<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function <span class="keyword">Person</span>(name, age)&#123;</span><br><span class="line">    this.name = name;</span><br><span class="line">    this.age = age;</span><br><span class="line">    </span><br><span class="line">    if(typeof this.sayName != <span class="string">"function"</span>) &#123;</span><br><span class="line">        <span class="keyword">Person</span>.prototype.sayName = function()&#123;</span><br><span class="line">            console.log(this.name);</span><br><span class="line">            return this.name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样的话，if 语句只会执行一次，并且直接在构造函数中完成对原型对象的增强。</p>
+<h3 id="稳妥模式">稳妥模式</h3><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function <span class="keyword">Person</span>(name, age)&#123;</span><br><span class="line">    var o = new Object();</span><br><span class="line">    o.sayName = function()&#123;</span><br><span class="line">        console.log(name);</span><br><span class="line">    &#125;;</span><br><span class="line">    return o;</span><br><span class="line">&#125;</span><br><span class="line">var person1 = <span class="keyword">Person</span>(<span class="string">"jarvis"</span>, 20);</span><br><span class="line">person1.sayName();  //<span class="string">"jarvis"</span></span><br></pre></td></tr></table></figure>
+<p>这样的话，除了 sayName 这个方法之外，没有其他办法可以访问到构造函数中的数据，其实是用了闭包的知识。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/18/JavaScript 核心学习——继承/" rel="prev">JavaScript 核心学习——继承</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/01/JavaScript 核心学习—— this 关键字/" rel="next">JavaScript 核心学习—— this 关键字</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/05/13/JavaScript 核心学习——对象与构造函数/"
+     data-title="JavaScript 核心学习——对象与构造函数"
+     data-content=""
+     data-url="http://zhangxiang958.github.io/2016/05/13/JavaScript 核心学习——对象与构造函数/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2016/05/13/JavaScript 核心学习——对象与构造函数/"
+                       data-title="JavaScript 核心学习——对象与构造函数" data-url="http://zhangxiang958.github.io/2016/05/13/JavaScript 核心学习——对象与构造函数/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://7xns9g.com1.z0.glb.clouddn.com/015630179.jpg" alt="JARVIS" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">JARVIS</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">广东工业大学14级网络工程张翔</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiang958" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhang-xiang-78-5" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="zxiang702" target="_blank">WeChat</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="958033967" target="_blank">QQ</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#对象"><span class="nav-number">1.</span> <span class="nav-text">对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#属性特性"><span class="nav-number">1.1.</span> <span class="nav-text">属性特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问器属性"><span class="nav-number">1.2.</span> <span class="nav-text">访问器属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可访问性与遍历"><span class="nav-number">1.3.</span> <span class="nav-text">可访问性与遍历</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造函数"><span class="nav-number">2.</span> <span class="nav-text">构造函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂模式"><span class="nav-number">2.1.</span> <span class="nav-text">工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数模式"><span class="nav-number">2.2.</span> <span class="nav-text">构造函数模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型模式"><span class="nav-number">2.3.</span> <span class="nav-text">原型模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合模式"><span class="nav-number">2.4.</span> <span class="nav-text">组合模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#寄生模式"><span class="nav-number">2.5.</span> <span class="nav-text">寄生模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态原型模式"><span class="nav-number">2.6.</span> <span class="nav-text">动态原型模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#稳妥模式"><span class="nav-number">2.7.</span> <span class="nav-text">稳妥模式</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JARVIS</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>

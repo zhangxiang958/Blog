@@ -1,0 +1,673 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="广东工业大学14级网络工程张翔" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="闭包是 JavaScript 中的核心概念，它的用途广泛，因此这里特地深入学习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 核心学习——闭包">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/04/26/JavaScript 核心学习——闭包/index.html">
+<meta property="og:site_name" content="JARVIS's blog">
+<meta property="og:description" content="闭包是 JavaScript 中的核心概念，它的用途广泛，因此这里特地深入学习。">
+<meta property="og:updated_time" content="2016-04-26T12:35:59.786Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 核心学习——闭包">
+<meta name="twitter:description" content="闭包是 JavaScript 中的核心概念，它的用途广泛，因此这里特地深入学习。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+    <title> JavaScript 核心学习——闭包 // JARVIS's blog </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">JARVIS's blog</span>
+  </a>
+
+
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+    <span class="logo-line-after"><i></i></span>
+
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              JavaScript 核心学习——闭包
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-04-26T18:17:24+08:00" content="2016-04-26">
+            2016-04-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/04/26/JavaScript 核心学习——闭包/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/26/JavaScript 核心学习——闭包/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>闭包是 JavaScript 中的核心概念，它的用途广泛，因此这里特地深入学习。<br><a id="more"></a></p>
+<h2 id="什么是闭包">什么是闭包</h2><p>闭包其实是 JavaScript 中极为有用的知识。但是它的真实面貌是什么呢？<br>闭包，使用通俗的话来说，就是一个函数内部的函数，是外界与函数内部之间的桥梁，但是准确地来说，这个解释不对。<br>闭包其实真实含义是保持对函数作用域的引用，这个引用叫做闭包。<br>我们知道外部作用域是不可以访问内部作用域的，详情请看本人的作用域博文，请点击下面的链接。至于为什么闭包<br>拥有访问函数内部的权利，是因为函数在执行的时候，创建了一个活动对象，并将这个活动对象推到作用域链的前端，<br>而函数内部的函数，因为定义在函数内部，拥有了包含了它的函数的作用域链，因此拥有访问权利，如果没有进行销毁<br>处理的话，作用域中的变量将会一直存放在内存中。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个简单的闭包使用例子</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(a);</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> value = foo()();</span><br><span class="line"><span class="built_in">console</span>.log(value);</span><br></pre></td></tr></table></figure></p>
+<p>但是不必局限于闭包的形式，其实如果从外部使用到了函数内部的变量，就是使用了闭包。其实我们写过很多闭包函数，<br>只是当时还不知道它叫做闭包而已，象事件处理函数，ajax，setTimeout/setInterval等等都使用了闭包。<br>下面来看一个常见的错误：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">    setTimeout( <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的这个例子，原本是祈祷打印出 0,1,2 的，但是真实结果是打印出 3 个 3，为什么呢？因为 JavaScript 除了函数<br>体以外没有块级作用域，因此定时器引用的变量 i 都是同一个变量，i 变量在循环结束的时候，已经变为了 3，因此打<br>印出 3 个 3。所以改进方法就是使用闭包。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for (var i = 0; i &#60; 3; i++) &#123;&#10;    setTimeout((function (num)&#123;&#10;        console.log(num);&#10;    &#125;)(i), 1000);&#10;&#125;&#10;&#10;//&#25110;&#32773;&#22914;&#19979;&#10;for(var i = 0; i &#60; 3; i++) &#123;&#10;    (function() &#123; //IIFE&#10;        var j = i;&#10;        setTimeout(function() &#123;&#10;            console.log(j);&#10;        &#125;,1000);&#10;    &#125;)();&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p> <a href="http://zhangxiang958.github.io/2016/03/30/JavaScript%20%E6%A0%B8%E5%BF%83%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/">JavaScript 作用域学习笔记</a></p>
+<h2 id="闭包有什么用">闭包有什么用</h2><p>闭包是 JavaScript 中很强大的机制，如果我们能够善用它，那么将会使我们功力大涨。闭包是对函数封闭的作用域的<br>引用，如果闭包能与块级作用域结合，那么非常强大。这里介绍一种 JavaScript 中创建块级作用域的方法：IIFE。<br>什么是 IIFE，它的意思是立即执行函数表达式，如何区分函数声明与函数表达式呢？如果第一个字符不是 function,<br>那么它就是一个函数表达式。看下面的例子：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="params">(function<span class="params">()</span>&#123;</span><br><span class="line">    console.log<span class="params">(<span class="string">"IIFE"</span>)</span>;</span><br><span class="line">&#125;)</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Boostrap 插件里面的 IIFE</span></span><br><span class="line">+<span class="function"><span class="keyword">function</span><span class="params">()</span>&#123;</span></span><br><span class="line">    console.<span class="built_in">log</span><span class="params">(<span class="string">"anothre IIFE"</span>)</span>;</span><br><span class="line">&#125;<span class="params">()</span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="模仿块级作用域">模仿块级作用域</h3><p>模仿块级作用域是通过 IIFE 与闭包共同完成的。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="comment">//IIFE</span></span><br><span class="line">        <span class="keyword">var</span> j = i;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(j);</span><br><span class="line">        &#125;,<span class="number">1000</span>);</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果象下面这样去使用闭包的话，不用担心内存问题，因为执行完就能立即销毁作用域链了，因为没有对匿名函数的引用<br><figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="list">(<span class="keyword">function</span><span class="list">()</span><span class="collection">&#123;</span><br><span class="line">    //块级作用域</span><br><span class="line">&#125;</span>)</span><span class="list">()</span><span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="私有变量">私有变量</h3><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="params">(function <span class="params">()</span>&#123;</span><br><span class="line">    var age = <span class="number">20</span>;</span><br><span class="line">    function sayAge<span class="params">()</span> &#123;</span><br><span class="line">        console.log<span class="params">(age)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    MyObj = function<span class="params">()</span>&#123;&#125;;</span><br><span class="line">    </span><br><span class="line">    MyObj.protoytpe.publicA<span class="literal">PI</span> = function<span class="params">()</span> &#123;</span><br><span class="line">        age ++;</span><br><span class="line">        return sayAge<span class="params">()</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;)</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">console.<span class="built_in">log</span><span class="params">(age)</span>;  <span class="comment">//报错，age 未定义</span></span><br><span class="line">var person1 = new MyObj<span class="params">()</span>; </span><br><span class="line">console.<span class="built_in">log</span><span class="params">(person1.publicA<span class="literal">PI</span><span class="params">()</span>)</span>; <span class="comment">//21</span></span><br><span class="line">var person2 = new MyObj<span class="params">()</span>;</span><br><span class="line">console.<span class="built_in">log</span><span class="params">(person2.publicA<span class="literal">PI</span><span class="params">()</span>)</span>; <span class="comment">//22</span></span><br><span class="line">console.<span class="built_in">log</span><span class="params">(person1.publicA<span class="literal">PI</span><span class="params">()</span>)</span>; <span class="comment">//23</span></span><br></pre></td></tr></table></figure>
+<p>上面的 age 变量被称为静态私有变量，外部无法访问，只能通过公共 API 来访问。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function <span class="function"><span class="title">fun</span><span class="params">(n,o)</span> &#123;</span></span><br><span class="line">  		console.log(o);</span><br><span class="line">  		<span class="keyword">return</span> &#123;</span><br><span class="line">   		<span class="function"><span class="keyword">fun</span>: <span class="title">function</span><span class="params">(m)</span>&#123;</span></span><br><span class="line">      				<span class="keyword">return</span> <span class="function"><span class="title">fun</span><span class="params">(m,n)</span>;</span></span><br><span class="line">    			&#125;</span><br><span class="line">  		&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable"><span class="keyword">var</span> a</span> = <span class="function"><span class="title">fun</span><span class="params">(0)</span>;  a.<span class="title">fun</span><span class="params">(1)</span>;  a.<span class="title">fun</span><span class="params">(2)</span>;  a.<span class="title">fun</span><span class="params">(3)</span>;</span></span><br><span class="line"><span class="comment">//undefinded   0  0  0  </span></span><br><span class="line"><span class="variable"><span class="keyword">var</span> b</span> = <span class="function"><span class="title">fun</span><span class="params">(0)</span>.<span class="title">fun</span><span class="params">(1)</span>.<span class="title">fun</span><span class="params">(2)</span>.<span class="title">fun</span><span class="params">(3)</span>;</span></span><br><span class="line"><span class="comment">//undefinded   0  1  2  </span></span><br><span class="line"><span class="variable"><span class="keyword">var</span> c</span> = <span class="function"><span class="title">fun</span><span class="params">(0)</span>.<span class="title">fun</span><span class="params">(1)</span>;  c.<span class="title">fun</span><span class="params">(2)</span>;  c.<span class="title">fun</span><span class="params">(3)</span>;</span></span><br><span class="line"><span class="comment">//undefinded   0  1  1</span></span><br></pre></td></tr></table></figure></p>
+<p>解释上面这个例子：<br>对于返回的对象中的 fun 方法，返回了 fun 函数。<br>对于 a ，第一次调用的时候，o 变量是未定义的，打印出 undefinded，使用 a.fun(1) 的时候，使用的是对象返回的<br>方法，由于 1 是赋值给 m 变量的，而对于 n 变量，根据闭包的作用域，找到 n ，发现第一次的时候被赋值为 0 ，因<br>此打印出 0 。后面的数次调用都是同样的道理。<br>对于 b，第一次调用 o 变量未定义，打印 undefinded，变化发生在后面，由于这里是链式调用，第一次 fun(0) 返回的<br>对象是不同于 fun(1) 返回的对象的，同理， fun(2) 返回的对象也不同于 fun(1) ,总之返回的对象各不相同。在<br>fun(1) 的时候，m 被赋值为 1，而 o 被赋值为 n ，而在作用域链中，n 被赋值为 0 （因为fun(0)）,所以打印出 0.<br>这个是因为 fun(1) 的对象闭包了 fun(0) ，所以后面的 fun(2) 也同样是闭包了 fun(1), 而 fun(1) 里面的 n 已经<br>被赋值为 1 了。所以 fun(2) 打印出来的是 1，所以后面的原理类似。<br>对于 c，前面的 undefinded，0 与 b 例子原理是相同，而后面的 1，1 因为调用的都是第二层对象，因此都是 1。</p>
+<h3 id="模块机制">模块机制</h3><p>闭包最强大的功能：模块机制。<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">var single = <span class="function"><span class="keyword">function</span><span class="params">(id)</span> &#123;</span></span><br><span class="line">    </span><br><span class="line">    var name = <span class="string">"me"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">sayName</span><span class="params">()</span> &#123;</span></span><br><span class="line">        console.<span class="built_in">log</span><span class="params">(name)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">sayID</span><span class="params">()</span> &#123;</span></span><br><span class="line">        console.<span class="built_in">log</span><span class="params">(id)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return &#123;</span><br><span class="line">        name: name,</span><br><span class="line">        sayID: sayID,</span><br><span class="line">        sayName: sayName</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var foo =single<span class="params">(<span class="string">"foo"</span>)</span>;</span><br><span class="line">foo.sayName<span class="params">()</span>; <span class="comment">//"me"</span></span><br><span class="line">foo.sayID<span class="params">()</span>; <span class="comment">// "foo"</span></span><br></pre></td></tr></table></figure></p>
+<p>两个必要条件：<br>1.必须要有外部函数，至少被调用一次。<br>2.至少返回一个内部函数。<br>适用于创建一些单例对象，如果需要创建一个需要初始化数据，并可以公开一些访问私有变量的对象的话，就适合使用<br>模块模式。</p>
+<p>增强的模块机制：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> single = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">"Jarvis"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">sayName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(name);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> obj = &#123;</span><br><span class="line">        name: name,</span><br><span class="line">        age: <span class="number">18</span>,</span><br><span class="line">        sex: <span class="string">"man"</span>,</span><br><span class="line">        sayName: sayName</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> anotherSingle = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">"Jarvis"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">sayName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(name);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> obj = <span class="keyword">new</span> Person();</span><br><span class="line">    </span><br><span class="line">    obj.name = name;</span><br><span class="line">    obj.sayName = sayName;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>增强的模块模式是适用于那些单例但是有需要添加一些别的特别的属性或是别的类型的对象的情况。</p>
+<p>现代模块机制：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//本段代码摘自 You Dont Konw JS</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">module</span> = (<span class="function"><span class="keyword">function</span> <span class="title">Manager</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> modules = &#123;&#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">define</span>(<span class="params">name, deps, impl</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; deps.length; i++) &#123;</span><br><span class="line">            deps[i] = modules[deps[i]];</span><br><span class="line">        &#125;</span><br><span class="line">        modules[name] = impl.apply(impl, deps);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">get</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> modules[name];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        define: define,</span><br><span class="line">        get: get</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.define(<span class="string">"bar"</span>, [], <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params">who</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(who);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        hello: hello</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.define(<span class="string">"foo"</span>, [<span class="string">"bar"</span>], <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> hungry = <span class="string">"hippo"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">awesome</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(bar.hello(hungry).toUpperCase() );</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        awesome: awesome</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bar = <span class="built_in">module</span>.get(<span class="string">"bar"</span>);</span><br><span class="line"><span class="keyword">var</span> foo = <span class="built_in">module</span>.get(<span class="string">"foo"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(bar.hello(<span class="string">"hippo"</span>));</span><br><span class="line">foo.awesome();</span><br></pre></td></tr></table></figure></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/01/JavaScript 核心学习—— this 关键字/" rel="prev">JavaScript 核心学习—— this 关键字</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/20/前端技能之 PHP 学习笔记/" rel="next">前端技能之 PHP 学习笔记</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/04/26/JavaScript 核心学习——闭包/"
+     data-title="JavaScript 核心学习——闭包"
+     data-content=""
+     data-url="http://zhangxiang958.github.io/2016/04/26/JavaScript 核心学习——闭包/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2016/04/26/JavaScript 核心学习——闭包/"
+                       data-title="JavaScript 核心学习——闭包" data-url="http://zhangxiang958.github.io/2016/04/26/JavaScript 核心学习——闭包/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://7xns9g.com1.z0.glb.clouddn.com/015630179.jpg" alt="JARVIS" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">JARVIS</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">广东工业大学14级网络工程张翔</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiang958" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhang-xiang-78-5" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="zxiang702" target="_blank">WeChat</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="958033967" target="_blank">QQ</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是闭包"><span class="nav-number">1.</span> <span class="nav-text">什么是闭包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包有什么用"><span class="nav-number">2.</span> <span class="nav-text">闭包有什么用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模仿块级作用域"><span class="nav-number">2.1.</span> <span class="nav-text">模仿块级作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#私有变量"><span class="nav-number">2.2.</span> <span class="nav-text">私有变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块机制"><span class="nav-number">2.3.</span> <span class="nav-text">模块机制</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JARVIS</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>

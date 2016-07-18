@@ -1,0 +1,671 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="广东工业大学14级网络工程张翔" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="最近因为要做一个 JAVA 课设作业，因此我选择完成一个网页版的学生信息管理系统。一方面让自己了解 JAVA 这门语言，另一方面可以对后台知识有一些了解，以帮助自己更好地学习前端。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端初学之浅谈前后端关系">
+<meta property="og:url" content="http://zhangxiang958.github.io/2015/11/25/前端初学之浅谈前后端关系/index.html">
+<meta property="og:site_name" content="JARVIS's blog">
+<meta property="og:description" content="最近因为要做一个 JAVA 课设作业，因此我选择完成一个网页版的学生信息管理系统。一方面让自己了解 JAVA 这门语言，另一方面可以对后台知识有一些了解，以帮助自己更好地学习前端。">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/jiegou.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/jiegou2.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/code.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/code2.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/rel.png">
+<meta property="og:updated_time" content="2016-02-23T14:22:52.104Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端初学之浅谈前后端关系">
+<meta name="twitter:description" content="最近因为要做一个 JAVA 课设作业，因此我选择完成一个网页版的学生信息管理系统。一方面让自己了解 JAVA 这门语言，另一方面可以对后台知识有一些了解，以帮助自己更好地学习前端。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+    <title> 前端初学之浅谈前后端关系 // JARVIS's blog </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">JARVIS's blog</span>
+  </a>
+
+
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+    <span class="logo-line-after"><i></i></span>
+
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              前端初学之浅谈前后端关系
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-11-25T21:15:24+08:00" content="2015-11-25">
+            2015-11-25
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/前端杂烩/" itemprop="url" rel="index"><span itemprop="name">前端杂烩</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/11/25/前端初学之浅谈前后端关系/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/25/前端初学之浅谈前后端关系/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>最近因为要做一个 JAVA 课设作业，因此我选择完成一个网页版的学生信息管理系统。<br>一方面让自己了解 JAVA 这门语言，另一方面可以对后台知识有一些了解，以帮助自己更好地学习前端。<br><a id="more"></a><br>    进入正题，本次开发采用的是最为传统的方式。<br>    即是用 HTML 写出静态模板，再用 JAVA 写出 .JSP 文件，与传统的 PHP 开发模式类似。</p>
+<h2 id="开发准备">开发准备</h2><p>首先，管理系统必须采用数据库来存储数据，我采用的是最为常见的 MySQL server 5.0 来作为数据库，<br>并且用 MySQL Front 来管理存储的数据。服务器采用的是 apache-tomcat 服务器。JDK 采用 1.6 版本。<br>具体的开发工具相信网上的教程已经说的十分详细，这里不再累述。我们先来了解一个 Java WEB 项目的<br>结构是怎么样的：<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/jiegou.png" alt="文件树"><br>上面的 WEB-INF 文件夹就是 Java WEB 项目的安全项目，用通过 web.xml 映射才能够访问。<br>以下是 WEB-INF 内部结构，其中 classes 是放编译好的类文件，而 lib 是放需要用到的 jar 包，<br>比如 <em>mysql-connector-java-5.1.12-bin.jar</em> 这个 jar 文件，这是 MySQL 专门按照 JDBC 标准<br>而制定的接口供 Java 调用。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/jiegou2.png" alt="文件树"><br>而真正运行项目的时候，项目文档要放在 tomcat/webapps/ 下才可以，<br>开启服务之后，可以在 localhost:8080/ 项目名称 /文件名称 进行访问。</p>
+<h2 id="知识储备">知识储备</h2><p>这里需要基本的 HTML + CSS + Javascript 的基本用法，以及 Java 语法，和 SQL语法 。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">DROP</span> <span class="keyword">DATABASE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="string">`st`</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="string">`st`</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">USE</span> <span class="string">`st`</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="string">`st_society`</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`st_society`</span> (</span><br><span class="line">  <span class="string">`st_id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> auto_increment COMMENT <span class="string">'社团id（自增、从0000起）'</span>,</span><br><span class="line">  <span class="string">`st_password`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">default</span> <span class="string">'123456'</span> COMMENT <span class="string">'社团登录密码，默认123456'</span>,</span><br><span class="line">  <span class="string">`st_name`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'社团名称'</span>,</span><br><span class="line">  <span class="string">`st_city`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'城市'</span>,</span><br><span class="line">  <span class="string">`st_school`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'院校'</span>,</span><br><span class="line">  <span class="string">`st_addtime`</span> datetime <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'注册时间'</span>,</span><br><span class="line">  <span class="string">`st_desc`</span> <span class="built_in">varchar</span>(<span class="number">1000</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'简要'</span>,</span><br><span class="line">  <span class="string">`lx_name`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'联系人姓名'</span>,</span><br><span class="line">  <span class="string">`lx_phone`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'联系人电话'</span>,</span><br><span class="line">  <span class="string">`lx_email`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'联系人邮箱'</span>,</span><br><span class="line">  <span class="string">`lx_qq`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'联系人qq'</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span>  (<span class="string">`st_id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8 COMMENT=<span class="string">'社团信息'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`st_society`</span> <span class="keyword">VALUES</span> (<span class="number">0000</span>, <span class="string">'123456'</span>, <span class="string">'计算机学院'</span>, <span class="string">'广州'</span>, <span class="string">'广东工业大学'</span>, </span><br><span class="line"><span class="string">'2015-11-24 00:00:00'</span>, <span class="string">'广东工业大学是一所学校.'</span>, </span><br><span class="line"><span class="string">'张翔'</span>, <span class="string">'13100010001'</span>, <span class="string">'95800333@qq.com'</span>, <span class="string">'95800333'</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="string">`st_member`</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`st_member`</span> (</span><br><span class="line">  <span class="string">`m_id`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'会员id（使用UUID）'</span>,</span><br><span class="line">  <span class="string">`m_name`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'姓名'</span>,</span><br><span class="line">  <span class="string">`m_sex`</span> <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'性别'</span>,</span><br><span class="line">  <span class="string">`m_major`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'院系专业班级'</span>,</span><br><span class="line">  <span class="string">`m_dorm`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'宿舍'</span>,</span><br><span class="line">  <span class="string">`m_qq`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'qq'</span>,</span><br><span class="line">  <span class="string">`m_email`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'邮箱'</span>,</span><br><span class="line">  <span class="string">`m_phone`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'电话'</span>,</span><br><span class="line">  <span class="string">`m_dept`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'部门'</span>,</span><br><span class="line">  <span class="string">`m_post`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'职务'</span>,</span><br><span class="line">  <span class="string">`m_money`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">default</span> <span class="string">'未交'</span> COMMENT <span class="string">'会费缴纳情况：**已交/未交/已退出'</span>,</span><br><span class="line">  <span class="string">`m_addtime`</span> datetime <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'入会时间'</span>,</span><br><span class="line">  <span class="string">`m_state`</span> <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'会员状态（在册/已退出）'</span>,</span><br><span class="line">  <span class="string">`m_leavetime`</span> datetime <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'毕业时间/退出时间'</span>,</span><br><span class="line">  <span class="string">`m_desc`</span> <span class="built_in">varchar</span>(<span class="number">1000</span>) <span class="keyword">default</span> <span class="literal">NULL</span> COMMENT <span class="string">'备注'</span>,</span><br><span class="line">  <span class="string">`st_id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'社团id'</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span>  (<span class="string">`m_id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8 COMMENT=<span class="string">'会员表'</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="string">`st_admin`</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`st_admin`</span> (</span><br><span class="line">  <span class="string">`admin_id`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'用户ID（使用UUID，暂时只支持单管理员）'</span>,</span><br><span class="line">  <span class="string">`admin_username`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'用户名(系统唯一，暂时只支持单管理员)'</span>,</span><br><span class="line">  <span class="string">`admin_password`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> COMMENT <span class="string">'密码'</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span>  (<span class="string">`admin_id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8 COMMENT=<span class="string">'平台管理表'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`st_admin`</span> <span class="keyword">VALUES</span> (<span class="string">'1'</span>, <span class="string">'admin'</span>, <span class="string">'admin111'</span>);</span></span><br></pre></td></tr></table></figure></p>
+<p>以上语句，创建了一个数据库。</p>
+<h2 id="开发过程">开发过程</h2><p>首先，在传统模式下，我们要写出 HTML 静态页面模板。<br>而这里数据的传输我采用的是最为常见的 from 表单传输。举个简单的例子，<br>整个项目的接下来的代码都与这两个类似，这是我项目中的登陆页面HTML代码：<br>HTML 中如果需要填入数据，就比如查看成员详细信息的话，就取到该成员独特的 ID ，<br>这里是用到 Uuid 包自动生成特殊的字符串作为 id ，然后声明变量，使用 JDBC 技术，<br>在数据库中查找到相应的字段，将字段中的数据填入表单中。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/code.png" alt=""></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//如果需要填入数据</span></span><br><span class="line">&lt;input <span class="class"><span class="keyword">type</span>=</span><span class="string">"text"</span> <span class="class"><span class="keyword">class</span>=</span><span class="string">"login-input"</span> name=<span class="string">"m_name"</span> value=<span class="string">"&lt;%=m_name%&gt;"</span> /&gt;</span><br><span class="line">这里的 m_name 变量是之前定义好的，name 属性需要与数据库中的字段命名相同</span><br></pre></td></tr></table></figure>
+<p>以下是 JSP 文件中的 Java 代码：<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/code2.png" alt=""><br>这里的 Connection 类是建立 JDBC 与数据库之间的链接，相当于一座桥梁，而 Statement 对象则负责<br>将 sql 语句传送到数据库中，相当于运输车。rs 接受返回的结果集，所需要的数据都在结果集中按照字段一一<br>拿取。</p>
+<h2 id="解惑">解惑</h2><p><img src="http://7xns9g.com1.z0.glb.clouddn.com/rel.png" alt=""><br>其实，做这个课设的最大收获在于明白前后端之间数据的传输与大致分工。<br>在这种模式中，在平时做项目开发中采用比较多，前端负责静态视图，后端将后端代码嵌入 HTML 模板中。<br>所有的代码编写都是围绕在前端编写的 HTML 静态模板而编写的。所以前端负责的代码编写中， name 属性<br>尤为重要，因为它是与数据库中的字段相关联的，出现错误的话就会有可能出现无法拿取数据的情况。其实<br>from 表单的 action 与 ajax 的 url 都类似，都是讲请求发送到一个后端文件中，比如 JAVA 的 .jsp 文件<br>中去，像上面的 login_do.jsp 文件，由这个 .jsp 文件建立与数据库的链接，使用一个传输器对象，将 sql 语句传输到数据库，进行增<br>删查改的操作，然后返回一个结果集，将结果集中按字段抓取想要的数据，将数据填入表单中，<br>就可以实现页面的动态效果。<br>在这种合作模式中，就必须要求前端代码要简洁易读。而采用 ajax 则不需要看彼此代码，但是规定好 API。</p>
+<p>作者   张翔<br>2015 年 11 月 25日    </p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/01/22/学习 CSS 浮动/" rel="prev">学习 CSS 浮动</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/31/代码规范那些事/" rel="next">代码规范那些事</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2015/11/25/前端初学之浅谈前后端关系/"
+     data-title="前端初学之浅谈前后端关系"
+     data-content=""
+     data-url="http://zhangxiang958.github.io/2015/11/25/前端初学之浅谈前后端关系/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2015/11/25/前端初学之浅谈前后端关系/"
+                       data-title="前端初学之浅谈前后端关系" data-url="http://zhangxiang958.github.io/2015/11/25/前端初学之浅谈前后端关系/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://7xns9g.com1.z0.glb.clouddn.com/015630179.jpg" alt="JARVIS" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">JARVIS</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">广东工业大学14级网络工程张翔</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiang958" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhang-xiang-78-5" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="zxiang702" target="_blank">WeChat</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="958033967" target="_blank">QQ</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开发准备"><span class="nav-number">1.</span> <span class="nav-text">开发准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">2.</span> <span class="nav-text">知识储备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发过程"><span class="nav-number">3.</span> <span class="nav-text">开发过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解惑"><span class="nav-number">4.</span> <span class="nav-text">解惑</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JARVIS</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>
