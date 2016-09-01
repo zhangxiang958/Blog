@@ -37,26 +37,18 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="废话不多说，直接切入正题。
-什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta name="description" content="业务场景本次总结涉及两个移动端的开发，一个是移动端的 HTML5 小游戏类型，一个是微信公众号的展示性页面。两个项目都是轻量级开发，根据设计稿与需求文档评估得出这两个项目都适合做成单页面应用，接下来就是对目前掌握对现有框架或库的了解进行技术选型。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习 CSS 浮动">
-<meta property="og:url" content="http://zhangxiang958.github.io/2016/01/22/学习 CSS 浮动/index.html">
+<meta property="og:title" content="Vue 项目总结">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/09/01/Vue 项目总结/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="废话不多说，直接切入正题。
-什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float.png">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float2.png">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float3.png">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float5.png">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float6.png">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float7.png">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float4.png">
-<meta property="og:updated_time" content="2016-01-23T03:59:43.367Z">
+<meta property="og:description" content="业务场景本次总结涉及两个移动端的开发，一个是移动端的 HTML5 小游戏类型，一个是微信公众号的展示性页面。两个项目都是轻量级开发，根据设计稿与需求文档评估得出这两个项目都适合做成单页面应用，接下来就是对目前掌握对现有框架或库的了解进行技术选型。">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/mid.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/network.png">
+<meta property="og:updated_time" content="2016-09-01T12:19:05.859Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习 CSS 浮动">
-<meta name="twitter:description" content="废话不多说，直接切入正题。
-什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta name="twitter:title" content="Vue 项目总结">
+<meta name="twitter:description" content="业务场景本次总结涉及两个移动端的开发，一个是移动端的 HTML5 小游戏类型，一个是微信公众号的展示性页面。两个项目都是轻量级开发，根据设计稿与需求文档评估得出这两个项目都适合做成单页面应用，接下来就是对目前掌握对现有框架或库的了解进行技术选型。">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -66,7 +58,7 @@
   };
 </script>
 
-    <title> 学习 CSS 浮动 // JARVIS's blog </title>
+    <title> Vue 项目总结 // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -172,7 +164,7 @@
           
           
             
-              学习 CSS 浮动
+              Vue 项目总结
             
           
         </h1>
@@ -181,8 +173,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-01-22T10:15:24+08:00" content="2016-01-22">
-            2016-01-22
+          <time itemprop="dateCreated" datetime="2016-09-01T20:17:24+08:00" content="2016-09-01">
+            2016-09-01
           </time>
         </span>
 
@@ -190,7 +182,7 @@
           <span class="post-category" >
             &nbsp; | &nbsp; 分类于
             
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a></span>
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/Web-Develop/" itemprop="url" rel="index"><span itemprop="name">Web Develop</span></a></span>
 
               
               
@@ -203,8 +195,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/01/22/学习 CSS 浮动/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/22/学习 CSS 浮动/" itemprop="commentsCount"></span>
+              <a href="/2016/09/01/Vue 项目总结/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/01/Vue 项目总结/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -218,26 +210,35 @@
       
 
       
-        <span itemprop="articleBody"><p>废话不多说，直接切入正题。</p>
-<h2 id="什么是浮动？">什么是浮动？</h2><p>浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。<br>看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，<br>因此深入了解float 属性是非常必要的。<br><a id="more"></a></p>
-<h2 id="浮动的规则">浮动的规则</h2><p>浮动元素自成一流，以往文本流的规则在它身上并不适用。</p>
-<h3 id="浮动元素脱离了文本流">浮动元素脱离了文本流</h3><p>“浮动”在文档流之上。它不仅会影响布局，而且会影响内容的排版。<br>非匿名文本会围绕浮动元素显示。如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float.png" alt=""></p>
-<h3 id="浮动元素的外边距不会合并。">浮动元素的外边距不会合并。</h3><p>很多人认为浮动元素脱离了文本流，那么就是在文本流的“上一层”。<br>但是事实却并非如此，假设浮动元素在同一层，那么根据水平格式化，左右外边距应该合并才对<br>但是结果如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float2.png" alt=""><br>可见，两个浮动元素之间有 20 px 的外边距，说明浮动元素的外边距是不会合并的。<br>因此我建议开发人员在使用浮动元素时运用 z-index 来管理，控制浮动元素的表现。</p>
-<h3 id="浮动元素自动拥有块级元素属性">浮动元素自动拥有块级元素属性</h3><p>元素一旦被设置为浮动，会自动生成块级框，表现为块级元素。<br>所以没有必要为浮动元素设置为 display : block; 或 display ： inline-block; 。<br>如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float3.png" alt=""><br>一个行内元素，本来并不接受 width 等属性，但是被设置为浮动后，变成了块级表现形式。</p>
-<h3 id="浮动元素不重叠">浮动元素不重叠</h3><p>浮动元素会跟随在上一个浮动元素之后，下一个浮动元素的左边界不会出现在上一个浮动元素的右边界的左边。<br>这个规则避免了浮动元素的重叠。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float5.png" alt=""><br>宽度不足会自动到下一层级，不会发生重叠。<br>但是凡事有例外，如果遇到元素有设置负外边距，那就是另一回事了。</p>
-<h4 id="如果发生重叠呢？">如果发生重叠呢？</h4><p>如果通过设置属性，比如负外边距等手段，让浮动元素与文本流元素重叠，那么它会以怎样的形式表现呢？<br>如果浮动与行内元素重叠，那么行内元素的背景，行框，内容都会在浮动元素“之上”。如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float6.png" alt=""><br>如果浮动元素与块级元素重叠，那么块级元素的背景，框会在浮动元素“之下”，内容在浮动元素“之上”。<br>如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float7.png" alt=""></p>
-<h3 id="浮动的停止条件">浮动的停止条件</h3><p>浮动元素遇到父级元素的内边界就会停止浮动，不会浮动到更高的地方。<br>举个形象的栗子就是，像气球浮动到天花板就不会再浮动了。<br><em>main 元素 有 padding-left：10px；</em><br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float4.png" alt=""></p>
-<h3 id="浮动元素的延伸">浮动元素的延伸</h3><p>如果父级元素与子元素同为浮动元素，如果子元素高度或宽度大于父元素的高度或宽度，<br>那么父元素会自动延伸包住子元素。</p>
-<h2 id="清除浮动">清除浮动</h2><h3 id="什么是清除浮动？">什么是清除浮动？</h3><p>像上面所说的浮动元素的负外边距等的影响导致的浮动元素的重叠现象，虽然不影响内容的展示，<br>但是影响了布局的美观。因此就要清除浮动元素在元素“上”的现象。<br>除此之外，还可以让元素自动包裹。</p>
-<h3 id="为什么要清除浮动？">为什么要清除浮动？</h3><p>在布局的过程中，难免会遇到各种情况。<br>比如，父级元素不需要浮动，但是子元素需要浮动来达到布局需要，<br>但是，一旦这样设置子元素浮动，父元素不浮动，<br>就会发生父级元素的“高度坍塌”现象，因为父元素没有相应的元素“撑”起他的盒子模型。<br>而对父元素设置高度又显然不适合自适应布局和流式布局或浮动布局的思想。这时候，<br>就需要用到清除浮动了。</p>
-<h3 id="清除浮动的方法">清除浮动的方法</h3><p>这里只是浅谈，作为个人学习笔记记录，更多大师级的博文链接在本博文后贴出。<br>清除浮动需要用到 clear 属性。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">clear </span>: left|right|both;  <span class="comment">//常用的三种属性值。</span></span><br></pre></td></tr></table></figure></p>
-<p>从字面意思就可以知道效果，分别从左边，右边，两边清除浮动。<br>需要特别注意的是，清除浮动会有一个清楚区域的出现。这个区域会让元素移到浮动元素的下边界处。<br>如果浮动元素和另外的元素需要间距，不妨增加浮动元素的下边界或增加其他元素的上边界。</p>
-<p>方法一、在需要清除浮动的地方增加一个标签（ br 或 其他标签），清除浮动。<br>利用 clear 或 br 独特的 clear 属性。<br>但是不推荐使用这种方法，布局并没有与结构解耦，新增了不必要的标签。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"float1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">h2</span>&gt;</span>1）添加额外标签<span class="tag">&lt;/<span class="title">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"main left"</span>&gt;</span>main&#123;float:left;&#125;<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"right"</span>&gt;</span>side&#123;float:right;&#125;<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">style</span>=<span class="value">"clear:both;"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">br</span> <span class="attribute">clear</span>=<span class="value">"all"</span>&gt;</span>  //与上一个标签作用相同</span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"footer"</span>&gt;</span>footer<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>方法二、父级元素也设置浮动属性。这个可以解决高度坍塌的问题，这也就是浮动带来的一部分 BUG。<br>但是 Jarvis 并不觉得这是解决问题的办法，因为父级元素也设置浮动只适用于极少极少情况，例如<br>自己写 demo 的时候。但是这样会给布局带来混乱的局面。</p>
-<p>方法三、使用伪元素清除浮动。保持了代码的整洁性，消除了增加一些不必要的标签。<br>运用的好可以增加代码的复用率。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.clearfix</span> &#123;</span><br><span class="line">    *<span class="attribute">zoom</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class">.clearfix</span><span class="pseudo">:after</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">" "</span>;</span><br><span class="line">    <span class="attribute">display</span>: block;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">clear</span>: both;</span><br><span class="line">    <span class="attribute">visibility</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>demo 地址：<br><a href="https://github.com/zhangxiang958/Task" target="_blank" rel="external">Jarvis 的 demo 地址</a><br>博文地址：<br><a href="http://www.w3cplus.com/css/clear-float" target="_blank" rel="external">大漠的清除浮动博文 Clear float</a><br><a href="http://www.iyunlu.com/view/css-xhtml/56.html" target="_blank" rel="external">清除 clearfix 改良</a><br><a href="http://www.iyunlu.com/view/css-xhtml/55.html" target="_blank" rel="external">那些年一起清除的浮动</a></p>
-<hr>
-<p>作者     张翔<br>2016 年 01月 22日    </p>
+        <span itemprop="articleBody"><h2 id="业务场景">业务场景</h2><p>本次总结涉及两个移动端的开发，一个是移动端的 HTML5 小游戏类型，一个是微信公众号的展示性页面。<br>两个项目都是轻量级开发，根据设计稿与需求文档评估得出这两个项目都适合做成单页面应用，接下来就是对目前掌握<br>对现有框架或库的了解进行技术选型。<br><a id="more"></a></p>
+<h2 id="技术选型">技术选型</h2><p>构建工具：gulp + webpack + vueify + vue-loader<br>项目架构：前端使用 vue.js 0.12<br>整个项目采用 .vue 后缀的单文件形式组件式开发。</p>
+<h3 id="选型原因">选型原因</h3><ol>
+<li>本次两个项目都为移动端的 HTML 5 页面。</li>
+<li>要求项目周期比较短，为期一周。</li>
+<li>参与的开发人员对于 MVVM 式开发并不熟悉，几乎是第一次使用 MVVM 模式开发。</li>
+<li>评估项目与分析设计稿时候发现页面可复用的组件很多。</li>
+<li>目前来说，vue.js 的 API 最为友好，学习曲线相对 angular.js/react 较平滑。</li>
+</ol>
+<h3 id="项目结构">项目结构</h3><p><img src="http://7xns9g.com1.z0.glb.clouddn.com/mid.png" alt=""><br>项目目录如上图,components 文件夹存放公用的组件, images 存放图片,views 文件夹存放页面。<br>app.js 为简单地加载一些模块，app.vue 是入口组件，index.html 为入口文件，router.js 是路由管理文件。<br>lib 中存放的是打包好了之后的 router.js 和 app.js 文件与其他一些 js 文件，如 frozenUI 框架的文件。</p>
+<p>在项目中，使用 vue-router 来进行路由控制，使用 vue-source 进行 ajax 交互。<br>vue-router 用来管理前端路由确实是利器，但是由于是第一次接触，很多属性方法都没来得及熟悉，因此有很多“脏”<br>代码，在使用 vue-router 的时候，有时候需要传递参数，除了使用 props 之外，还可以使用 vue-router 的 data<br>函数（<a href="http://router.vuejs.org/zh-cn/pipeline/hooks.html" target="_blank" rel="external">data 钩子函数</a>）。</p>
+<p>vue-source 的接口交互在跨域问题会出现问题，但是总体来说还算不错。vue-source 会出现 500 错误问题，这是因<br>为 vue-source 中的 $http 并不等价于 jquery 的 ajax ，post 的 data 并不是 from data 形式的，而是 request<br>payload。<br>解决方法请移步：<a href="http://www.open-open.com/lib/view/open1447060624960.html#articleHeader10" target="_blank" rel="external">vue-source 出现 500 错误</a></p>
+<h2 id="项目构建">项目构建</h2><p>项目构建参考了稀土掘金中的一篇博文， <a href="http://gold.xitu.io/entry/55f77eb460b28e6a6f0f4f86" target="_blank" rel="external">vue 的组件式开发模式</a>, 与囧克斯上的一篇介绍 just vue<br>介绍 <a href="http://jiongks.name/blog/just-vue/" target="_blank" rel="external">just vue</a> 脚手架的文章。<br>这样搭建项目好处在于使用 vue-loader 来进行以 .vue 为后缀的组件式开发，并且使用 gulp 来监听/打包的流程，<br>使用 webpack 来对静态资源打包。</p>
+<h2 id="技术难点">技术难点</h2><p>基于微信开发，我觉得有几点值得注意。微信开发中有两点需要注意，一是注意看微信开发者文档，二是本地调试。</p>
+<h3 id="微信_js-SDK_接口开发">微信 js-SDK 接口开发</h3><p>在进行录音功能开发的时候，发现并不是全部机型都会支持 wx.onVoiceRecordEnd 这一个接口，那么这时候就需要<br>使用定时器配合微信接口进行开发。<br>另外就是微信的图片上传 uploadImage 不能批量上传，必须等待上一张图片上传完才能上传下一张。</p>
+<h3 id="本地调试的问题">本地调试的问题</h3><p>在调试微信接口的时候，最让人抓狂的就是它不能使用本地服务器进行调试，换言之，不能本地调试，详情请看<br><a href="http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E6.AD.A5.E9.AA.A4.E4.B8.89.EF.BC.9A.E9.80.9A.E8.BF.87config.E6.8E.A5.E5.8F.A3.E6.B3.A8.E5.85.A5.E6.9D.83.E9.99.90.E9.AA.8C.E8.AF.81.E9.85.8D.E7.BD.AE" target="_blank" rel="external">微信常见错误</a>。<br>如果想要本地调试就必须使用另外的办法，关于解决方法在下面的 git 工作流程中有提及。</p>
+<h2 id="不足之处">不足之处</h2><p>由于是自己初次搭建单页面应用（SPA）的项目，并且第一次接触 vue 的开发，因此本次开发中有很多不足之处。</p>
+<h3 id="性能">性能</h3><p>这里的性能分为两点。</p>
+<ol>
+<li><p>webpack 打包性能，影响开发效率。<br>开发过程中，在初期，webpack + gulp 的自动刷新功能还算是比较稳定与流畅快速，但是到了项目中的文件数量增加<br>的时候，打包的文件数量也随之增加，这样拖慢了刷新时间，有时候居然要等待 2 分钟以上才能加载出页面，严重影<br>响了开发效率。关于这部分我自己思考了一下，发现不应该在 gulpfile.js 中监听文件变化然后重新打包，这样下来<br>打包效率当然会减慢，应该将打包 bundle 和监听 watch 两个任务分开，调试的时候执行监听能够立刻看到变化，在<br>要 push 到远程仓库的时候在打包一次即可。</p>
+</li>
+<li><p>页面性能。<br>这里的页面性能其实想说的就是加载速度的问题，撇开 CDN 加速的方法，有没有方法可以直接提高 vue 应用，或者说<br>单页面应用的首次加载速度呢？我自己想到的办法是需要首页显示的页面不需要写在 vue 文件中，避免白屏时间过长<br>，另外就是不只是 vue，像 angular 或 react 等都会有组件惰性加载的方法，用户暂时不需要用到的组件没有必要在<br>页面加载的时候就全部加载进来，这样显得有点没有必要并且浪费，对于 vue 来说，可以使用 vue-router 的惰性加载<br>lazy load。以上<strong>两点</strong>应该能够解决单页面应用的首页加载问题。<br>传送门：[<a href="http://router.vuejs.org/zh-cn/lazy.html" target="_blank" rel="external">动态组件载入</a>]</p>
+</li>
+</ol>
+<h3 id="加载速度">加载速度</h3><p>网页的显示速度会大大地影响用户体验的，如果一个网页在首次加载的时候很慢，有可能会导致用户关闭网页选择离开。<br>这次开发的产品上线后出现了网页需要加载很长一段时间后才能显示出网页，虽然显示后应用的使用流畅，但是页面的<br>首次加载速度慢却是致命伤。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/network.png" alt=""><br>本次的项目的入口文件只有一个 html 文件与 app.js 文件，其实完全可以放到像七牛这样的 CDN 加速服务上加速，<br>这样可以避免消耗服务器的带宽，又可以利用七牛服务器的 CDN 加速。</p>
+<p>另外有一点就是即使所有文件使用了 CDN 加速，最终还是无法大幅减少首页的白屏时间，这个不是 vue 等工具导致的，<br>而是单页面应用的缺点，首次加载问题，解决问题的方法就在于首页不要使用 vue 来写，然后使用动态组件载入异步<br>加载组件。</p>
+<h3 id="静态文件的缓存">静态文件的缓存</h3><p>因为之前没有完整的项目经验，所以在构建项目的时候对于服务器上的文件缓存考虑不周，导致服务器经常访问旧版本<br>代码，严重拖慢了开发效率。<br>解决方法是在文件名中添加时间戳或 hash 值，然后根据文件名更换引用的文件名。<br>在 gulp 中使用 gulp-rev 与 gulp-rev-collector 这两个插件生成文件后缀 hash 值并替换 html 文件中的引用名。</p>
+<h3 id="git_工作流程">git 工作流程</h3><p>本次基于微信开发，因为在 Ubuntu 系统下，无法用微信提供的开发者工具，因此只能利用其他的方法进行微信 js-SDK<br>的调试了。<br>目前采用的方法是使用 git 服务器，利用 github 的 Webhooks 来进行自动化部署。<br>解决方案：<a href="http://www.piaoyi.org/linux/Gitlab-GitHub-webhook-push-auto-deployment.html" target="_blank" rel="external">利用 git 服务器与 github Webhooks 自动化部署</a>.</p>
+<p>但是尽管如此,我还是觉得有更优的方法来解决微信 js-SDK 的调试问题,因为不可能直接在服务器上写代码,这样完全<br>没有安全性可言,对产品的研发流程不利,并且不可能将每次微小的调试都 commit 并 push 到服务器上,这样会增大了<br>commit 的负担,同时增加了像 coding 这样的代码托管仓库的 git 仓库的大小.<br>万幸的是,有人提出了很好的解决方法,不过是基于 windows 系统下的,不过已经要比之前线上调试的条件好太多了.<br>以下是知乎上的一个问答,值得一看.<br>传送门:<br><a href="https://www.zhihu.com/question/25456655" target="_blank" rel="external">微信开发如何做本地调试？</a><br><a href="https://natapp.cn/" target="_blank" rel="external">微信本地开发利器 NATAPP</a></p>
 </span>
       
     </div>
@@ -249,13 +250,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/02/04/CSS 布局实战/" rel="prev">CSS 布局实战</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/25/前端初学之浅谈前后端关系/" rel="next">前端初学之浅谈前后端关系</a>
+              <a href="/2016/08/14/你们无法逃避的谈心/" rel="next">你们无法逃避的谈心</a>
             
           </div>
         </div>
@@ -270,10 +269,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/01/22/学习 CSS 浮动/"
-     data-title="学习 CSS 浮动"
+        <div class="ds-share flat" data-thread-key="2016/09/01/Vue 项目总结/"
+     data-title="Vue 项目总结"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2016/01/22/学习 CSS 浮动/">
+     data-url="http://zhangxiang958.github.io/2016/09/01/Vue 项目总结/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -300,8 +299,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2016/01/22/学习 CSS 浮动/"
-                       data-title="学习 CSS 浮动" data-url="http://zhangxiang958.github.io/2016/01/22/学习 CSS 浮动/">
+                  <div class="ds-thread" data-thread-key="2016/09/01/Vue 项目总结/"
+                       data-title="Vue 项目总结" data-url="http://zhangxiang958.github.io/2016/09/01/Vue 项目总结/">
                   </div>
                 
               </div>
@@ -401,7 +400,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是浮动？"><span class="nav-number">1.</span> <span class="nav-text">什么是浮动？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浮动的规则"><span class="nav-number">2.</span> <span class="nav-text">浮动的规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素脱离了文本流"><span class="nav-number">2.1.</span> <span class="nav-text">浮动元素脱离了文本流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素的外边距不会合并。"><span class="nav-number">2.2.</span> <span class="nav-text">浮动元素的外边距不会合并。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素自动拥有块级元素属性"><span class="nav-number">2.3.</span> <span class="nav-text">浮动元素自动拥有块级元素属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素不重叠"><span class="nav-number">2.4.</span> <span class="nav-text">浮动元素不重叠</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如果发生重叠呢？"><span class="nav-number">2.4.1.</span> <span class="nav-text">如果发生重叠呢？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动的停止条件"><span class="nav-number">2.5.</span> <span class="nav-text">浮动的停止条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素的延伸"><span class="nav-number">2.6.</span> <span class="nav-text">浮动元素的延伸</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#清除浮动"><span class="nav-number">3.</span> <span class="nav-text">清除浮动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是清除浮动？"><span class="nav-number">3.1.</span> <span class="nav-text">什么是清除浮动？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要清除浮动？"><span class="nav-number">3.2.</span> <span class="nav-text">为什么要清除浮动？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清除浮动的方法"><span class="nav-number">3.3.</span> <span class="nav-text">清除浮动的方法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#业务场景"><span class="nav-number">1.</span> <span class="nav-text">业务场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术选型"><span class="nav-number">2.</span> <span class="nav-text">技术选型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#选型原因"><span class="nav-number">2.1.</span> <span class="nav-text">选型原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目结构"><span class="nav-number">2.2.</span> <span class="nav-text">项目结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目构建"><span class="nav-number">3.</span> <span class="nav-text">项目构建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术难点"><span class="nav-number">4.</span> <span class="nav-text">技术难点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#微信_js-SDK_接口开发"><span class="nav-number">4.1.</span> <span class="nav-text">微信 js-SDK 接口开发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地调试的问题"><span class="nav-number">4.2.</span> <span class="nav-text">本地调试的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不足之处"><span class="nav-number">5.</span> <span class="nav-text">不足之处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#性能"><span class="nav-number">5.1.</span> <span class="nav-text">性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载速度"><span class="nav-number">5.2.</span> <span class="nav-text">加载速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态文件的缓存"><span class="nav-number">5.3.</span> <span class="nav-text">静态文件的缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git_工作流程"><span class="nav-number">5.4.</span> <span class="nav-text">git 工作流程</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
