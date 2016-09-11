@@ -1,0 +1,741 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="广东工业大学14级网络工程张翔" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="应老师的要求，因为项目需要使用 parse-server 来作为应用的后端支撑，因此我将我学习 parse-server 的笔记或译文放到博文中，希望可以帮助到师弟师妹的后续学习。本次译文是我第一次翻译文档，其中翻译会生硬，欢迎大家提出意见。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Parse 系列之 Parse-server 搭建（译）">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/09/11/Parse 系列之 Parse-server 搭建（译）/index.html">
+<meta property="og:site_name" content="JARVIS's blog">
+<meta property="og:description" content="应老师的要求，因为项目需要使用 parse-server 来作为应用的后端支撑，因此我将我学习 parse-server 的笔记或译文放到博文中，希望可以帮助到师弟师妹的后续学习。本次译文是我第一次翻译文档，其中翻译会生硬，欢迎大家提出意见。">
+<meta property="og:updated_time" content="2016-09-11T07:12:49.736Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Parse 系列之 Parse-server 搭建（译）">
+<meta name="twitter:description" content="应老师的要求，因为项目需要使用 parse-server 来作为应用的后端支撑，因此我将我学习 parse-server 的笔记或译文放到博文中，希望可以帮助到师弟师妹的后续学习。本次译文是我第一次翻译文档，其中翻译会生硬，欢迎大家提出意见。">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+    <title> Parse 系列之 Parse-server 搭建（译） // JARVIS's blog </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">JARVIS's blog</span>
+  </a>
+
+
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+    <span class="logo-line-after"><i></i></span>
+
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Parse 系列之 Parse-server 搭建（译）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-09-11T15:13:24+08:00" content="2016-09-11">
+            2016-09-11
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/Parse/" itemprop="url" rel="index"><span itemprop="name">Parse</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/09/11/Parse 系列之 Parse-server 搭建（译）/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/Parse 系列之 Parse-server 搭建（译）/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>应老师的要求，因为项目需要使用 parse-server 来作为应用的后端支撑，因此我将我学习 parse-server 的笔记<br>或译文放到博文中，希望可以帮助到师弟师妹的后续学习。<br>本次译文是我第一次翻译文档，其中翻译会生硬，欢迎大家提出意见。<br><a id="more"></a></p>
+<h2 id="开始">开始</h2><p>搭建 parse-server 最快捷简单的方式是本地运行 MongoDB 和 Parse Server。</p>
+<h2 id="本地搭建_Parse_Server">本地搭建 Parse Server</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm <span class="operator"><span class="keyword">install</span> -g <span class="keyword">parse</span>-<span class="keyword">server</span> mongodb-runner</span><br><span class="line">$ mongodb-runner <span class="keyword">start</span></span><br><span class="line">$ <span class="keyword">parse</span>-<span class="keyword">server</span> <span class="comment">--appId APPLICATION_ID --masterKey MASTER_KEY --databaseURI mongodb://localhost/test</span></span></span><br></pre></td></tr></table></figure>
+<p>你可以使用任意字符串命名你的应用 id 和 masterKey，这些将会被用于用户信息登录 Parse Server。<br>输入上面的命令后，现在，你可以在你的主机运行一个本地的 Parse Server 了。</p>
+<p><strong>如果想要使用远程的 MongoDB 数据库？</strong> 在运行 Parse-server 之前将 —databaseURI DATABASE_URL 字段传入命令<br>中。<br>如果想了解更多关于配置 Parse Server 的信息，请点击<a href="https://parseplatform.github.io//docs/" target="_blank" rel="external">这里</a>。<br>如果想要找到关于配置的全部选项，则请输入命令 <em>parse-server —help</em>。</p>
+<h3 id="保存你的第一个对象">保存你的第一个对象</h3><p>现在，你的主机已经搭建好 Parser Server，接下来我们就要存储你的第一个对象。这里我们将会使用 REST API，但是你可以通过 Parse SDKs 更简单地做到同样的事情。运行下面的命令：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -X <span class="keyword">POST</span> \</span><br><span class="line">-<span class="keyword">H</span> <span class="string">"X-Parse-Application-Id: APPLICATION_ID"</span> \</span><br><span class="line">-<span class="keyword">H</span> <span class="string">"Content-Type: application/json"</span> \</span><br><span class="line">-<span class="keyword">d</span> '&#123;<span class="string">"score"</span>:1337,<span class="string">"playerName"</span>:<span class="string">"Sean Plott"</span>,<span class="string">"cheatMode"</span>:false&#125;' \</span><br><span class="line">http:<span class="comment">//localhost:1337/parse/classes/GameScore</span></span><br></pre></td></tr></table></figure></p>
+<p>你会得到一个像下面的返回信息：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">objectId</span>": <span class="value"><span class="string">"2ntvSpRGIK"</span></span>,</span><br><span class="line">  "<span class="attribute">createdAt</span>": <span class="value"><span class="string">"2016-03-11T23:51:48.050Z"</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>你可以通过下面的命令直接读取这个对象（确定你在得到这个对象的时候将 API 中的 <em>2ntvSpRGIK</em> 换成<br>你上面得到的 <em>objectId</em>）：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>curl -<span class="constant">X GET </span>\</span><br><span class="line">  -<span class="constant">H </span><span class="string">"X-Parse-Application-Id: APPLICATION_ID"</span> \</span><br><span class="line">  <span class="symbol">http:</span>/<span class="regexp">/localhost:1337/parse</span><span class="regexp">/classes/</span><span class="constant">GameScore/</span><span class="number">2</span>ntvSpRGIK</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Response</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"objectId"</span>: <span class="string">"2ntvSpRGIK"</span>,</span><br><span class="line">  <span class="string">"score"</span>: <span class="number">1337</span>,</span><br><span class="line">  <span class="string">"playerName"</span>: <span class="string">"Sean Plott"</span>,</span><br><span class="line">  <span class="string">"cheatMode"</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="string">"updatedAt"</span>: <span class="string">"2016-03-11T23:51:48.050Z"</span>,</span><br><span class="line">  <span class="string">"createdAt"</span>: <span class="string">"2016-03-11T23:51:48.050Z"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过保存每一个独立对象的 <em>id</em> 并不是理想的途径，然而，很多情况下，你会得到一个储存对象的数组，像这样：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>curl -<span class="constant">X GET </span>\</span><br><span class="line">  -<span class="constant">H </span><span class="string">"X-Parse-Application-Id: APPLICATION_ID"</span> \</span><br><span class="line">  <span class="symbol">http:</span>/<span class="regexp">/localhost:1337/parse</span><span class="regexp">/classes/</span><span class="constant">GameScore</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The response will provide all the matching objects within the `results` array:</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"results"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"objectId"</span>: <span class="string">"2ntvSpRGIK"</span>,</span><br><span class="line">      <span class="string">"score"</span>: <span class="number">1337</span>,</span><br><span class="line">      <span class="string">"playerName"</span>: <span class="string">"Sean Plott"</span>,</span><br><span class="line">      <span class="string">"cheatMode"</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="string">"updatedAt"</span>: <span class="string">"2016-03-11T23:51:48.050Z"</span>,</span><br><span class="line">      <span class="string">"createdAt"</span>: <span class="string">"2016-03-11T23:51:48.050Z"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>想要学习更多关于在Parse Server 保存和查询对象，请查看 <a href="https://parseplatform.github.io//docs/" target="_blank" rel="external">Parse 文档</a></p>
+<h2 id="远程运行_Parse_Server">远程运行 Parse Server</h2><p>只要你能够很好地明白一个项目是怎么运行的，请查阅 <a href="https://github.com/ParsePlatform/parse-server/wiki" target="_blank" rel="external">Parse Server wiki</a> 深度指南通过部署 Parse Server 提供基础服务。<br>通过查阅来学习更多关于附加方式来运行 Parse Server。‘</p>
+<h3 id="Parse_Server_应用样本">Parse Server 应用样本</h3><p>我们已经提供了基础的 <a href="https://github.com/ParsePlatform/parse-server-example" target="_blank" rel="external">Node.js 应用</a>，该应用使用了 基于 Express 下的 Parse Server 模块并且它能够轻易地部署来提供各种各样的基础服务。</p>
+<ul>
+<li><a href="https://devcenter.heroku.com/articles/deploying-a-parse-server-to-heroku" target="_blank" rel="external">Heroku and mLab</a></li>
+<li><a href="http://mobile.awsblog.com/post/TxCD57GZLM2JR/How-to-set-up-Parse-Server-on-AWS-using-AWS-Elastic-Beanstalk" target="_blank" rel="external">AWS and Elastic Beanstalk</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-run-parse-server-on-ubuntu-14-04" target="_blank" rel="external">Digital Ocean</a></li>
+<li><a href="https://nodechef.com/blog/post/6/migrate-from-parse-to-nodechef%E2%80%99s-managed-parse-server" target="_blank" rel="external">Microsoft Azure</a></li>
+<li><a href="https://nodechef.com/blog/post/6/migrate-from-parse-to-nodechef%E2%80%99s-managed-parse-server" target="_blank" rel="external">Pivotal Web Services</a></li>
+<li><a href="https://medium.com/@justinbeckwith/deploying-parse-server-to-google-app-engine-6bc0b7451d50" target="_blank" rel="external">Pivotal Web Services</a></li>
+<li><a href="http://blog.back4app.com/2016/03/01/quick-wizard-migration/" target="_blank" rel="external">Back4app</a></li>
+<li><a href="https://azure.microsoft.com/en-us/blog/azure-welcomes-parse-developers/" target="_blank" rel="external">HyperDev</a></li>
+</ul>
+<h3 id="Parse_Server_+_Express">Parse Server + Express</h3><p>你也可以创造一个 Parse Server 的实例，并且配置到新的或已经存在的 Express 网站中。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> ParseServer = <span class="built_in">require</span>(<span class="string">'parse-server'</span>).ParseServer;</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> api = <span class="keyword">new</span> ParseServer(&#123;</span><br><span class="line">  databaseURI: <span class="string">'mongodb://localhost:27017/dev'</span>, <span class="comment">// Connection string for your MongoDB database</span></span><br><span class="line">  cloud: <span class="string">'/home/myApp/cloud/main.js'</span>, <span class="comment">// Absolute path to your Cloud Code</span></span><br><span class="line">  appId: <span class="string">'myAppId'</span>,</span><br><span class="line">  masterKey: <span class="string">'myMasterKey'</span>, <span class="comment">// Keep this key secret!</span></span><br><span class="line">  fileKey: <span class="string">'optionalFileKey'</span>,</span><br><span class="line">  serverURL: <span class="string">'http://localhost:1337/parse'</span> <span class="comment">// Don't forget to change to https if needed</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Serve the Parse API on the /parse URL prefix</span></span><br><span class="line">app.use(<span class="string">'/parse'</span>, api);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">1337</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'parse-server-example running on port 1337.'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>了解更多关于可用的配置选项请运行 <em>parse-server —help</em>.</p>
+<h3 id="日志">日志</h3><p>Parse Server 默认地打印到：</p>
+<ul>
+<li>控制台</li>
+<li>在日常文件中成 JSON 格式的独立一行<br>如果想打印在每一个请求与回应中？在启动 <em>parse-server</em> 设置 <em>VERBOSE</em> 这个环境参数。<br>用法：<em>- VERBOSE=’1’ parse-server —appId APPLICATION_ID —masterKey MASTER_KEY</em><br>如果想让日志存放在一个文件夹中？在启动 <em>parse-server</em> 设置 <em>PARSE_SERVER_LOGS_FOLDER</em> 这个环境参数。<br>用法：<em>PARSE_SERVER_LOGS_FOLDER=’<path-to-logs-folder>‘ parse-server —appId APPLICATION_ID —masterKey MASTER_KEY</path-to-logs-folder></em><br>如果想要新建一个独立的 JSON 错误日志（针对 CloudWatch，Google Cloud Logging 等等的云服务器）？在启动 parse  server 的时候设置 <em>JSON_LOGS</em> 这个环境参数。<br>用法：<em>JSON_LOGS=’1’ parse-server —appId APPLICATION_ID —masterKey MASTER_KEY</em></li>
+</ul>
+<h2 id="文档">文档</h2><p>Parse Server 的详细文档已经放到了 <a href="https://github.com/ParsePlatform/parse-server/wiki" target="_blank" rel="external">wiki</a>。Parse Server 的指南是一个很好的启动指引，如果你对于开发 Parse Server 感兴趣，<a href="https://github.com/ParsePlatform/parse-server/wiki/Development-Guide" target="_blank" rel="external">开发者文档</a> 将会帮助你搭建。</p>
+<h3 id="迁移已经存在的_Parse_应用">迁移已经存在的 Parse 应用</h3><p>Parse 的服务将会在 2017.1.28 全部关闭。如果你计划迁移你的应用，你需要尽快开始你的工作了。这里有几点是 Parse 主版本没有提供一致的标准的。更多详细信息请进入<a href="https://parse.com/migration" target="_blank" rel="external">迁移指南</a>.</p>
+<h3 id="配置">配置</h3><p>Parse Server 可以配置使用。你可以通过在运行 parse-server 的时候设置参数或下载配置 JSON 格式的文件，配置<br>文件通过使用 parse-server path/to/configuration.json. 如果你正在 Express 使用 Parse Server，可以通过设置<br>一个 ParseServer 对象来存储这些配置参数。</p>
+<h4 id="基础配置参数">基础配置参数</h4><ul>
+<li>appId（必填）-这个应用的 id 是用于这个服务的主域名的。你可以使用任意字符串来定义。为了迁移应用，这个应该匹配你已经拥有的 Parse 应用。</li>
+<li>masterKey（必填）- master key 是用于控制 ACL 安全的，你可以使用任意字符串命名，必须保证它的私密性！为了迁移应用，应该用你存在的 parse 应用</li>
+<li>databaseURI（必填）- 这个是链接数据库的字符串，例如：mongodb://user:pass@host.com/dbname。如果你的密码有特殊字符请确认使用 URL 编码模式。</li>
+<li>prot-默认端口为 1337, 设置这个参数可以使用不同的端口。</li>
+<li>serverURL- 你的 parse 应用的 URL（别忘了 http：//或 https：//）。这个 URL 将会被用于云端请求 Parse Server 服务。</li>
+<li>cloud - 这个值是你的云端代码的绝对路径。</li>
+<li>push - 配置参数 APNS 和 GCM push。详见 <a href="https://github.com/ParsePlatform/parse-server/wiki/Push" target="_blank" rel="external">Push 入口</a></li>
+</ul>
+<h4 id="客户端配置参数">客户端配置参数</h4><p>这些 Parse 客户端的字段对于 Parse Server 来说不再是必要的。如果你希望仍然使用他们，也许能够拒绝一些旧版本的版本的客户端请求，你可以在初始化的时候设置好这些字段。设置其中的一个字段在请求的时候就需要带上相应的字段。</p>
+<ul>
+<li>clientKey</li>
+<li>javascriptKey</li>
+<li>restAPIKey</li>
+<li>dotNetKey</li>
+</ul>
+<h4 id="可用的选项">可用的选项</h4><ul>
+<li>fileKey - 为了迁移应用，这个对于 Parse 已经部署的应用的文件请求是必要的。</li>
+<li>allowClientClassCreation - 默认设置为 true，设置为 false 能让客户端不能创建类</li>
+<li>enableAnonymousUsers - 默认为 true，设置为 false 是杜绝匿名用户。 </li>
+<li>oauth - 用于验证第三方认证</li>
+<li>facebookAppIds - 储存用户用于登录的 Facebook 应用的 IDs。</li>
+<li>mountPath - 服务的安装路径，默认为 /parse</li>
+<li>filesAdapter - 默认行为可以创建一个对象改变。</li>
+<li>maxUploadSize - 最大的文件上传大小，默认为 20 mb</li>
+<li>loggerAdapter - 默认行为可以创建一个对象改变。</li>
+<li>sessionLength - 一个会话的有效时间长度，默认为 31536000 秒（1 年）</li>
+<li>revokeSessionOnPasswordReset - 当用户修改密码的时候，或者通过重置密码邮件来登录的时候，如果该值为 true 则所有对话将被取消，如果你不想所有会话被删除则设置为 false</li>
+<li>accoundLockout - 当有恶意用户行为企图推断用户密码的时候通过验证码和错误信息来锁定用户。</li>
+</ul>
+<h4 id="日志-1">日志</h4><p>在启动 Parse-server 使用 PARSE_SERVER_LOGS_FOLDER 这个环境变量字段来保存你的服务日志到你想要的文件夹。<br>用法：<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PARSE_SERVER_LOGS_FOLDER='&lt;path-<span class="keyword">to</span>-logs-folder&gt;' parse-server <span class="comment">--appId APPLICATION_ID --masterKey MASTER_KEY</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="邮箱验证与密码重置">邮箱验证与密码重置</h4><p>确认用户的邮件地址并让密码重置邮件能够传到邮件服务器。作为 Parse-server 的一个模块，我们提供了一个可配值对象使用 Mailgun 来发送邮件，并将它加到你的初始化代码中。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">var server = ParseServer(&#123;</span><br><span class="line">  ...otherOptions,</span><br><span class="line">  // Enable email verification</span><br><span class="line">  verifyUserEmails: true,</span><br><span class="line"></span><br><span class="line">  // if `verifyUserEmails` is `true` and</span><br><span class="line">  //     if `emailVerifyTokenValidityDuration` is `undefined` then</span><br><span class="line">  //        email verify token never expires</span><br><span class="line">  //     else</span><br><span class="line">  //        email verify token expires after `emailVerifyTokenValidityDuration`</span><br><span class="line">  //</span><br><span class="line">  // `emailVerifyTokenValidityDuration` defaults to `undefined`</span><br><span class="line">  //</span><br><span class="line">  // email verify token below expires in 2 hours (= 2 * 60 * 60 == 7200 seconds)</span><br><span class="line">  emailVerifyTokenValidityDuration: 2 * 60 * 60, // in seconds (2 hours = 7200 seconds)</span><br><span class="line"></span><br><span class="line">  // <span class="operator"><span class="keyword">set</span> preventLoginWithUnverifiedEmail <span class="keyword">to</span> <span class="literal">false</span> <span class="keyword">to</span> allow <span class="keyword">user</span> <span class="keyword">to</span> login without verifying their email</span><br><span class="line">  // <span class="keyword">set</span> preventLoginWithUnverifiedEmail <span class="keyword">to</span> <span class="literal">true</span> <span class="keyword">to</span> prevent <span class="keyword">user</span> <span class="keyword">from</span> login <span class="keyword">if</span> their email <span class="keyword">is</span> <span class="keyword">not</span> verified</span><br><span class="line">  preventLoginWithUnverifiedEmail: <span class="literal">false</span>, // defaults <span class="keyword">to</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  // The <span class="keyword">public</span> URL <span class="keyword">of</span> your app.</span><br><span class="line">  // This will appear <span class="keyword">in</span> the link that <span class="keyword">is</span> used <span class="keyword">to</span> verify email addresses <span class="keyword">and</span> <span class="keyword">reset</span> passwords.</span><br><span class="line">  // <span class="keyword">Set</span> the mount path <span class="keyword">as</span> it <span class="keyword">is</span> <span class="keyword">in</span> serverURL</span><br><span class="line">  publicServerURL: <span class="string">'https://example.com/parse'</span>,</span><br><span class="line">  // Your apps name. This will appear <span class="keyword">in</span> the subject <span class="keyword">and</span> body <span class="keyword">of</span> the emails that <span class="keyword">are</span> sent.</span><br><span class="line">  appName: <span class="string">'Parse App'</span>,</span><br><span class="line">  // The email adapter</span><br><span class="line">  emailAdapter: &#123;</span><br><span class="line">    <span class="keyword">module</span>: <span class="string">'parse-server-simple-mailgun-adapter'</span>,</span><br><span class="line">    options: &#123;</span><br><span class="line">      // The address that your emails come <span class="keyword">from</span></span><br><span class="line">      fromAddress: <span class="string">'parse@example.com'</span>,</span><br><span class="line">      // Your <span class="keyword">domain</span> <span class="keyword">from</span> mailgun.com</span><br><span class="line">      <span class="keyword">domain</span>: <span class="string">'example.com'</span>,</span><br><span class="line">      // Your API <span class="keyword">key</span> <span class="keyword">from</span> mailgun.com</span><br><span class="line">      apiKey: <span class="string">'key-mykey'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  // account lockout policy setting (OPTIONAL) - defaults <span class="keyword">to</span> undefined</span><br><span class="line">  // <span class="keyword">if</span> the account lockout policy <span class="keyword">is</span> <span class="keyword">set</span> <span class="keyword">and</span> there <span class="keyword">are</span> more than <span class="string">`threshold`</span> <span class="built_in">number</span> <span class="keyword">of</span> failed login attempts <span class="keyword">then</span> the <span class="string">`login`</span> api <span class="keyword">call</span> <span class="keyword">returns</span> error code <span class="string">`Parse.Error.OBJECT_NOT_FOUND`</span> <span class="keyword">with</span> error message <span class="string">`Your account is locked due to multiple failed login attempts. Please try again after &lt;duration&gt; minute(s)`</span>. <span class="keyword">After</span> <span class="string">`duration`</span> minutes <span class="keyword">of</span> <span class="keyword">no</span> login attempts, the application will allow the <span class="keyword">user</span> <span class="keyword">to</span> try login again.</span><br><span class="line">  accountLockout: &#123;</span><br><span class="line">    duration: <span class="number">5</span>, // duration policy setting determines the <span class="built_in">number</span> <span class="keyword">of</span> minutes that a locked-out account remains locked out <span class="keyword">before</span> automatically becoming unlocked. <span class="keyword">Set</span> it <span class="keyword">to</span> a <span class="keyword">value</span> greater than <span class="number">0</span> <span class="keyword">and</span> less than <span class="number">100000.</span></span><br><span class="line">    threshold: <span class="number">3</span>, // threshold policy setting determines the <span class="built_in">number</span> <span class="keyword">of</span> failed <span class="keyword">sign</span>-<span class="keyword">in</span> attempts that will cause a <span class="keyword">user</span> account <span class="keyword">to</span> be locked. <span class="keyword">Set</span> it <span class="keyword">to</span> an <span class="built_in">integer</span> <span class="keyword">value</span> greater than <span class="number">0</span> <span class="keyword">and</span> less than <span class="number">1000.</span> </span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span></span><br></pre></td></tr></table></figure></p>
+<p>你也可以使用社区中的其他邮件服务：</p>
+<ul>
+<li>parse-server-postmark-adapter</li>
+<li>parse-server-sendgrid-adapter</li>
+<li>parse-server-mandrill-adapter</li>
+<li>parse-server-simple-ses-adapter</li>
+<li>parse-server-mailgun-adapter-template</li>
+<li>parse-server-mailjet-adapter</li>
+</ul>
+<h3 id="使用环境变量来配置_Parse_Server">使用环境变量来配置 Parse Server</h3><p>你可以使用以下的环境变量来配置你的 Parse 服务：<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">PORT</span></span><br><span class="line">PARSE_SERVER_APPLICATION_ID</span><br><span class="line">PARSE_SERVER_MASTER_KEY</span><br><span class="line">PARSE_SERVER_DATABASE_URI</span><br><span class="line">PARSE_SERVER_URL</span><br><span class="line">PARSE_SERVER_CLOUD_CODE_MAIN</span><br></pre></td></tr></table></figure></p>
+<p>默认端口为 1337,如果想用不同的端口则需要设置 PORT 环境变量<br><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">$</span> <span class="comment">PORT=8080</span> <span class="comment">parse</span><span class="literal">-</span><span class="comment">server</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">appId</span> <span class="comment">APPLICATION_ID</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">masterKey</span> <span class="comment">MASTER_KEY</span></span><br></pre></td></tr></table></figure></p>
+<p>使用 pase-server —help 获取配置环境变量列表</p>
+<h4 id="可用的模块">可用的模块</h4><p>parse server modules（adapters）</p>
+<h4 id="配置文件模块">配置文件模块</h4><p>parse server 允许开发者选择几个选项来选择文件储存方式</p>
+<ul>
+<li>GridStoreAdapter - 使用 MongoDB 来储存</li>
+<li>S3Adapter - 使用 Amazon S3 来存储</li>
+<li>GCSAdapter - 使用 Google Cloud Storage 来存储</li>
+</ul>
+<p>GridStoreAdapter 是默认使用的方式，不需要设置，如果你想要使用其他方式像 S3 或 Google Cloud Storage，就需要添加配置信息。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/01/Vue 项目总结/" rel="next">Vue 项目总结</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/09/11/Parse 系列之 Parse-server 搭建（译）/"
+     data-title="Parse 系列之 Parse-server 搭建（译）"
+     data-content=""
+     data-url="http://zhangxiang958.github.io/2016/09/11/Parse 系列之 Parse-server 搭建（译）/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2016/09/11/Parse 系列之 Parse-server 搭建（译）/"
+                       data-title="Parse 系列之 Parse-server 搭建（译）" data-url="http://zhangxiang958.github.io/2016/09/11/Parse 系列之 Parse-server 搭建（译）/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://7xns9g.com1.z0.glb.clouddn.com/015630179.jpg" alt="JARVIS" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">JARVIS</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">广东工业大学14级网络工程张翔</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiang958" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhang-xiang-78-5" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="zxiang702" target="_blank">WeChat</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="958033967" target="_blank">QQ</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开始"><span class="nav-number">1.</span> <span class="nav-text">开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地搭建_Parse_Server"><span class="nav-number">2.</span> <span class="nav-text">本地搭建 Parse Server</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#保存你的第一个对象"><span class="nav-number">2.1.</span> <span class="nav-text">保存你的第一个对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程运行_Parse_Server"><span class="nav-number">3.</span> <span class="nav-text">远程运行 Parse Server</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Parse_Server_应用样本"><span class="nav-number">3.1.</span> <span class="nav-text">Parse Server 应用样本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parse_Server_+_Express"><span class="nav-number">3.2.</span> <span class="nav-text">Parse Server + Express</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志"><span class="nav-number">3.3.</span> <span class="nav-text">日志</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文档"><span class="nav-number">4.</span> <span class="nav-text">文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#迁移已经存在的_Parse_应用"><span class="nav-number">4.1.</span> <span class="nav-text">迁移已经存在的 Parse 应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">4.2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基础配置参数"><span class="nav-number">4.2.1.</span> <span class="nav-text">基础配置参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端配置参数"><span class="nav-number">4.2.2.</span> <span class="nav-text">客户端配置参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可用的选项"><span class="nav-number">4.2.3.</span> <span class="nav-text">可用的选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#日志-1"><span class="nav-number">4.2.4.</span> <span class="nav-text">日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#邮箱验证与密码重置"><span class="nav-number">4.2.5.</span> <span class="nav-text">邮箱验证与密码重置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用环境变量来配置_Parse_Server"><span class="nav-number">4.3.</span> <span class="nav-text">使用环境变量来配置 Parse Server</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#可用的模块"><span class="nav-number">4.3.1.</span> <span class="nav-text">可用的模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置文件模块"><span class="nav-number">4.3.2.</span> <span class="nav-text">配置文件模块</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JARVIS</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>
