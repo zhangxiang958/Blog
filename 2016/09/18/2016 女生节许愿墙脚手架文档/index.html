@@ -37,16 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="description" content="本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终总结会在女生节结束后发布。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="试谈JavaScript事件处理机制">
-<meta property="og:url" content="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/index.html">
+<meta property="og:title" content="2016 女生节许愿墙脚手架文档">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/09/18/2016 女生节许愿墙脚手架文档/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
-<meta property="og:updated_time" content="2015-07-16T11:55:06.798Z">
+<meta property="og:description" content="本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终总结会在女生节结束后发布。">
+<meta property="og:updated_time" content="2016-09-18T07:31:01.171Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="试谈JavaScript事件处理机制">
-<meta name="twitter:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="twitter:title" content="2016 女生节许愿墙脚手架文档">
+<meta name="twitter:description" content="本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终总结会在女生节结束后发布。">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +56,7 @@
   };
 </script>
 
-    <title> 试谈JavaScript事件处理机制 // JARVIS's blog </title>
+    <title> 2016 女生节许愿墙脚手架文档 // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -162,7 +162,7 @@
           
           
             
-              试谈JavaScript事件处理机制
+              2016 女生节许愿墙脚手架文档
             
           
         </h1>
@@ -171,8 +171,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-07-15T10:15:24+08:00" content="2015-07-15">
-            2015-07-15
+          <time itemprop="dateCreated" datetime="2016-09-18T15:30:24+08:00" content="2016-09-18">
+            2016-09-18
           </time>
         </span>
 
@@ -180,7 +180,7 @@
           <span class="post-category" >
             &nbsp; | &nbsp; 分类于
             
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/Web-Develop/" itemprop="url" rel="index"><span itemprop="name">Web Develop</span></a></span>
 
               
               
@@ -193,8 +193,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/07/15/试谈JavaScript事件处理机制/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/" itemprop="commentsCount"></span>
+              <a href="/2016/09/18/2016 女生节许愿墙脚手架文档/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/18/2016 女生节许愿墙脚手架文档/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -208,22 +208,22 @@
       
 
       
-        <span itemprop="articleBody"><hr>
-<p>在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法<br><a id="more"></a></p>
-<h2 id="JavaScript的特色">JavaScript的特色</h2><p>Javascript是一门解释型的单线程语言，这是为了避免多线程时可能引起的冲突。浏览器在解释代码时是从上至下逐步进行解释翻译的，但是我们在电脑上CPU不一定是满载的，有可能是闲置的，这就导致了现在多核CPU计算能力的浪费，因此出现了事件处理机制去利用多核CPU的计算能力。</p>
-<hr>
-<h1 id="事件机制">事件机制</h1><h2 id="执行栈">执行栈</h2><p>JavaScript在执行代码的时候，每一个行为（函数）都会进入到一个栈中去等待执行————先进入后执行。<br>执行栈就是主线程，当CPU遇到需要花费时间长的任务（如setTimeout）时，会跳过，直接执行下一个任务。</p>
-<h2 id="回调队列Callback_queue">回调队列Callback queue</h2><p>上面所说CPU遇到花费时间长需要等待的任务也就是所谓的异步任务时，比如DOM/Ajax/setTimeout，此时会将任务放在一个队列中，此队列就叫做回调队列，也是异步处理机制的一部分。当主线程中的任务处理完后，就会调出队列中的任务去完成，先进入队列的就会先被处理。此外，任务队列还会存放一些具有定时器的回调函数。</p>
-<h2 id="运行机制">运行机制</h2><ol>
-<li>执行栈（主线程）执行所有的任务，回调队列不执行任务</li>
-<li>当主线程上的任务全部完成后，会一个一个调出任务队列中的任务进入到主线程中去执行</li>
-<li>就是不断重复以上两个步骤</li>
+        <span itemprop="articleBody"><p>本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终<br>总结会在女生节结束后发布。<br><a id="more"></a></p>
+<h2 id="项目骨架">项目骨架</h2><p>本项目使用 react + react-router + es6<br>构建工具 gulp + webpack + babel<br>前端 UI 库：FrozenUI </p>
+<h3 id="前端自适应方法">前端自适应方法</h3><p>暂时使用了移动端自适应方法 <a href="https://github.com/amfe/lib-flexible/blob/master/README.md" target="_blank" rel="external">flexible</a> 方案，如果时间允许则使用 flex 布局。<br><a href="https://github.com/amfe/article/issues/17" target="_blank" rel="external">flexible 方案</a></p>
+<h2 id="注意事项">注意事项</h2><h3 id="CSS_编写">CSS 编写</h3><p>因为 react 使用组件化开发，但是 CSS 的痛点在于全局性，那么在 react 的组件式开发中需要使用 BEM 模式，或使用 container 类名来独特定义组件，但是在此项目中使用 CSS-Module 。<br>使用 CSS-Module 来配合 React 进行组件化开发，这里有人可能会问 React 不是提供了 CSS in JS 的方法即使用对象<br>来使用内联样式吗？问题在于对象方法无法表示伪类这样的 CSS 代码，使用起来 CSS 代码就没有复用性了，所以采用<br>CSS-Module。为什么不建议用 jsx 的 inine style ，因为这样是写不了伪元素的，建议使用 css-module 方法。<br>详细的关于 CSS-Module 的资料这里不再多说，详细请看 <a href="http://www.tuicool.com/articles/nYjyEzZ" target="_blank" rel="external">CSS-Module</a>.<br>这里我提一个疑问，使用 React 组件化开发 .css 文件写在哪里进行引用管理呢？<br>在 webpack 中使用 css-loader 就可以了，css 原生不支持 CSS-Module，使用 webpack 就可以模块化了。<br>但是又有个疑问就是使用 css-loader 加载出来的 css 文件是动态地插入到 index.html 中的，那么不是消耗了大量的 http 请求吗？<br>这样的话那还不如自己引入 css 文件然后合并压缩，这样反而性能更好，这样想是错的，因为插入的是 style 标签，而不是 link 标签，并不会消耗 http 请求数量。</p>
+<h3 id="首页加载">首页加载</h3><p>需要懒加载组件，因为许愿墙相对较大，并且我十分在乎初始化速度，react 的懒加载与 vue 的懒加载十分类似，<br>使用 require.ensure ，写进路由里面，需要的时候才进行加载。<br>并且根据我以往开发单页面项目的经验，在入口文件中的图片等资源的 CDN 加速也是很影响首页加载速度的，因此本次<br>项目开发使用七牛 CDN 加载静态资源。<br><a href="https://fakefish.github.io/react-webpack-cookbook/Optimizing-development" target="_blank" rel="external">React 小书—优化开发</a><br><a href="https://fakefish.github.io/react-webpack-cookbook/Lazy-loaded-entry-points.html" target="_blank" rel="external">懒加载入口文件</a></p>
+<h3 id="组件编写">组件编写</h3><p>本次组件采用 jsx 语法，组件保存在 components 文件夹内，一个组件一个文件名，文件夹内存放 css 文件与 jsx 文件。</p>
+<h3 id="使用_gulp-connect_而不是使用_webpack-dev-server">使用 gulp-connect 而不是使用 webpack-dev-server</h3><p>一般来说使用 gulp-connect 与 webpack-dev-server 都是合适的，但是对于此项目我希望更加自动化，将打包压缩好的代码自动上传到七牛 CDN 中，并且整个项目的流程更加清晰，webpack 当然也能完成项目构建的全部内容，但是就少了对项目整体的把控。</p>
+<h3 id="希望拥有高效的编译">希望拥有高效的编译</h3><p>高效的编译有 3 个方法：</p>
+<ol>
+<li>避免全局编译</li>
+<li>使用 gulp-cached 与 gulp-remember 配合，我使用的是 gulp-changed 只获取改变过的文件再编译<br>jsx 怎么避免全局编译，使用 gulp-changed 无法配合 webpack 使用</li>
+<li>在上线的时候才压缩优化</li>
 </ol>
-<p>![事件机制]（<a href="http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）" target="_blank" rel="external">http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）</a></p>
-<h3 id="回调函数">回调函数</h3><p>所谓回调函数，就是会被主线程挂起来的代码。</p>
-<h2 id="定时器">定时器</h2><p>定时器主要是由setTimeout超时调用和setInterval间歇调用所组成，setTimeout接受两个参数，一个是回调函数，一个是执行的时间。<br>两者的区别是setTimeout是一次调用，而setInterval是不断调用。</p>
-<hr>
-<p>作者     张翔<br>2015 年 07月 15日    </p>
+<h3 id="怎样才能有效地提高_react_的编译速度">怎样才能有效地提高 react 的编译速度</h3><p>使用优化重合并，避免每次都编译打包一次 react 整个库和它的依赖。<br><a href="https://fakefish.github.io/react-webpack-cookbook/Optimizing-rebundling.html" target="_blank" rel="external">优化重合并</a></p>
+<h3 id="Zepto_的坑">Zepto 的坑</h3><p>因为 Zepto 自带的 click 事件是有点击穿透的 bug 存在的，所以应该使用 fastclick 插件来解决。</p>
+<p>参考资料：<br><a href="https://zhuanlan.zhihu.com/p/21312474" target="_blank" rel="external">webpack + gulp 构建完整前端工作流</a><br><a href="https://segmentfault.com/a/1190000004825205" target="_blank" rel="external">react-js开发环境</a><br><a href="https://segmentfault.com/a/1190000005770042#articleHeader0" target="_blank" rel="external">开发工具心得：如何 10 倍提高你的 Webpack 构建效率</a><br>（未完持续）</p>
 </span>
       
     </div>
@@ -235,11 +235,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/27/JavaScript学习笔记/" rel="prev">JavaScript核心知识学习笔记</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/11/Parse 系列之 Parse-server 搭建（译）/" rel="next">Parse 系列之 Parse-server 搭建（译）</a>
             
           </div>
         </div>
@@ -254,10 +254,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-     data-title="试谈JavaScript事件处理机制"
+        <div class="ds-share flat" data-thread-key="2016/09/18/2016 女生节许愿墙脚手架文档/"
+     data-title="2016 女生节许愿墙脚手架文档"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+     data-url="http://zhangxiang958.github.io/2016/09/18/2016 女生节许愿墙脚手架文档/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -284,8 +284,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-                       data-title="试谈JavaScript事件处理机制" data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+                  <div class="ds-thread" data-thread-key="2016/09/18/2016 女生节许愿墙脚手架文档/"
+                       data-title="2016 女生节许愿墙脚手架文档" data-url="http://zhangxiang958.github.io/2016/09/18/2016 女生节许愿墙脚手架文档/">
                   </div>
                 
               </div>
@@ -385,7 +385,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript的特色"><span class="nav-number">1.</span> <span class="nav-text">JavaScript的特色</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事件机制"><span class="nav-number"></span> <span class="nav-text">事件机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">1.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回调队列Callback_queue"><span class="nav-number">2.</span> <span class="nav-text">回调队列Callback queue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行机制"><span class="nav-number">3.</span> <span class="nav-text">运行机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回调函数"><span class="nav-number">3.1.</span> <span class="nav-text">回调函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时器"><span class="nav-number">4.</span> <span class="nav-text">定时器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目骨架"><span class="nav-number">1.</span> <span class="nav-text">项目骨架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端自适应方法"><span class="nav-number">1.1.</span> <span class="nav-text">前端自适应方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">2.</span> <span class="nav-text">注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS_编写"><span class="nav-number">2.1.</span> <span class="nav-text">CSS 编写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#首页加载"><span class="nav-number">2.2.</span> <span class="nav-text">首页加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件编写"><span class="nav-number">2.3.</span> <span class="nav-text">组件编写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用_gulp-connect_而不是使用_webpack-dev-server"><span class="nav-number">2.4.</span> <span class="nav-text">使用 gulp-connect 而不是使用 webpack-dev-server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#希望拥有高效的编译"><span class="nav-number">2.5.</span> <span class="nav-text">希望拥有高效的编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎样才能有效地提高_react_的编译速度"><span class="nav-number">2.6.</span> <span class="nav-text">怎样才能有效地提高 react 的编译速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zepto_的坑"><span class="nav-number">2.7.</span> <span class="nav-text">Zepto 的坑</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
