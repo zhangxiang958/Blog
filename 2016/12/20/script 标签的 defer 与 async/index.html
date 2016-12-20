@@ -37,16 +37,17 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
 <meta property="og:type" content="article">
-<meta property="og:title" content="试谈JavaScript事件处理机制">
-<meta property="og:url" content="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/index.html">
+<meta property="og:title" content="script 标签的 defer 与 async">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/12/20/script 标签的 defer 与 async/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
-<meta property="og:updated_time" content="2015-07-16T11:55:06.798Z">
+<meta property="og:description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/1644593160.jpg">
+<meta property="og:updated_time" content="2016-12-20T12:15:46.087Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="试谈JavaScript事件处理机制">
-<meta name="twitter:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="twitter:title" content="script 标签的 defer 与 async">
+<meta name="twitter:description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +57,7 @@
   };
 </script>
 
-    <title> 试谈JavaScript事件处理机制 // JARVIS's blog </title>
+    <title> script 标签的 defer 与 async // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -162,7 +163,7 @@
           
           
             
-              试谈JavaScript事件处理机制
+              script 标签的 defer 与 async
             
           
         </h1>
@@ -171,8 +172,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-07-15T10:15:24+08:00" content="2015-07-15">
-            2015-07-15
+          <time itemprop="dateCreated" datetime="2016-12-20T20:15:24+08:00" content="2016-12-20">
+            2016-12-20
           </time>
         </span>
 
@@ -180,7 +181,7 @@
           <span class="post-category" >
             &nbsp; | &nbsp; 分类于
             
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/查缺补漏/" itemprop="url" rel="index"><span itemprop="name">查缺补漏</span></a></span>
 
               
               
@@ -193,8 +194,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/07/15/试谈JavaScript事件处理机制/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/" itemprop="commentsCount"></span>
+              <a href="/2016/12/20/script 标签的 defer 与 async/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/20/script 标签的 defer 与 async/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -208,22 +209,11 @@
       
 
       
-        <span itemprop="articleBody"><hr>
-<p>在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法<br><a id="more"></a></p>
-<h2 id="JavaScript的特色">JavaScript的特色</h2><p>Javascript是一门解释型的单线程语言，这是为了避免多线程时可能引起的冲突。浏览器在解释代码时是从上至下逐步进行解释翻译的，但是我们在电脑上CPU不一定是满载的，有可能是闲置的，这就导致了现在多核CPU计算能力的浪费，因此出现了事件处理机制去利用多核CPU的计算能力。</p>
-<hr>
-<h1 id="事件机制">事件机制</h1><h2 id="执行栈">执行栈</h2><p>JavaScript在执行代码的时候，每一个行为（函数）都会进入到一个栈中去等待执行————先进入后执行。<br>执行栈就是主线程，当CPU遇到需要花费时间长的任务（如setTimeout）时，会跳过，直接执行下一个任务。</p>
-<h2 id="回调队列Callback_queue">回调队列Callback queue</h2><p>上面所说CPU遇到花费时间长需要等待的任务也就是所谓的异步任务时，比如DOM/Ajax/setTimeout，此时会将任务放在一个队列中，此队列就叫做回调队列，也是异步处理机制的一部分。当主线程中的任务处理完后，就会调出队列中的任务去完成，先进入队列的就会先被处理。此外，任务队列还会存放一些具有定时器的回调函数。</p>
-<h2 id="运行机制">运行机制</h2><ol>
-<li>执行栈（主线程）执行所有的任务，回调队列不执行任务</li>
-<li>当主线程上的任务全部完成后，会一个一个调出任务队列中的任务进入到主线程中去执行</li>
-<li>就是不断重复以上两个步骤</li>
-</ol>
-<p>![事件机制]（<a href="http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）" target="_blank" rel="external">http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）</a></p>
-<h3 id="回调函数">回调函数</h3><p>所谓回调函数，就是会被主线程挂起来的代码。</p>
-<h2 id="定时器">定时器</h2><p>定时器主要是由setTimeout超时调用和setInterval间歇调用所组成，setTimeout接受两个参数，一个是回调函数，一个是执行的时间。<br>两者的区别是setTimeout是一次调用，而setInterval是不断调用。</p>
-<hr>
-<p>作者     张翔<br>2015 年 07月 15日    </p>
+        <span itemprop="articleBody"><h2 id="两者共同点">两者共同点</h2><p>defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联<br>脚本起作用.<br>添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?<br><a id="more"></a></p>
+<h2 id="defer_延迟脚本">defer 延迟脚本</h2><p>defer 会在 DOMContentLoad 事件之前执行,虽然规范中表明 defer 的脚本会按顺序,但是实际中同时加了此属性的 script 脚本并不能保证其执行顺序,所以最好只有一个延迟脚本.</p>
+<h3 id="那是不是意味着加了_defer_的脚本可以放在_head_标签那里_?">那是不是意味着加了 defer 的脚本可以放在 head 标签那里 ?</h3><p>从规范上说, 外联脚本加上了 defer 属性之后,会立刻下载,但不会阻塞浏览器加载其他组件,在浏览器的渲染工作完成之后<br>且在 DomContentLoad 事件之前发生. 也就是说放在 head 中加上 defer 属性的 script 脚本与放在文档底部效果相同.<br>但是有些浏览器并不支持 defer 属性,因此对于 defer 脚本放在 body 的闭合标签之前仍是最佳选择.实际上, defer 的脚本不一定会按顺序执行.</p>
+<h2 id="async_异步脚本">async 异步脚本</h2><p>加上 async 属性的 script 标签会立刻下载脚本,但是不影响浏览器继续渲染页面,但是当脚本下载完成之后,脚本会立刻执<br>行,这样有可能导致了浏览器的渲染工作停滞,之所以说停滞是因为渲染工作有可能在下载脚本完成之前就已经结束了.<br>因为 async 的执行时刻不确定性,因此尽量不要将异步脚本放在 head 头部,这样会影响页面加载从而影响用户体验. 换而<br>言之,它的脚本执行时刻一定会在 load 事件之前,但是可能在 DOMContentLoaded 事件之前或之后,<strong>它是为了尽可能快地执行脚本却不想阻碍浏览器的其他工作</strong>例如渲染页面.</p>
+<h2 id="区别">区别</h2><p>下面这张图片很能够说明这两者的关系.<br><img src="http://ofsur12wi.bkt.clouddn.com/1644593160.jpg" alt=""></p>
 </span>
       
     </div>
@@ -235,11 +225,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/27/JavaScript学习笔记/" rel="prev">JavaScript核心知识学习笔记</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/25/HTTP 必知必会/" rel="next">HTTP 必知必会</a>
             
           </div>
         </div>
@@ -254,10 +244,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-     data-title="试谈JavaScript事件处理机制"
+        <div class="ds-share flat" data-thread-key="2016/12/20/script 标签的 defer 与 async/"
+     data-title="script 标签的 defer 与 async"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+     data-url="http://zhangxiang958.github.io/2016/12/20/script 标签的 defer 与 async/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -284,8 +274,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-                       data-title="试谈JavaScript事件处理机制" data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+                  <div class="ds-thread" data-thread-key="2016/12/20/script 标签的 defer 与 async/"
+                       data-title="script 标签的 defer 与 async" data-url="http://zhangxiang958.github.io/2016/12/20/script 标签的 defer 与 async/">
                   </div>
                 
               </div>
@@ -385,7 +375,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript的特色"><span class="nav-number">1.</span> <span class="nav-text">JavaScript的特色</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事件机制"><span class="nav-number"></span> <span class="nav-text">事件机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">1.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回调队列Callback_queue"><span class="nav-number">2.</span> <span class="nav-text">回调队列Callback queue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行机制"><span class="nav-number">3.</span> <span class="nav-text">运行机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回调函数"><span class="nav-number">3.1.</span> <span class="nav-text">回调函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时器"><span class="nav-number">4.</span> <span class="nav-text">定时器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#两者共同点"><span class="nav-number">1.</span> <span class="nav-text">两者共同点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#defer_延迟脚本"><span class="nav-number">2.</span> <span class="nav-text">defer 延迟脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#那是不是意味着加了_defer_的脚本可以放在_head_标签那里_?"><span class="nav-number">2.1.</span> <span class="nav-text">那是不是意味着加了 defer 的脚本可以放在 head 标签那里 ?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async_异步脚本"><span class="nav-number">3.</span> <span class="nav-text">async 异步脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区别"><span class="nav-number">4.</span> <span class="nav-text">区别</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
