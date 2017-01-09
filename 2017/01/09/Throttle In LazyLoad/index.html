@@ -37,17 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
+<meta name="description" content="在做许愿墙项目的时候,发现懒加载绑定在 scroll 事件上, lazyload 函数会执行非常多次,极大地影响了页面性能,因此采用节流函数来限制 loayload 函数的执行次数.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="script 标签的 defer 与 async">
-<meta property="og:url" content="http://zhangxiang958.github.io/2016/12/20/script 标签的 defer 与 async/index.html">
+<meta property="og:title" content="Throttle In LazyLoad">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/01/09/Throttle In LazyLoad/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
-<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/1644593160.jpg">
-<meta property="og:updated_time" content="2016-12-20T12:15:46.087Z">
+<meta property="og:description" content="在做许愿墙项目的时候,发现懒加载绑定在 scroll 事件上, lazyload 函数会执行非常多次,极大地影响了页面性能,因此采用节流函数来限制 loayload 函数的执行次数.">
+<meta property="og:updated_time" content="2017-01-09T14:01:14.957Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="script 标签的 defer 与 async">
-<meta name="twitter:description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
+<meta name="twitter:title" content="Throttle In LazyLoad">
+<meta name="twitter:description" content="在做许愿墙项目的时候,发现懒加载绑定在 scroll 事件上, lazyload 函数会执行非常多次,极大地影响了页面性能,因此采用节流函数来限制 loayload 函数的执行次数.">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -57,7 +56,7 @@
   };
 </script>
 
-    <title> script 标签的 defer 与 async // JARVIS's blog </title>
+    <title> Throttle In LazyLoad // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -163,7 +162,7 @@
           
           
             
-              script 标签的 defer 与 async
+              Throttle In LazyLoad
             
           
         </h1>
@@ -172,8 +171,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-12-20T20:15:24+08:00" content="2016-12-20">
-            2016-12-20
+          <time itemprop="dateCreated" datetime="2017-01-09T21:59:24+08:00" content="2017-01-09">
+            2017-01-09
           </time>
         </span>
 
@@ -181,7 +180,7 @@
           <span class="post-category" >
             &nbsp; | &nbsp; 分类于
             
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/查缺补漏/" itemprop="url" rel="index"><span itemprop="name">查缺补漏</span></a></span>
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/Web-Develop/" itemprop="url" rel="index"><span itemprop="name">Web Develop</span></a></span>
 
               
               
@@ -194,8 +193,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/12/20/script 标签的 defer 与 async/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/20/script 标签的 defer 与 async/" itemprop="commentsCount"></span>
+              <a href="/2017/01/09/Throttle In LazyLoad/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/09/Throttle In LazyLoad/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -209,11 +208,13 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="两者共同点">两者共同点</h2><p>defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联<br>脚本起作用.<br>添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?<br><a id="more"></a></p>
-<h2 id="defer_延迟脚本">defer 延迟脚本</h2><p>defer 会在 DOMContentLoad 事件之前执行,虽然规范中表明 defer 的脚本会按顺序,但是实际中同时加了此属性的 script 脚本并不能保证其执行顺序,所以最好只有一个延迟脚本.</p>
-<h3 id="那是不是意味着加了_defer_的脚本可以放在_head_标签那里_?">那是不是意味着加了 defer 的脚本可以放在 head 标签那里 ?</h3><p>从规范上说, 外联脚本加上了 defer 属性之后,会立刻下载,但不会阻塞浏览器加载其他组件,在浏览器的渲染工作完成之后<br>且在 DomContentLoad 事件之前发生. 也就是说放在 head 中加上 defer 属性的 script 脚本与放在文档底部效果相同.<br>但是有些浏览器并不支持 defer 属性,因此对于 defer 脚本放在 body 的闭合标签之前仍是最佳选择.实际上, defer 的脚本不一定会按顺序执行.</p>
-<h2 id="async_异步脚本">async 异步脚本</h2><p>加上 async 属性的 script 标签会立刻下载脚本,但是不影响浏览器继续渲染页面,但是当脚本下载完成之后,脚本会立刻执<br>行,这样有可能导致了浏览器的渲染工作停滞,之所以说停滞是因为渲染工作有可能在下载脚本完成之前就已经结束了.<br>因为 async 的执行时刻不确定性,因此尽量不要将异步脚本放在 head 头部,这样会影响页面加载从而影响用户体验. 换而<br>言之,它的脚本执行时刻一定会在 load 事件之前,但是可能在 DOMContentLoaded 事件之前或之后,<strong>它是为了尽可能快地执行脚本却不想阻碍浏览器的其他工作</strong>例如渲染页面.</p>
-<h2 id="区别">区别</h2><p>下面这张图片很能够说明这两者的关系.<br><img src="http://ofsur12wi.bkt.clouddn.com/1644593160.jpg" alt=""></p>
+        <span itemprop="articleBody"><p>在做许愿墙项目的时候,发现懒加载绑定在 scroll 事件上, lazyload 函数会执行非常多次,极大地影响了页面性能,<br>因此采用节流函数来限制 loayload 函数的执行次数.<br><a id="more"></a></p>
+<h2 id="throttle_节流函数">throttle 节流函数</h2><p>有两种方式, 一种是利用定时器延迟执行函数,另一种是利用定时器延迟执行并同时在一定时间间隔执行函数.<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function throttle(context, <span class="keyword">method</span>, args, delay)&#123;</span><br><span class="line">    </span><br><span class="line">    clearTimeout(<span class="keyword">method</span>.tid);  //清除定时器</span><br><span class="line">    //使用函数变量来储存定时器 id </span><br><span class="line">    <span class="keyword">method</span>.tid = setTimeout(function()&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">method</span>.apply(context, args);  //因为采用 apply, 所以 args 应为数组形式</span><br><span class="line">    &#125;, delay);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">function throttle(context, <span class="keyword">method</span>, args, delay, duration) &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> start = new <span class="type">Date</span>();  //函数开始执行时间</span><br><span class="line">    <span class="keyword">var</span> timer = null;  //储存定时器 id</span><br><span class="line">    <span class="keyword">return</span> function()&#123;</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">var</span> now = new <span class="type">Date</span>();  //目前时间</span><br><span class="line">        clearTimeout(timer);  //清除定时器</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(now - start &gt;= duration) &#123;  //如果函数执行时间间隔大于规定时间</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">method</span>.apply(context, args);    //立刻执行</span><br><span class="line">            start = now;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            timer = setTimeout(function()&#123;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">method</span>.apply(context, args);  //因为采用 apply, 所以 args 应为数组形式</span><br><span class="line">            &#125;, delay);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里只需采用第一种节流函数即可.</p>
+<h2 id="说明原理">说明原理</h2><h3 id="第一种方法">第一种方法</h3><p>因为函数是对象,因此将定时器 id 存储在函数对象的属性中,在执行 throttle 函数之前,先清除之前设定的定时器.<br>个人比较喜欢这种方法,因为简单高效,但是有个明显的缺点就是只有在设置的 500 ms 之内没有触发这个函数才能执行,<br>比如绑定在 input 框的 input 事件上只会在结束输入才会执行函数.  </p>
+<h3 id="第二种方法">第二种方法</h3><p>第二种方法采用了闭包的方法(返回一个函数), 使用一个变量存储定时器 id ,只有闭包才能有权访问这个 timer 变量,<br>从而修改或清除定时器.同样的, 在执行函数之前先存储一个时间戳,在一定的时间间隔之后,立刻执行,否则不在时间<br>间隔内设定定时器延迟执行,优化性能.注意在达到时间间隔直接执行函数之后,要修改 start 时间戳为 now.<br>另外,<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ele.onevent = throttle(context, <span class="function"><span class="keyword">method</span>, <span class="title">args</span>, <span class="title">delay</span>, <span class="title">duration</span>);</span> <span class="comment">//直接调用 throttle 函数</span></span><br></pre></td></tr></table></figure></p>
+<p>应该像这样去调用函数,因为 throttle 返回一个函数, throttle 会立即执行,然后每次触发事件只会执行 throttle<br>返回的函数,而不是 throttle 函数.</p>
 </span>
       
     </div>
@@ -225,13 +226,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/08/开启 Gzip 为前端加速/" rel="prev">开启 Gzip 为前端加速</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/25/HTTP 必知必会/" rel="next">HTTP 必知必会</a>
+              <a href="/2017/01/08/开启 Gzip 为前端加速/" rel="next">开启 Gzip 为前端加速</a>
             
           </div>
         </div>
@@ -246,10 +245,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/12/20/script 标签的 defer 与 async/"
-     data-title="script 标签的 defer 与 async"
+        <div class="ds-share flat" data-thread-key="2017/01/09/Throttle In LazyLoad/"
+     data-title="Throttle In LazyLoad"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2016/12/20/script 标签的 defer 与 async/">
+     data-url="http://zhangxiang958.github.io/2017/01/09/Throttle In LazyLoad/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -276,8 +275,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2016/12/20/script 标签的 defer 与 async/"
-                       data-title="script 标签的 defer 与 async" data-url="http://zhangxiang958.github.io/2016/12/20/script 标签的 defer 与 async/">
+                  <div class="ds-thread" data-thread-key="2017/01/09/Throttle In LazyLoad/"
+                       data-title="Throttle In LazyLoad" data-url="http://zhangxiang958.github.io/2017/01/09/Throttle In LazyLoad/">
                   </div>
                 
               </div>
@@ -377,7 +376,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#两者共同点"><span class="nav-number">1.</span> <span class="nav-text">两者共同点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#defer_延迟脚本"><span class="nav-number">2.</span> <span class="nav-text">defer 延迟脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#那是不是意味着加了_defer_的脚本可以放在_head_标签那里_?"><span class="nav-number">2.1.</span> <span class="nav-text">那是不是意味着加了 defer 的脚本可以放在 head 标签那里 ?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async_异步脚本"><span class="nav-number">3.</span> <span class="nav-text">async 异步脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区别"><span class="nav-number">4.</span> <span class="nav-text">区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#throttle_节流函数"><span class="nav-number">1.</span> <span class="nav-text">throttle 节流函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说明原理"><span class="nav-number">2.</span> <span class="nav-text">说明原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一种方法"><span class="nav-number">2.1.</span> <span class="nav-text">第一种方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二种方法"><span class="nav-number">2.2.</span> <span class="nav-text">第二种方法</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
