@@ -37,16 +37,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="description" content="随着微信小程序的出现,相信会有一大批人会开始接触微信开发,而在微信开发的过程中,其调试是非常繁琐的.下面我将我自身在微信开发方面做一些总结,希望可以抛砖引玉.其实早就应该反思自己的微信开发流程了,但是一直有项目,所以就搁置了.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="试谈JavaScript事件处理机制">
-<meta property="og:url" content="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/index.html">
+<meta property="og:title" content="微信调试">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/01/11/微信调试/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
-<meta property="og:updated_time" content="2015-07-16T11:55:06.798Z">
+<meta property="og:description" content="随着微信小程序的出现,相信会有一大批人会开始接触微信开发,而在微信开发的过程中,其调试是非常繁琐的.下面我将我自身在微信开发方面做一些总结,希望可以抛砖引玉.其实早就应该反思自己的微信开发流程了,但是一直有项目,所以就搁置了.">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/whyNgrok.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/jssdkURL.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/ngrok.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/ngrokDo.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/localngrok.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/ngrok4040.png">
+<meta property="og:updated_time" content="2017-01-11T14:21:24.578Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="试谈JavaScript事件处理机制">
-<meta name="twitter:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="twitter:title" content="微信调试">
+<meta name="twitter:description" content="随着微信小程序的出现,相信会有一大批人会开始接触微信开发,而在微信开发的过程中,其调试是非常繁琐的.下面我将我自身在微信开发方面做一些总结,希望可以抛砖引玉.其实早就应该反思自己的微信开发流程了,但是一直有项目,所以就搁置了.">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +62,7 @@
   };
 </script>
 
-    <title> 试谈JavaScript事件处理机制 // JARVIS's blog </title>
+    <title> 微信调试 // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -162,7 +168,7 @@
           
           
             
-              试谈JavaScript事件处理机制
+              微信调试
             
           
         </h1>
@@ -171,8 +177,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-07-15T10:15:24+08:00" content="2015-07-15">
-            2015-07-15
+          <time itemprop="dateCreated" datetime="2017-01-11T22:20:24+08:00" content="2017-01-11">
+            2017-01-11
           </time>
         </span>
 
@@ -180,7 +186,7 @@
           <span class="post-category" >
             &nbsp; | &nbsp; 分类于
             
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/Web-Develop/" itemprop="url" rel="index"><span itemprop="name">Web Develop</span></a></span>
 
               
               
@@ -193,8 +199,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/07/15/试谈JavaScript事件处理机制/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/" itemprop="commentsCount"></span>
+              <a href="/2017/01/11/微信调试/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/11/微信调试/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -208,22 +214,25 @@
       
 
       
-        <span itemprop="articleBody"><hr>
-<p>在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法<br><a id="more"></a></p>
-<h2 id="JavaScript的特色">JavaScript的特色</h2><p>Javascript是一门解释型的单线程语言，这是为了避免多线程时可能引起的冲突。浏览器在解释代码时是从上至下逐步进行解释翻译的，但是我们在电脑上CPU不一定是满载的，有可能是闲置的，这就导致了现在多核CPU计算能力的浪费，因此出现了事件处理机制去利用多核CPU的计算能力。</p>
-<hr>
-<h1 id="事件机制">事件机制</h1><h2 id="执行栈">执行栈</h2><p>JavaScript在执行代码的时候，每一个行为（函数）都会进入到一个栈中去等待执行————先进入后执行。<br>执行栈就是主线程，当CPU遇到需要花费时间长的任务（如setTimeout）时，会跳过，直接执行下一个任务。</p>
-<h2 id="回调队列Callback_queue">回调队列Callback queue</h2><p>上面所说CPU遇到花费时间长需要等待的任务也就是所谓的异步任务时，比如DOM/Ajax/setTimeout，此时会将任务放在一个队列中，此队列就叫做回调队列，也是异步处理机制的一部分。当主线程中的任务处理完后，就会调出队列中的任务去完成，先进入队列的就会先被处理。此外，任务队列还会存放一些具有定时器的回调函数。</p>
-<h2 id="运行机制">运行机制</h2><ol>
-<li>执行栈（主线程）执行所有的任务，回调队列不执行任务</li>
-<li>当主线程上的任务全部完成后，会一个一个调出任务队列中的任务进入到主线程中去执行</li>
-<li>就是不断重复以上两个步骤</li>
-</ol>
-<p>![事件机制]（<a href="http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）" target="_blank" rel="external">http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）</a></p>
-<h3 id="回调函数">回调函数</h3><p>所谓回调函数，就是会被主线程挂起来的代码。</p>
-<h2 id="定时器">定时器</h2><p>定时器主要是由setTimeout超时调用和setInterval间歇调用所组成，setTimeout接受两个参数，一个是回调函数，一个是执行的时间。<br>两者的区别是setTimeout是一次调用，而setInterval是不断调用。</p>
-<hr>
-<p>作者     张翔<br>2015 年 07月 15日    </p>
+        <span itemprop="articleBody"><p>随着微信小程序的出现,相信会有一大批人会开始接触微信开发,而在微信开发的过程中,其调试是非常繁琐的.下面我将我<br>自身在微信开发方面做一些总结,希望可以抛砖引玉.<br>其实早就应该反思自己的微信开发流程了,但是一直有项目,所以就搁置了.<br><a id="more"></a></p>
+<h2 id="微信调试的难处">微信调试的难处</h2><h3 id="微信接口的使用的粗略说明">微信接口的使用的粗略说明</h3><p>其实前端所说的微信开发,目前来说就是微信的 jssdk 的使用与调试.微信的 jssdk 上手其实并不难, API 都比较友好,<br>关键是微信接口的调试,因为微信自身必须顾及自己服务器等的安全性,因此在使用 jssdk 之前,需要通过验证,拿取一个<br>token,经过 SHA1 加密算法得到一个签名,不过这部分微信已经提供有 Node.js 或 Java 等版本的代码供参考,可以直接<br>用,相信并不困难.<br>后台只需要将得到的签名, 与用于生成签名的公众号的 appid, secret, 时间戳在使用微信接口之前通过验证:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> currentUrl = <span class="built_in">window</span>.location.href.split(<span class="string">"#"</span>)[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">	type: <span class="string">"post"</span>,</span><br><span class="line">	url: <span class="string">"url"</span>,</span><br><span class="line">    dataType: <span class="string">"json"</span>,</span><br><span class="line">	data:&#123;</span><br><span class="line">		<span class="string">"url"</span>: currentUrl</span><br><span class="line">	&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span>(<span class="params">msgs</span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(msgs);</span><br><span class="line">		<span class="keyword">var</span> signPackage = <span class="built_in">JSON</span>.parse(msgs);</span><br><span class="line">		wx.config(&#123;</span><br><span class="line">			debug: <span class="literal">false</span>,</span><br><span class="line">			appId: signPackage.appId,</span><br><span class="line">			timestamp: signPackage.timestamp,</span><br><span class="line">			nonceStr: signPackage.nonceStr,</span><br><span class="line">			signature: signPackage.signature,</span><br><span class="line">			jsApiList: [  <span class="comment">//填写需要使用的 API 名</span></span><br><span class="line">			    <span class="string">'chooseImage'</span>,</span><br><span class="line">				<span class="string">'previewImage'</span>,</span><br><span class="line">				<span class="string">'uploadImage'</span></span><br><span class="line">			]</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>即可使用.</p>
+<h3 id="难处">难处</h3><p>虽然 wx.ready 函数有选项可以开启调试模式(将 <em>debug</em> 选项改为 <em>true</em>), 可以 alert 出部分报错信息,但是在手机<br>上却不能看到我们自己的报错信息,有时候我们需要知道微信返回的是一个字符串还是一个数组还是一个对象,如果不能通<br>过本地调试,而是需要通过线上调试的话将会造成很大的困扰与不便, 我先前的做法是使用 git 部署并线上调试,在这里<br>和大家说明极其不推荐这种方式,这只能在项目很赶的时候用来解决燃眉之急的.<br>由于调试微信接口不接受 localhost 本地服务器,必须自行准备一个带有域名服务器或者使用内网穿透工具.<br>(使用 <a href="https://ngrok.com/" target="_blank" rel="external">https://ngrok.com/</a> 或 国内版 <a href="https://natapp.cn/)；" target="_blank" rel="external">https://natapp.cn/)；</a></p>
+<p><a href="https://www.zhihu.com/question/25456655" target="_blank" rel="external">https://www.zhihu.com/question/25456655</a></p>
+<h2 id="为什么要使用内网穿透工具">为什么要使用内网穿透工具</h2><p>微信公众平台都必须在公众管理平台里面配置才能获得调用 jssdk 的权限(即 wx.ready 函数通过).<br><img src="http://ofsur12wi.bkt.clouddn.com/whyNgrok.png" alt=""><br><img src="http://ofsur12wi.bkt.clouddn.com/jssdkURL.png" alt=""><br>里面的 url 填写的是你使用内网穿透工具获得的 url 之后的接口地址.而 token 是后台需要规定用于生成签名的字符串<br>并且这里的 url 只能接收域名(IP 地址也不行),如果我们不想使用线上调试希望本地调试的话,就只能使用内网穿透工具.</p>
+<h3 id="内网穿透">内网穿透</h3><p>我们上网之前都必须通过 DHCP 协议获取一个 IP 地址,但是这个 IP 地址并没有映射一个域名,即 DNS 服务器没有一个<br>CNAME 映射,如果我们需要将本地 IP 映射成一个域名,然后将这个域名使用到我们的微信配置上,那么就需要使用内网穿<br>透工具,内网穿透就是分配一个域名(这里是二级域名),绑定到本地获得的 IP 地址,并且到 DNS 服务器增加一个 CNAME<br>查询.</p>
+<h2 id="调试准备">调试准备</h2><p>我在这里使用 ubuntu 16.04 进行说明.步骤如下:</p>
+<h3 id="下载工具">下载工具</h3><p>从 <a href="https://ngrok.com/download" target="_blank" rel="external">https://ngrok.com/download</a> 下载适合自己系统的版本.解压后可以看到一个执行文件.<br><img src="http://ofsur12wi.bkt.clouddn.com/ngrok.png" alt=""></p>
+<h3 id="使用注册后的_authtoken_启动_ngrok">使用注册后的 authtoken 启动 ngrok</h3><p><img src="http://ofsur12wi.bkt.clouddn.com/ngrokDo.png" alt=""></p>
+<h3 id="命令行执行">命令行执行</h3><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ngrok <span class="keyword">http</span> port <span class="comment"> //port 是自己需要设定的端口号,执行后会得到下面的界面</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://ofsur12wi.bkt.clouddn.com/localngrok.png" alt=""><br>可以看到, 本地的 127.0.0.1:port 已经可以映射为一个域名地址 <a href="http://3b69fdf1.ngrok.io" target="_blank" rel="external">http://3b69fdf1.ngrok.io</a>, 也可以使用 https 版<br>本的 <a href="https://3b69fdf1.ngrok.io" target="_blank" rel="external">https://3b69fdf1.ngrok.io</a> .</p>
+<h3 id="查看转接的_HTTP_信息">查看转接的 HTTP 信息</h3><p>访问 localhost:4040 就可以看到映射的网址的 HTTP 访问情况了.<br><img src="http://ofsur12wi.bkt.clouddn.com/ngrok4040.png" alt=""></p>
+<h3 id="最后">最后</h3><p>这样就可以本地调试了,如果需要用手机进行调试,那么只需要使用手机访问获得的域名就可以访问到页面了.</p>
+<h2 id="附录">附录</h2><ul>
+<li>在上线自己的产品之前一定要确保自己的域名是有公信部备案的,不然在绑定网页域名的时候就会出错,无法绑定.</li>
+<li>ngrok 每次执行分配的域名是随机生成的,所以如果想固定使用一个域名,那么先执行ngrok -authtoken autoken port, authtoken 是注册时得到的 token, port 是想要绑定的端口号.然后执行 ngrok -subdomain testHost port 这样就可以通过 <a href="http://testHost.ngrok.io" target="_blank" rel="external">http://testHost.ngrok.io</a> 就可以一直访问到本机的 127.0.0.1:port 了.</li>
+<li><a href="https://ngrok.com/docs" target="_blank" rel="external">ngrok 文档</a></li>
+</ul>
 </span>
       
     </div>
@@ -235,11 +244,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/27/JavaScript学习笔记/" rel="prev">JavaScript核心知识学习笔记</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/09/Throttle In LazyLoad/" rel="next">Throttle In LazyLoad</a>
             
           </div>
         </div>
@@ -254,10 +263,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-     data-title="试谈JavaScript事件处理机制"
+        <div class="ds-share flat" data-thread-key="2017/01/11/微信调试/"
+     data-title="微信调试"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+     data-url="http://zhangxiang958.github.io/2017/01/11/微信调试/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -284,8 +293,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-                       data-title="试谈JavaScript事件处理机制" data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+                  <div class="ds-thread" data-thread-key="2017/01/11/微信调试/"
+                       data-title="微信调试" data-url="http://zhangxiang958.github.io/2017/01/11/微信调试/">
                   </div>
                 
               </div>
@@ -385,7 +394,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript的特色"><span class="nav-number">1.</span> <span class="nav-text">JavaScript的特色</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事件机制"><span class="nav-number"></span> <span class="nav-text">事件机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">1.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回调队列Callback_queue"><span class="nav-number">2.</span> <span class="nav-text">回调队列Callback queue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行机制"><span class="nav-number">3.</span> <span class="nav-text">运行机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回调函数"><span class="nav-number">3.1.</span> <span class="nav-text">回调函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时器"><span class="nav-number">4.</span> <span class="nav-text">定时器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微信调试的难处"><span class="nav-number">1.</span> <span class="nav-text">微信调试的难处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#微信接口的使用的粗略说明"><span class="nav-number">1.1.</span> <span class="nav-text">微信接口的使用的粗略说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#难处"><span class="nav-number">1.2.</span> <span class="nav-text">难处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要使用内网穿透工具"><span class="nav-number">2.</span> <span class="nav-text">为什么要使用内网穿透工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内网穿透"><span class="nav-number">2.1.</span> <span class="nav-text">内网穿透</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调试准备"><span class="nav-number">3.</span> <span class="nav-text">调试准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载工具"><span class="nav-number">3.1.</span> <span class="nav-text">下载工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用注册后的_authtoken_启动_ngrok"><span class="nav-number">3.2.</span> <span class="nav-text">使用注册后的 authtoken 启动 ngrok</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行执行"><span class="nav-number">3.3.</span> <span class="nav-text">命令行执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看转接的_HTTP_信息"><span class="nav-number">3.4.</span> <span class="nav-text">查看转接的 HTTP 信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后"><span class="nav-number">3.5.</span> <span class="nav-text">最后</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">4.</span> <span class="nav-text">附录</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
