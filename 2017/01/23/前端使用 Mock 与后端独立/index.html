@@ -37,16 +37,21 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="description" content="在项目开发期间,不应该出现开发人员有空白的时间,应该将项目中的调试与性能尽可能地去完善,但是有时候会遇到后台还没有开发出 API 的时候,不应该干等后台人员开发出 API, 作为一名前端,应当利用 mock, 使用模拟假数据来尽早地进入调试阶段与优化阶段.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="试谈JavaScript事件处理机制">
-<meta property="og:url" content="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/index.html">
+<meta property="og:title" content="前端使用 Mock 与后端独立">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/01/23/前端使用 Mock 与后端独立/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
-<meta property="og:updated_time" content="2015-07-16T11:55:06.798Z">
+<meta property="og:description" content="在项目开发期间,不应该出现开发人员有空白的时间,应该将项目中的调试与性能尽可能地去完善,但是有时候会遇到后台还没有开发出 API 的时候,不应该干等后台人员开发出 API, 作为一名前端,应当利用 mock, 使用模拟假数据来尽早地进入调试阶段与优化阶段.">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/mockjsnpm.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/vuePro.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/mockVue.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/useMock.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/vueConsole.png">
+<meta property="og:updated_time" content="2017-01-23T11:55:27.901Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="试谈JavaScript事件处理机制">
-<meta name="twitter:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="twitter:title" content="前端使用 Mock 与后端独立">
+<meta name="twitter:description" content="在项目开发期间,不应该出现开发人员有空白的时间,应该将项目中的调试与性能尽可能地去完善,但是有时候会遇到后台还没有开发出 API 的时候,不应该干等后台人员开发出 API, 作为一名前端,应当利用 mock, 使用模拟假数据来尽早地进入调试阶段与优化阶段.">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +61,7 @@
   };
 </script>
 
-    <title> 试谈JavaScript事件处理机制 // JARVIS's blog </title>
+    <title> 前端使用 Mock 与后端独立 // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -162,7 +167,7 @@
           
           
             
-              试谈JavaScript事件处理机制
+              前端使用 Mock 与后端独立
             
           
         </h1>
@@ -171,8 +176,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-07-15T10:15:24+08:00" content="2015-07-15">
-            2015-07-15
+          <time itemprop="dateCreated" datetime="2017-01-23T19:55:24+08:00" content="2017-01-23">
+            2017-01-23
           </time>
         </span>
 
@@ -180,7 +185,7 @@
           <span class="post-category" >
             &nbsp; | &nbsp; 分类于
             
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/Web-Develop/" itemprop="url" rel="index"><span itemprop="name">Web Develop</span></a></span>
 
               
               
@@ -193,8 +198,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/07/15/试谈JavaScript事件处理机制/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/" itemprop="commentsCount"></span>
+              <a href="/2017/01/23/前端使用 Mock 与后端独立/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/23/前端使用 Mock 与后端独立/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -208,22 +213,13 @@
       
 
       
-        <span itemprop="articleBody"><hr>
-<p>在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法<br><a id="more"></a></p>
-<h2 id="JavaScript的特色">JavaScript的特色</h2><p>Javascript是一门解释型的单线程语言，这是为了避免多线程时可能引起的冲突。浏览器在解释代码时是从上至下逐步进行解释翻译的，但是我们在电脑上CPU不一定是满载的，有可能是闲置的，这就导致了现在多核CPU计算能力的浪费，因此出现了事件处理机制去利用多核CPU的计算能力。</p>
-<hr>
-<h1 id="事件机制">事件机制</h1><h2 id="执行栈">执行栈</h2><p>JavaScript在执行代码的时候，每一个行为（函数）都会进入到一个栈中去等待执行————先进入后执行。<br>执行栈就是主线程，当CPU遇到需要花费时间长的任务（如setTimeout）时，会跳过，直接执行下一个任务。</p>
-<h2 id="回调队列Callback_queue">回调队列Callback queue</h2><p>上面所说CPU遇到花费时间长需要等待的任务也就是所谓的异步任务时，比如DOM/Ajax/setTimeout，此时会将任务放在一个队列中，此队列就叫做回调队列，也是异步处理机制的一部分。当主线程中的任务处理完后，就会调出队列中的任务去完成，先进入队列的就会先被处理。此外，任务队列还会存放一些具有定时器的回调函数。</p>
-<h2 id="运行机制">运行机制</h2><ol>
-<li>执行栈（主线程）执行所有的任务，回调队列不执行任务</li>
-<li>当主线程上的任务全部完成后，会一个一个调出任务队列中的任务进入到主线程中去执行</li>
-<li>就是不断重复以上两个步骤</li>
-</ol>
-<p>![事件机制]（<a href="http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）" target="_blank" rel="external">http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）</a></p>
-<h3 id="回调函数">回调函数</h3><p>所谓回调函数，就是会被主线程挂起来的代码。</p>
-<h2 id="定时器">定时器</h2><p>定时器主要是由setTimeout超时调用和setInterval间歇调用所组成，setTimeout接受两个参数，一个是回调函数，一个是执行的时间。<br>两者的区别是setTimeout是一次调用，而setInterval是不断调用。</p>
-<hr>
-<p>作者     张翔<br>2015 年 07月 15日    </p>
+        <span itemprop="articleBody"><p>在项目开发期间,不应该出现开发人员有空白的时间,应该将项目中的调试与性能尽可能地去完善,但是有时候会遇到后台<br>还没有开发出 API 的时候,不应该干等后台人员开发出 API, 作为一名前端,应当利用 mock, 使用模拟假数据来尽早地<br>进入调试阶段与优化阶段.<br><a id="more"></a><br>可以尝试使用 <a href="https://github.com/nuysoft/Mock/wiki/Getting-Started" target="_blank" rel="external">mock 工具—mockjs</a>.</p>
+<h3 id="在_Ubuntu_下安装_mockjs">在 Ubuntu 下安装 mockjs</h3><p><img src="http://ofsur12wi.bkt.clouddn.com/mockjsnpm.png" alt=""></p>
+<h3 id="Demo_In_Vue">Demo In Vue</h3><p>提供一个我自己项目中使用 mock 的例子, 项目的结构其实只要根据图示进行 import 或 require 就可以使用了,简单<br>快捷,简直快速提高工作效率.</p>
+<p><strong><em>项目结构</em></strong>:<br><img src="http://ofsur12wi.bkt.clouddn.com/vuePro.png" alt=""></p>
+<p><strong><em>mock.js</em></strong>:<br>在上面的项目结构中的 <strong><em>mock</em></strong> 文件夹中添加一个 <strong><em>mock.js</em></strong><br><img src="http://ofsur12wi.bkt.clouddn.com/mockVue.png" alt=""></p>
+<p><strong><em>使用 mock</em></strong>:<br><img src="http://ofsur12wi.bkt.clouddn.com/useMock.png" alt=""></p>
+<p><strong><em>查看获取数据</em></strong>:<br><img src="http://ofsur12wi.bkt.clouddn.com/vueConsole.png" alt=""></p>
 </span>
       
     </div>
@@ -235,11 +231,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/27/JavaScript学习笔记/" rel="prev">JavaScript核心知识学习笔记</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/22/React In GirlWall/" rel="next">React In GirlWall</a>
             
           </div>
         </div>
@@ -254,10 +250,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-     data-title="试谈JavaScript事件处理机制"
+        <div class="ds-share flat" data-thread-key="2017/01/23/前端使用 Mock 与后端独立/"
+     data-title="前端使用 Mock 与后端独立"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+     data-url="http://zhangxiang958.github.io/2017/01/23/前端使用 Mock 与后端独立/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -284,8 +280,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-                       data-title="试谈JavaScript事件处理机制" data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+                  <div class="ds-thread" data-thread-key="2017/01/23/前端使用 Mock 与后端独立/"
+                       data-title="前端使用 Mock 与后端独立" data-url="http://zhangxiang958.github.io/2017/01/23/前端使用 Mock 与后端独立/">
                   </div>
                 
               </div>
@@ -385,7 +381,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript的特色"><span class="nav-number">1.</span> <span class="nav-text">JavaScript的特色</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事件机制"><span class="nav-number"></span> <span class="nav-text">事件机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">1.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回调队列Callback_queue"><span class="nav-number">2.</span> <span class="nav-text">回调队列Callback queue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行机制"><span class="nav-number">3.</span> <span class="nav-text">运行机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回调函数"><span class="nav-number">3.1.</span> <span class="nav-text">回调函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时器"><span class="nav-number">4.</span> <span class="nav-text">定时器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#在_Ubuntu_下安装_mockjs"><span class="nav-number">1.</span> <span class="nav-text">在 Ubuntu 下安装 mockjs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Demo_In_Vue"><span class="nav-number">2.</span> <span class="nav-text">Demo In Vue</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
