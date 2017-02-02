@@ -1,0 +1,691 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="广东工业大学14级网络工程张翔" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="WebScoket 是 HTML5 新增的全双工通信协议, 解决 HTTP 的 “拉” 协议问题,增加了服务端的 “推” , 实现实时数据传输websocket 是浏览器支持全双工通信的协议, 协议 url 格式为 ws: url, 加密后为 wss: url.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebSocket In GirlWall">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/02/02/WebSocket In GirlWall/index.html">
+<meta property="og:site_name" content="JARVIS's blog">
+<meta property="og:description" content="WebScoket 是 HTML5 新增的全双工通信协议, 解决 HTTP 的 “拉” 协议问题,增加了服务端的 “推” , 实现实时数据传输websocket 是浏览器支持全双工通信的协议, 协议 url 格式为 ws: url, 加密后为 wss: url.">
+<meta property="og:updated_time" content="2017-02-02T14:45:30.162Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebSocket In GirlWall">
+<meta name="twitter:description" content="WebScoket 是 HTML5 新增的全双工通信协议, 解决 HTTP 的 “拉” 协议问题,增加了服务端的 “推” , 实现实时数据传输websocket 是浏览器支持全双工通信的协议, 协议 url 格式为 ws: url, 加密后为 wss: url.">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+    <title> WebSocket In GirlWall // JARVIS's blog </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">JARVIS's blog</span>
+  </a>
+
+
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+    <span class="logo-line-after"><i></i></span>
+
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              WebSocket In GirlWall
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-02T22:45:24+08:00" content="2017-02-02">
+            2017-02-02
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/Web-Develop/" itemprop="url" rel="index"><span itemprop="name">Web Develop</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/02/02/WebSocket In GirlWall/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/02/WebSocket In GirlWall/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>WebScoket 是 HTML5 新增的全双工通信协议, 解决 HTTP 的 “拉” 协议问题,增加了服务端的 “推” , 实现实时数据传输<br>websocket 是浏览器支持全双工通信的协议, 协议 url 格式为 ws: url, 加密后为 wss: url.<br><a id="more"></a></p>
+<h2 id="为什么使用_WebSocket">为什么使用 WebSocket</h2><p>WebSocket 在实现双向传输数据时, 会比 Comet 有优势吗? WebSocket 比 HTTP 长轮循或长连接到底好在哪里?<br> WebSocket 不是需要很多长连接吗?<br>在 Javascript 中有提及 Comet 这类技术用于实时传输数据,但是我认为 WebSocket 会性能比较好.<br>实现实时信息的方式有:</p>
+<ol>
+<li><p>轮询 = XHR + 定时器, 浪费带宽,增加服务器负荷,很多重复的”废”数据, 但实现简单,适用于小型应用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createXHR</span>(<span class="params">method, url</span>)</span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(<span class="keyword">typeof</span> XMLHttpRequest != <span class="string">'undefinded'</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> ActiveXObject != <span class="string">'undefinded'</span>) &#123;</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">var</span> versions = [<span class="string">'MSXML2.XMLHttp'</span>, <span class="string">'MSXML2.XMLHttp.2.0'</span>, <span class="string">'MSXML2.XMLHttp.3.0'</span>, <span class="string">'MSXML2.XMLHttp.4.0'</span>, <span class="string">'MSXML2.XMLHttp.5.0'</span>, <span class="string">'MSXML2.XMLHttp.6.0'</span>];</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; versions.length; i++ ) &#123;</span><br><span class="line">               </span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   <span class="keyword">new</span> ActiveXObject(versions[i]);</span><br><span class="line">                   <span class="built_in">arguments</span>.callee.activeXString = versions[i];</span><br><span class="line">               &#125; <span class="keyword">catch</span>(ex) &#123;</span><br><span class="line">                   <span class="comment">//跳过</span></span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">new</span> ActiveXObject(argument.callee.activeXString);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           alert(<span class="string">'Your bower is not support XHR'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sendData</span>(<span class="params">method, url, data</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">var</span> xhr = createXHR();</span><br><span class="line">       </span><br><span class="line">       xhr.onreadyStatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">           <span class="keyword">if</span>(xhr.readyState == <span class="number">4</span>) &#123;</span><br><span class="line">               <span class="keyword">if</span>(xhr.status == <span class="number">200</span>) &#123;</span><br><span class="line">                   <span class="keyword">var</span> data = xhr.responseText;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       xhr.open(method, url, <span class="literal">true</span>);</span><br><span class="line">       xhr.send(data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       sendData(<span class="string">'GET'</span>, <span class="string">'http://locahost:8081'</span>, <span class="literal">null</span>);</span><br><span class="line">&#125;, <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Comet 中的长连接 = 保持住 HTTP 的连接, 利用 XHR 的 timeout 与收到数据/连接结束后马上建立新连接. 而服务<br>端需要不断去确认数据是否发生变化.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createXHR</span>(<span class="params">method, url</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(<span class="keyword">typeof</span> XMLHttpRequest != <span class="string">'undefinded'</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">       &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> ActiveXObject != <span class="string">'undefinded'</span>) &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> versions = [<span class="string">'MSXML2.XMLHttp'</span>, <span class="string">'MSXML2.XMLHttp.2.0'</span>, <span class="string">'MSXML2.XMLHttp.3.0'</span>, <span class="string">'MSXML2.XMLHttp.4.0'</span>, <span class="string">'MSXML2.XMLHttp.5.0'</span>, <span class="string">'MSXML2.XMLHttp.6.0'</span>];</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; versions.length; i++ ) &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">new</span> ActiveXObject(versions[i]);</span><br><span class="line">                    <span class="built_in">arguments</span>.callee.activeXString = versions[i];</span><br><span class="line">                &#125; <span class="keyword">catch</span>(ex) &#123;</span><br><span class="line">                    <span class="comment">//跳过</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ActiveXObject(argument.callee.activeXString);</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            alert(<span class="string">'Your bower is not support XHR'</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">longPolling</span>(<span class="params">method, url, data</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> xhr = createXHR();</span><br><span class="line">        </span><br><span class="line">        xhr.onreadyStatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(xhr.readyState == <span class="number">4</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span>(xhr.status == <span class="number">200</span>) &#123;</span><br><span class="line">                    <span class="keyword">var</span> data = xhr.responseText;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                </span><br><span class="line">                &#125;</span><br><span class="line">                longPolling(<span class="string">'GET'</span>, <span class="string">'http://localhost:18080'</span>, <span class="literal">null</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        xhr.open(method, url, <span class="literal">true</span>);</span><br><span class="line">        xhr.send(data);</span><br><span class="line"> &#125;</span><br><span class="line"> longPolling(<span class="string">'GET'</span>, <span class="string">'http://localhost:18080'</span>, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>3.HTTP 流:通过流模式,在数据还没有完全接收到的时候,就已经处理数据,主要是通过 XHR 的 onreadyStatechange 的<br>xhr.readyState == 3 就处理数据.通过监测字符串长度得知数据是否已经处理过.而服务端需要<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//设置头部, 数据采用流模式</span></span><br><span class="line">res.setHeader(<span class="symbol">'content</span>-<span class="class"><span class="keyword">type</span>', '<span class="title">multipart/octet-stream</span>');</span></span><br></pre></td></tr></table></figure></p>
+<p>以上几个方法的性能并不好,大部分原因在于有时需要的数据是轻量的,但是 HTTP 头部信息却比数据要大,造成了损耗.<br>而 WebSocket 的性能消耗却比他们小,但是缺点在于兼容性差.(请看 Websocket 性能消耗章节.)</p>
+<h2 id="WebSocket_使用">WebSocket 使用</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">var <span class="keyword">ws</span> = <span class="keyword">new</span> WebSocket(url)；//url 为 <span class="keyword">w</span><span class="variable">s:</span>//www.example.<span class="keyword">com</span>/test</span><br><span class="line"><span class="keyword">ws</span>.send(<span class="built_in">string</span>); //JSON.stringify(obj);</span><br><span class="line"><span class="keyword">ws</span>.<span class="keyword">close</span>();</span><br><span class="line"></span><br><span class="line">//只有 <span class="keyword">close</span> 事件的 event 对象才有相对应的属性, wasClean(是否明确关闭连接), code(状态码), reason(服务端发送过来的信息)</span><br><span class="line"></span><br><span class="line">//<span class="keyword">ws</span> 不支持 DOM <span class="number">2</span> 级的监听器, 只能用 DOM <span class="number">0</span> 级的监听器</span><br><span class="line"><span class="keyword">ws</span>.onmessage = <span class="function"><span class="keyword">function</span><span class="params">(event)</span>&#123;</span></span><br><span class="line"> //接收数据</span><br><span class="line"> var data = event.data;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">ws</span>.onopen = <span class="function"><span class="keyword">function</span><span class="params">()</span>&#123;</span></span><br><span class="line">    console.<span class="built_in">log</span>(<span class="string">'connection opened'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">ws</span>.onerror = <span class="function"><span class="keyword">function</span><span class="params">()</span>&#123;</span></span><br><span class="line">    console.<span class="built_in">log</span>(<span class="string">'connection error'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">ws</span>.onclose = <span class="function"><span class="keyword">function</span><span class="params">(event)</span>&#123;</span></span><br><span class="line">    console.<span class="built_in">log</span>(<span class="string">'connnection closed by'</span> + event.reason);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 Socket.io 有一些小技巧:<br>在界面显示信息需要两个 emit, 这样可以知道所有显示的信息都是从服务器过来的,这样的好处可以确保发送成功,<br>并且保持接口的一致性.<br>监听 socket.on(‘to’ + userId, function(){})  这样无论收到还是发送信息都可以进入这个方法.<br>用户离开的时候应该 delete 对象:<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var users = &#123;&#125;, usocket = &#123;&#125;<span class="comment">;</span></span><br><span class="line">//新增连接对象</span><br><span class="line">users[userId] = userId<span class="comment">;</span></span><br><span class="line">usocket[userId] = socket<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="WebSocket_原理">WebSocket 原理</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//与常规的 HTTP 头部相比</span></span><br><span class="line"><span class="string">Upgrade:</span> websocket</span><br><span class="line"><span class="string">Connection:</span> Upgrade</span><br></pre></td></tr></table></figure>
+<p>websocket 利用 HTTP 进行握手,建立连接,然后就可以进行通信了. 使用 <a href="http://blog.fens.me/nodejs-socketio-chat/" target="_blank" rel="external">socket.io</a> 来跨浏览器兼容. WebSocket 通过一个长连接来达到客户端与服务端双向推送数据.</p>
+<h2 id="项目实践">项目实践</h2><p>许愿墙有很多功能都需要服务器主动发送信息到客户端,但是问题在于服务器能不能承受,与有没有必要建立 websocket.<br>对于服务器能不能承受的问题不用担心, WebSocket 的性能很好, 只需 1G 内存, 1 核 CPU 处理能力就能同时连接<br>50,000 个用户.</p>
+<h3 id="在_BAE_上的难点">在 BAE 上的难点</h3><p>在做项目的时候是部署在 BAE 上的,由于使用了多个执行单元,这样的话,用户的 socket 对象就会分别存储在不同的<br>执行单元中,如何在多个机器中如何找到用户? 答案是使用 redis 发布信息机制,这里不再详细阐释,请看 BAE 博客.<br>传送门:<a href="http://godbae.duapp.com/?p=1096" target="_blank" rel="external">http://godbae.duapp.com/?p=1096</a>.<br><a href="https://cnodejs.org/topic/557a999216839d2d539361a3" target="_blank" rel="external">WebSocket 聊天室</a>到底是怎么知道自己和谁在说话,是私聊而不是广播(如何实现点对点聊天)?<br>我们知道,目前真正的点对点通信是不存在的, 还没有技术可以做到不通过服务器直接通信的,这样我们就知道 WebSocket<br>是如何实现私聊的了.老样子,我们还是通过寻找用户的 ID 或者用户名来确定用户的 socket 对象,将信息传给该用户的<br>socket 对象就行了.</p>
+<h3 id="其他">其他</h3><p>对于实现上当然也可以使用 SSE—Server-sent Event, <a href="http://www.cnblogs.com/goody9807/p/4257192.html" target="_blank" rel="external">SSE</a> 通过创建 EventSource 对象,实现服务器 “推”:<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//客户端使用</span></span><br><span class="line"><span class="keyword">var</span> sse = <span class="keyword">new</span> EventSource(<span class="string">'http://www.example.com/test'</span>);</span><br><span class="line"></span><br><span class="line">sse.onmessage = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sse,onopen = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sse.onerror = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但 SSE 还是建立在 HTTP 协议上的,如果需要频繁地取小量的实时性数据, WebSocket 更胜一筹.</p>
+<h2 id="反向代理影响_websocket_吗_?">反向代理影响 websocket 吗 ?</h2><p>结果是影响的, WebScoket 是需要 HTTP 建立链接的.主要是通过<br><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Upgrade</span>: <span class="string">WebScoket</span></span><br><span class="line"><span class="attribute">Connnection</span>: <span class="string">Upgrade</span></span><br></pre></td></tr></table></figure></p>
+<p>这两个头部信息,但是问题在于这两个头部信息是逐跳头部信息,也就是说在第一条有效,后面的跳均不带这个头部信息,<br>而客户端是不会察觉代理的存在的,所以将 HTTP Upgrade 请求发给代理之后,代理发送给后端服务器并没有带这个头部<br>信息,即 WebSocket 没有真正建立起来.所以我们需要在 Nginx 反向代理配置中添加自动添加头部的设置.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    proxy_pass http://wsbackend;</span><br><span class="line">    proxy_http_version <span class="number">1.1</span>;</span><br><span class="line">    proxy_<span class="built_in">set</span>_headerUpgrade: <span class="variable">$http_upgrade</span>;</span><br><span class="line">    proxy_<span class="built_in">set</span>_header Connection <span class="string">"upgrade"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><em>Nginx</em> 官网给出的 <em>Nginx</em> 使用 <em>webSocket</em> 的例子: <em><a href="https://www.nginx.com/blog/websocket-nginx/" target="_blank" rel="external">Nginx 上的 WebSocket 链接设置</a></em></p>
+<h2 id="WebSocket_的性能消耗">WebSocket 的性能消耗</h2><p>原本担心 WebSocket 在建立很多客户端长连接之后会开销很大,但是出乎我意料的是,根据 Nginx 服务器做的性能监测,<br>在建立了 5000 个客户端连接, Nginx 服务器需要的开销包括不到 1G 的内存, 1 核的 CPU 处理能力. </p>
+<p>资料:</p>
+<ul>
+<li><a href="https://www.nginx.com/blog/nginx-websockets-performance/" target="_blank" rel="external">在 Nginx 上的 NodeJS WebSocket 测试报告</a></li>
+<li><a href="http://crossbario.com/blog/Dissecting-Websocket-Overhead/" target="_blank" rel="external">WebSocket 开销</a></li>
+</ul>
+<p>链接:</p>
+<ul>
+<li><a href="http://www.tuicool.com/articles/ABnyqqF" target="_blank" rel="external">一篇关于 WebSocket 反向代理的博文</a></li>
+<li><a href="http://www.tuicool.com/articles/uINBfiZ" target="_blank" rel="external">Web 即时通讯盘点</a></li>
+<li><a href="http://www.52im.net/thread-296-1-1.html" target="_blank" rel="external">即时通讯网</a></li>
+<li><a href="http://www.52im.net/forum.php?mod=viewthread&amp;tid=338" target="_blank" rel="external">即时通讯总结</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/31/Ajax/" rel="next">Ajax</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/02/02/WebSocket In GirlWall/"
+     data-title="WebSocket In GirlWall"
+     data-content=""
+     data-url="http://zhangxiang958.github.io/2017/02/02/WebSocket In GirlWall/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2017/02/02/WebSocket In GirlWall/"
+                       data-title="WebSocket In GirlWall" data-url="http://zhangxiang958.github.io/2017/02/02/WebSocket In GirlWall/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://7xns9g.com1.z0.glb.clouddn.com/015630179.jpg" alt="JARVIS" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">JARVIS</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">广东工业大学14级网络工程张翔</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiang958" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhang-xiang-78-5" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="zxiang702" target="_blank">WeChat</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="958033967" target="_blank">QQ</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用_WebSocket"><span class="nav-number">1.</span> <span class="nav-text">为什么使用 WebSocket</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebSocket_使用"><span class="nav-number">2.</span> <span class="nav-text">WebSocket 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebSocket_原理"><span class="nav-number">3.</span> <span class="nav-text">WebSocket 原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目实践"><span class="nav-number">4.</span> <span class="nav-text">项目实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在_BAE_上的难点"><span class="nav-number">4.1.</span> <span class="nav-text">在 BAE 上的难点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">4.2.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反向代理影响_websocket_吗_?"><span class="nav-number">5.</span> <span class="nav-text">反向代理影响 websocket 吗 ?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebSocket_的性能消耗"><span class="nav-number">6.</span> <span class="nav-text">WebSocket 的性能消耗</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JARVIS</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>
