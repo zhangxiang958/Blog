@@ -1,0 +1,690 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="广东工业大学14级网络工程张翔" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="我希望能对一些工具库能够有多一些深入了解, Zepto 在做移动项目运用很多,希望借此能够对 Javascript 可以有更多的深入与了解.加上在目前的技术趋势,原生 Javascript 越来越强大, 各浏览器之间的兼容问题也相比以前较少, 在单页面框架内使用原生 Javascript 代替 JQuery 这样的工具库的声音越来越大.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zepto 源码简单剖析">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/02/16/Zepto 源码简单剖析/index.html">
+<meta property="og:site_name" content="JARVIS's blog">
+<meta property="og:description" content="我希望能对一些工具库能够有多一些深入了解, Zepto 在做移动项目运用很多,希望借此能够对 Javascript 可以有更多的深入与了解.加上在目前的技术趋势,原生 Javascript 越来越强大, 各浏览器之间的兼容问题也相比以前较少, 在单页面框架内使用原生 Javascript 代替 JQuery 这样的工具库的声音越来越大.">
+<meta property="og:updated_time" content="2017-02-16T14:08:23.999Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zepto 源码简单剖析">
+<meta name="twitter:description" content="我希望能对一些工具库能够有多一些深入了解, Zepto 在做移动项目运用很多,希望借此能够对 Javascript 可以有更多的深入与了解.加上在目前的技术趋势,原生 Javascript 越来越强大, 各浏览器之间的兼容问题也相比以前较少, 在单页面框架内使用原生 Javascript 代替 JQuery 这样的工具库的声音越来越大.">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+    <title> Zepto 源码简单剖析 // JARVIS's blog </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">JARVIS's blog</span>
+  </a>
+
+
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+    <span class="logo-line-after"><i></i></span>
+
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Zepto 源码简单剖析
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-16T22:06:24+08:00" content="2017-02-16">
+            2017-02-16
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/02/16/Zepto 源码简单剖析/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/16/Zepto 源码简单剖析/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>我希望能对一些工具库能够有多一些深入了解, Zepto 在做移动项目运用很多,希望借此能够对 Javascript 可以有更多<br>的深入与了解.<br>加上在目前的技术趋势,原生 Javascript 越来越强大, 各浏览器之间的兼容问题也相比以前较少, 在单页面框架内使用原生 Javascript 代替 JQuery 这样的工具库的声音越来越大.<br><a id="more"></a></p>
+<h2 id="一些常用的工具函数">一些常用的工具函数</h2><h3 id="选择元素_zepto-qsa">选择元素 <em>zepto.qsa</em></h3><p><em>zepto.qsa</em> 选择元素这个 <em>API</em> 在 <em>zepto.init</em> (即 <em>$</em> 函数)中扮演着非常重要的角色,<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">// `$.zepto.qsa` is Zepto's CSS selector implementation which</span></span><br><span class="line">  <span class="comment">// uses `document.querySelectorAll` and optimizes for some special cases, like `#id`.</span></span><br><span class="line">  <span class="comment">// This method can be overridden in plugins.</span></span><br><span class="line">  <span class="comment">//这个函数是用来选择 CSS 选择器的 querySelectorAll</span></span><br><span class="line">zepto.qsa = <span class="function"><span class="keyword">function</span>(<span class="params">element, selector</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> found,</span><br><span class="line">      maybeID = selector[<span class="number">0</span>] == <span class="string">'#'</span>, <span class="comment">//如果有 '#' 符号就是 id 选择器</span></span><br><span class="line">      maybeClass = !maybeID &amp;&amp; selector[<span class="number">0</span>] == <span class="string">'.'</span>,  <span class="comment">// 如果没有,有 '.' 则是类选择器</span></span><br><span class="line">      <span class="comment">//如果只有标签名(没有 id 也没有类) 下面的表达式意思是如果有 id 或 类,则取符号后的名字,如果没有类和名字,则选择出单标签名</span></span><br><span class="line">      nameOnly = maybeID || maybeClass ? selector.slice(<span class="number">1</span>) : selector, <span class="comment">// Ensure that a 1 char tag name still gets checked</span></span><br><span class="line">      <span class="comment">//看是不是只有一个选择器</span></span><br><span class="line">      isSimple = simpleSelectorRE.test(nameOnly)</span><br><span class="line"></span><br><span class="line">      <span class="comment">//第一个判断 element.getElementById 这个方法是否存在, 是不是一个单选择器, 是不是 id 选择器</span></span><br><span class="line">  <span class="keyword">return</span> (element.getElementById &amp;&amp; isSimple &amp;&amp; maybeID) ? <span class="comment">// Safari DocumentFragment doesn't have getElementById</span></span><br><span class="line">    <span class="comment">//如果是使用 getElementById 找到元素, 如果能找到,则以数组的形式返回,如果没有则返回空数组, 问题在于为什么要用数组的形式? 个人认为是为了统一 Zepto 对象选择元素 API 的统一性(无论数组大小都是数组形式返回).</span></span><br><span class="line">    ( (found = element.getElementById(nameOnly)) ? [found] : [] ) :</span><br><span class="line">    <span class="comment">//如果不存在 getElementById 这个方法, 或者多重选择(后代), 或者不是 id 选择器</span></span><br><span class="line">    <span class="comment">//则判断 如果不是元素节点(!== 1) 或不是 document (根节点 !== 9) 或者不是 文档片段类型documentFragment(!== 11)</span></span><br><span class="line">    <span class="comment">//则返回空数组,因为其他节点找不到元素</span></span><br><span class="line">    (element.nodeType !== <span class="number">1</span> &amp;&amp; element.nodeType !== <span class="number">9</span> &amp;&amp; element.nodeType !== <span class="number">11</span>) ? [] :</span><br><span class="line">    <span class="comment">//如果是元素节点或者 document 或 documentFragment 节点</span></span><br><span class="line">    <span class="comment">// slice: function()&#123;</span></span><br><span class="line">    <span class="comment">//return $(slice.apply(this, arguments))</span></span><br><span class="line">    <span class="comment">//&#125;,</span></span><br><span class="line">    slice.call(</span><br><span class="line">      <span class="comment">//判断是否单选择, 不是 id 选择器, 有 getElementByClassName 方法</span></span><br><span class="line">      isSimple &amp;&amp; !maybeID &amp;&amp; element.getElementsByClassName ? <span class="comment">// DocumentFragment doesn't have getElementsByClassName/TagName</span></span><br><span class="line">        <span class="comment">//第一层判断的前选择, 如果不是单选择 id 选择器</span></span><br><span class="line">        <span class="comment">//第二层判断</span></span><br><span class="line">        <span class="comment">//如果是 class 则使用 getElementByClassName()</span></span><br><span class="line">        maybeClass ? element.getElementsByClassName(nameOnly) : <span class="comment">// If it's simple, it could be a class</span></span><br><span class="line">        <span class="comment">//不是则是标签, getElementByTagName() </span></span><br><span class="line">        element.getElementsByTagName(selector) : <span class="comment">// Or a tag</span></span><br><span class="line">        <span class="comment">//这个是第一层判断的后选择</span></span><br><span class="line">        <span class="comment">//如果不是简单选择,则要将所有的元素选择出来使用 querySelectorAll() 试一下用这个 API</span></span><br><span class="line">        element.querySelectorAll(selector) <span class="comment">// Or it's not simple, and we need to query all</span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这个 <em>API</em> 中, 都使用了三段式判断来判断返回的内容,有个疑问在于与 <em>if…else</em> 语句相比, 三段式判断的好处<br>在于比 <em>if…else</em> 语句要简洁,对于这种工具库源码,使用三段式判断来避免大范围的 <em>if…else</em> 与花括号的相互<br>嵌套的繁琐,实在是有利于源码的阅读.</p>
+<h3 id="生成标签_zepto-fragment">生成标签 <em>zepto.fragment</em></h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// `$.zepto.fragment` takes a html string and an optional tag name</span></span><br><span class="line"><span class="comment">// to generate DOM nodes from the given html string.</span></span><br><span class="line"><span class="comment">// The generated DOM nodes are returned as an array.</span></span><br><span class="line"><span class="comment">// This function can be overridden in plugins for example to make</span></span><br><span class="line"><span class="comment">// it compatible with browsers that don't support the DOM fully.</span></span><br><span class="line"><span class="comment">//fragment 函数接收 html 字符串和一个 tag 名, 在 tag 的后代生成 html 标签,</span></span><br><span class="line"><span class="comment">//返回的结果是以节点数组形式返回</span></span><br><span class="line">zepto.fragment = <span class="function"><span class="keyword">function</span>(<span class="params">html, name, properties</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> dom, nodes, container</span><br><span class="line"></span><br><span class="line">  <span class="comment">// A special case optimization for a single tag</span></span><br><span class="line">  <span class="comment">//RegExp.$[1-99] 是内置正则对象的属性,数字代表正则表达式匹配的第几个字符串</span></span><br><span class="line">  <span class="comment">//这里的正则对象是全局正则对象</span></span><br><span class="line">  <span class="keyword">if</span> (singleTagRE.test(html)) dom = $(<span class="built_in">document</span>.createElement(<span class="built_in">RegExp</span>.$<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!dom) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (html.replace) &#123;</span><br><span class="line">     html = html.replace(tagExpanderRE, <span class="string">"&lt;$1&gt;&lt;/$2&gt;"</span>)</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (name === <span class="literal">undefined</span>) name = fragmentRE.test(html) &amp;&amp; <span class="built_in">RegExp</span>.$<span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> (!(name <span class="keyword">in</span> containers)) name = <span class="string">'*'</span></span><br><span class="line"></span><br><span class="line">    container = containers[name]</span><br><span class="line">    container.innerHTML = <span class="string">''</span> + html</span><br><span class="line">    dom = $.each(slice.call(container.childNodes), <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      container.removeChild(<span class="keyword">this</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (isPlainObject(properties)) &#123;<span class="comment">//是否是原生对象,但是不是 window 对象(document.window)</span></span><br><span class="line"></span><br><span class="line">    nodes = $(dom);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//问题在于为什么对 nodes 进行操作,函数返回的是 dom ? 是不是赋值操作是引用而不是复制 ?</span></span><br><span class="line">    <span class="comment">//答案是</span></span><br><span class="line">    <span class="comment">//字面量变量才是基本类型, 用 new 操作符都是对象类型,基本类型在栈内部,对象类型在堆内部,所以基本类型才会 play itself,</span></span><br><span class="line">    <span class="comment">//但是对象类型是 itself</span></span><br><span class="line">    <span class="comment">//因为这是引用类型,所以进行操作的时候 nodes 变, dom 也进行变值</span></span><br><span class="line">    <span class="comment">//所以返回的是 dom</span></span><br><span class="line">    $.each(properties, <span class="function"><span class="keyword">function</span>(<span class="params">key, value</span>) </span>&#123;</span><br><span class="line">      <span class="comment">// methodAttributes = ['val', 'css', 'html', 'text', 'data', 'width', 'height', 'offset']</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">//如果有上面这些属性的话,就使用 Zepto 对象的方法赋值</span></span><br><span class="line">      <span class="keyword">if</span> (methodAttributes.indexOf(key) &gt; -<span class="number">1</span>) nodes[key](value)</span><br><span class="line">      <span class="comment">//如果不是就用 attr 方法</span></span><br><span class="line">      <span class="keyword">else</span> nodes.attr(key, value)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> dom;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Ready">Ready</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ready</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">document</span>.readySatte === <span class="string">'complete'</span> || (<span class="built_in">document</span>.readyState !== <span class="string">'loading'</span> &amp;&amp; <span class="built_in">document</span>.documentElement.doScroll)) &#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback();</span><br><span class="line">        &#125;, <span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">var</span> handler = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="built_in">document</span>.removeEventListener(<span class="string">'DOMContentLoaded'</span>, handler, <span class="literal">false</span>);</span><br><span class="line">            <span class="built_in">window</span>.removeEventListener(<span class="string">'load'</span>, handler, <span class="literal">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">document</span>.addEventListener(<span class="string">'DOMContentLoaded'</span>, handler, <span class="literal">false</span>);</span><br><span class="line">        <span class="built_in">window</span>.addEventListener(<span class="string">'load'</span>, handler, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Trim">Trim</h3><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function <span class="built_in">trim</span>(<span class="built_in">str</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">str</span> == <span class="keyword">null</span> ? <span class="string">''</span> : <span class="keyword">String</span>.prototype.<span class="built_in">trim</span>.call(<span class="built_in">str</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Type">Type</h3><p>type 函数是用来判断值的类型的,我们知道在 Javascript 中值有 5 个基本类型: undefinded, null, String, number,<br>boolean.而对象 Object 中又有 Array, String, Number 等包装类型,虽然 typeof 可以判断基本值类型,但是对于 Object 类型却很难判断是哪种引用类型.我们知道 toString 函数是可以将值转化为对象的字符串表示.所以:<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function <span class="class"><span class="keyword">type</span>(</span><span class="function"><span class="keyword">val</span>)&#123;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="class"><span class="keyword">type</span> <span class="title">==</span> <span class="title">null</span> <span class="title">?</span> <span class="title">String</span>(</span><span class="function"><span class="keyword">val</span>) :</span> <span class="type">Object</span>.prototype.toString.call(<span class="function"><span class="keyword">val</span>);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="children">children</h3><p>返回直接后代, 在简单实现中发现元素对象中的 <em>childNodes</em> 与 <em>children</em>, 两者很像,但是需要加以区分.<br>childNodes 返回的是 NodeList 集合,是该元素的字节点集合, 而 children 返回的是 HTMLCollection 集合,是该元素<br>的子元素集合.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这里的 children API 的需求是返回元素的子元素</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">children</span>(<span class="params">el</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'children'</span> <span class="keyword">in</span> el ? </span><br><span class="line">            <span class="built_in">Array</span>.prototype.slice.call(el.children) :</span><br><span class="line">            <span class="built_in">Array</span>.prototype.map.call(el.childNodes, <span class="function"><span class="keyword">function</span>(<span class="params">son</span>)</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(son.nodeType == <span class="number">1</span>) <span class="keyword">return</span> son;</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Pluck">Pluck</h3><p>DOM 遍历的基本 API.<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">pluck</span><span class="params">(el, prop)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> el[prop];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Matches">Matches</h3><p>matches 的兼容性写法.<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">matches</span><span class="params">(ele, selector)</span>&#123;</span></span><br><span class="line">    </span><br><span class="line">    var matchSelector = ele.matches || ele.wekitMatchesSelector || ele.mozMatchesSelector || ele.oMatchesSelector || ele.matchesSelector;</span><br><span class="line">    <span class="keyword">if</span><span class="params">(matchesSelector)</span> return matchesSelector.call<span class="params">(ele, selector)</span>;</span><br><span class="line">    var matches, parentNode = ele.parentNode, temp = <span class="built_in">!</span>parentNode;</span><br><span class="line">    <span class="keyword">if</span><span class="params">(temp)</span> parentNode = document.createElement<span class="params">('div')</span>.appendChild<span class="params">(ele)</span>;</span><br><span class="line">    match = ~zepto.qsa<span class="params">(ele, selector)</span>.indexOf<span class="params">(ele)</span>;</span><br><span class="line">    temp &amp;&amp; parentNode.removeChild<span class="params">(ele)</span>;</span><br><span class="line">    return matches;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Contains">Contains</h3><p>用于检查某个 DOM 元素是否是某个元素的后代.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">contains</span><span class="params">(parent, node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(document.documentElement.contains) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">(parent, node)</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">parent</span>.contains(node);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">(parent, node)</span></span>&#123;</span><br><span class="line">            <span class="keyword">while</span>(node &amp;&amp; (node = node.parentNode)) &#123;</span><br><span class="line">                <span class="keyword">if</span>(node === <span class="keyword">parent</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Clone">Clone</h3><p>主要使用的是 DOM 自带的 API— cloneNode, 克隆节点, 如果 cloneNode 传入参数为 true, 那么就进行后代节点的全<br>克隆,如果输入 false, 就是只复制这个节点.<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clone</span><span class="params">(el)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> el.cloneNode(<span class="literal">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Attr">Attr</h3><p>其实在 DOM API 中,但是运用了 DOM 本身的 API— getAttribute, setAttribute, removeAttribute 来实现属性的修改<br>添加与移除.</p>
+<h3 id="CSS">CSS</h3><p>元素中的 style 是 style 元素 CSSStyleDeclaration 类, style 对象有 removeProperty() 方法移除样式属性.<br>在简单实现的时候发现 Zepto 这样拼接字符串使用 csstext 一次性写入貌似高效,但是好像没有考虑去重的问题.<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先确定 CSS 函数的作用</span></span><br><span class="line"></span><br><span class="line"> <span class="number">1.</span> 只输入样式属性名, 则获取该样式属性的值</span><br><span class="line"> <span class="number">2.</span> 输入样式属性名与相对应的值,设置样式属性值</span><br><span class="line"></span><br><span class="line"><span class="comment">//难点也在于 style 集合中的属性名是以驼峰写法的, 但是内联样式的属性却是连接符形式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CSS</span><span class="params">(el, prop, val)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!el || !prop) <span class="keyword">return</span></span><br><span class="line">    <span class="comment">//优先选择内联样式, getComputedStyle 是计算元素的最终样式的</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(!val &amp;&amp; val == <span class="literal">undefined</span>) <span class="keyword">return</span> el.style[prop] || getComputedStyle(el, <span class="literal">null</span>).getPropertyValue(prop);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> css = <span class="string">''</span>;</span><br><span class="line">    css += prop + <span class="string">':'</span> + maybeAddPX(val) + <span class="string">';'</span>;</span><br><span class="line">    el.style.cssText += <span class="string">';'</span> + css;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//为数值添加 'px' 后缀单位</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">maybeAddPX</span><span class="params">(prop, val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">/*</span><br><span class="line">        cssnumber = &#123;</span><br><span class="line">            'column-count': 1,</span><br><span class="line">            'columns': 1,</span><br><span class="line">            'font-weight': 1,</span><br><span class="line">            'line-height': 1,</span><br><span class="line">            'opacity': 1,</span><br><span class="line">            'z-index': 1,</span><br><span class="line">            'zoom': 1</span><br><span class="line">        &#125;</span><br><span class="line">    */</span></span><br><span class="line">    <span class="keyword">return</span> ((<span class="keyword">typeof</span> prop == <span class="string">'number'</span> &amp;&amp; !(cssNumber[prop])) ? val + <span class="string">'px'</span> : val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong><em>使用 getComputedStyle 获取伪类信息</em></strong><br>getComputedStyle(ele, ‘伪类’) 与 getPropertyValue() 与 element.style.name 相比,可以获取 style 标签或者 link 中的 CSS 样式.并且重要的一点在于 getComputedStyle 可以获取伪类信息<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//大部分情况下我们只需要调用 window.getComputedStyle 这个 API 就可以了, 只有在 firefox 中获取子框架(iframe) 才需要用到 document.defaultView</span><br><span class="line">//兼容性代码如下:</span><br><span class="line">//getComputedStyle = document.defaultView &amp;&amp; document.defaultview.getComputedStyle;</span><br><span class="line"><span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css"></span><br><span class="line">    <span class="rule"><span class="attribute">p</span>:<span class="value">after &#123;</span><br><span class="line">        content: <span class="string">'the class'</span></span><br><span class="line">    &#125;</span><br><span class="line">&lt;style&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    var p = document.<span class="function">getElementsByTagName</span>(<span class="string">'p'</span>)[<span class="number">0</span>]</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="tag">console</span><span class="class">.log</span>(<span class="tag">getcomputedStyle</span>(<span class="tag">p</span>, '<span class="pseudo">:after')</span><span class="class">.content</span>);   //'<span class="tag">the</span> <span class="tag">class</span>'</span><br><span class="line">&lt;/<span class="tag">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>备注: <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/getComputedStyle" target="_blank" rel="external">getComputedStyle On MDN</a></p>
+<h3 id="Class">Class</h3><ol>
+<li><p><em>hasClass</em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasClass</span>(<span class="params">el, name</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(name == <span class="literal">undefined</span>) <span class="keyword">return</span> </span><br><span class="line">       <span class="keyword">else</span> <span class="keyword">if</span>(! <span class="string">'className'</span> <span class="keyword">in</span> el) <span class="keyword">return</span></span><br><span class="line">       </span><br><span class="line">       <span class="keyword">return</span> <span class="built_in">Array</span>.prototype.some.call([el], <span class="function"><span class="keyword">function</span>(<span class="params">el</span>)</span>&#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">this</span>.test(el.className);</span><br><span class="line">       &#125;, <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'(^|\\s)'</span> + name + <span class="string">'(\\s|$)'</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">hasClass(<span class="built_in">document</span>.getelementByTagName[<span class="number">0</span>], <span class="string">'test'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><em>addClass</em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addClass</span>(<span class="params">el, name</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(!el || !name) <span class="keyword">return</span> </span><br><span class="line">       <span class="keyword">else</span> <span class="keyword">if</span>(! <span class="string">'className'</span> <span class="keyword">in</span> el) <span class="keyword">return</span></span><br><span class="line">       </span><br><span class="line">       <span class="keyword">var</span> cls = el.className, nameList = name.split(<span class="string">','</span>), newNameList = [];</span><br><span class="line">       <span class="built_in">Array</span>.prototype.every.call(nameList, <span class="function"><span class="keyword">function</span>(<span class="params">newName</span>)</span>&#123;</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">if</span>(!hasClass(el, newName)) newNameList.push(newName);</span><br><span class="line">           <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">       &#125;);</span><br><span class="line">       </span><br><span class="line">       newNameList.length &amp;&amp; (el.className = cls + (cls ? <span class="string">' '</span> : <span class="string">''</span>) + newNameList.join(<span class="string">' '</span>)); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">addClass(<span class="built_in">document</span>.getElementByTagName(<span class="string">'p'</span>)[<span class="number">0</span>], <span class="string">'test,p'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><em>removeClass</em></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeClass</span>(<span class="params">el, name</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(!el || !name) <span class="keyword">return</span></span><br><span class="line">       <span class="keyword">else</span> <span class="keyword">if</span>(! <span class="string">'className'</span> <span class="keyword">in</span> el) <span class="keyword">return</span></span><br><span class="line">   </span><br><span class="line">       <span class="keyword">var</span> cls = el.className, nameList = name.split(<span class="string">','</span>), nowClass = cls.split(<span class="string">' '</span>), newClass = <span class="string">''</span>;</span><br><span class="line">       <span class="built_in">Array</span>.prototype.every.call(nameList, <span class="function"><span class="keyword">function</span>(<span class="params">theName</span>)</span>&#123;</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">if</span>(hasClass(el, theName)) newClass += cls.replace(<span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'(^|\\s)'</span> + theName + <span class="string">'(\\s|$)'</span>), <span class="string">''</span>);</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">       &#125;);</span><br><span class="line">       el.className = newClass.trim();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><em>toggleClass</em></p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">toggleClass</span><span class="params">(el, name)</span>&#123;</span></span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span><span class="params">(hasClass<span class="params">(el, name)</span>)</span> removeClass<span class="params">(el, name)</span>;</span><br><span class="line">       <span class="keyword">else</span> addClass<span class="params">(el, name)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="offset">offset</h3><p>想要理解 offset 一系列的 API, 我觉得关键在于弄清楚浏览器对于页面的距离位置的几个变量的关系.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在简单实现的时候发现一个 API, getBoundingClientRect(), 可以方便地获取元素的位置大小.</span></span><br><span class="line"><span class="variable"><span class="keyword">var</span> p</span> = document.getelementsByTagName('p')[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line"><span class="variable"><span class="keyword">var</span> left</span> = p.getBoundingClientRect().left + window.pageXoffset;</span><br><span class="line"><span class="variable"><span class="keyword">var</span> top</span> = p.getBoundingClientRect().top + window.pageYOffset;</span><br><span class="line"><span class="variable"><span class="keyword">var</span> width</span> = p.getBoundingClientRect().width;</span><br><span class="line"><span class="variable"><span class="keyword">var</span> height</span>: p.getBoundingClientRect().height;</span><br></pre></td></tr></table></figure>
+<h2 id="附录">附录</h2><h3 id="在_eq_API_中发现的小技巧:">在 <em>eq</em> API 中发现的小技巧:</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function e<span class="string">q(index)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">index</span> === -<span class="number">1</span> ? Array.<span class="keyword">prototype</span>.slice.call(this, idx) : Array.<span class="keyword">prototype</span>.slice.call(this, idx, + idx + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>+ idx + 1</em> 这个表达式可以将字符串形式的数字转化为真正的数值之后才进行计算,防止了 <em>NaN</em> 的出现.</p>
+<h3 id="正则表达式的运用">正则表达式的运用</h3><p>以前在做项目的时候,对于正则表达式总是不以为然,只是在验证手机号,邮箱地址等地方运用,但是其实它在驼峰与连接符<br>写法之间的来回切换是非常有用与高效的.</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/02/WebSocket In GirlWall/" rel="next">WebSocket In GirlWall</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/02/16/Zepto 源码简单剖析/"
+     data-title="Zepto 源码简单剖析"
+     data-content=""
+     data-url="http://zhangxiang958.github.io/2017/02/16/Zepto 源码简单剖析/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2017/02/16/Zepto 源码简单剖析/"
+                       data-title="Zepto 源码简单剖析" data-url="http://zhangxiang958.github.io/2017/02/16/Zepto 源码简单剖析/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://7xns9g.com1.z0.glb.clouddn.com/015630179.jpg" alt="JARVIS" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">JARVIS</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">广东工业大学14级网络工程张翔</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiang958" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhang-xiang-78-5" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="zxiang702" target="_blank">WeChat</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="958033967" target="_blank">QQ</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些常用的工具函数"><span class="nav-number">1.</span> <span class="nav-text">一些常用的工具函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#选择元素_zepto-qsa"><span class="nav-number">1.1.</span> <span class="nav-text">选择元素 zepto.qsa</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成标签_zepto-fragment"><span class="nav-number">1.2.</span> <span class="nav-text">生成标签 zepto.fragment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ready"><span class="nav-number">1.3.</span> <span class="nav-text">Ready</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Trim"><span class="nav-number">1.4.</span> <span class="nav-text">Trim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Type"><span class="nav-number">1.5.</span> <span class="nav-text">Type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#children"><span class="nav-number">1.6.</span> <span class="nav-text">children</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pluck"><span class="nav-number">1.7.</span> <span class="nav-text">Pluck</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Matches"><span class="nav-number">1.8.</span> <span class="nav-text">Matches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Contains"><span class="nav-number">1.9.</span> <span class="nav-text">Contains</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clone"><span class="nav-number">1.10.</span> <span class="nav-text">Clone</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Attr"><span class="nav-number">1.11.</span> <span class="nav-text">Attr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS"><span class="nav-number">1.12.</span> <span class="nav-text">CSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Class"><span class="nav-number">1.13.</span> <span class="nav-text">Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#offset"><span class="nav-number">1.14.</span> <span class="nav-text">offset</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">2.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在_eq_API_中发现的小技巧:"><span class="nav-number">2.1.</span> <span class="nav-text">在 eq API 中发现的小技巧:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则表达式的运用"><span class="nav-number">2.2.</span> <span class="nav-text">正则表达式的运用</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JARVIS</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>
