@@ -37,16 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终总结会在女生节结束后发布。">
+<meta name="description" content="问题现象在项目中,遇到的问题是有一个弹出层, 弹出层有一个按钮点击之后表示操作完成并且隐藏遮罩与弹出框,但是点击按钮之后弹出层下面的元素却触发了 click 事件,导致 bug 的出现.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2016 女生节许愿墙脚手架文档">
-<meta property="og:url" content="http://zhangxiang958.github.io/2016/09/18/2016 女生节许愿墙脚手架文档/index.html">
+<meta property="og:title" content="Zepto 点击穿透问题深究与解决">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/03/04/Zepto 点击穿透问题深究与解决/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终总结会在女生节结束后发布。">
-<meta property="og:updated_time" content="2016-09-18T07:31:01.171Z">
+<meta property="og:description" content="问题现象在项目中,遇到的问题是有一个弹出层, 弹出层有一个按钮点击之后表示操作完成并且隐藏遮罩与弹出框,但是点击按钮之后弹出层下面的元素却触发了 click 事件,导致 bug 的出现.">
+<meta property="og:updated_time" content="2017-03-04T15:04:59.597Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2016 女生节许愿墙脚手架文档">
-<meta name="twitter:description" content="本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终总结会在女生节结束后发布。">
+<meta name="twitter:title" content="Zepto 点击穿透问题深究与解决">
+<meta name="twitter:description" content="问题现象在项目中,遇到的问题是有一个弹出层, 弹出层有一个按钮点击之后表示操作完成并且隐藏遮罩与弹出框,但是点击按钮之后弹出层下面的元素却触发了 click 事件,导致 bug 的出现.">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +56,7 @@
   };
 </script>
 
-    <title> 2016 女生节许愿墙脚手架文档 // JARVIS's blog </title>
+    <title> Zepto 点击穿透问题深究与解决 // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -162,7 +162,7 @@
           
           
             
-              2016 女生节许愿墙脚手架文档
+              Zepto 点击穿透问题深究与解决
             
           
         </h1>
@@ -171,8 +171,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-09-18T15:30:24+08:00" content="2016-09-18">
-            2016-09-18
+          <time itemprop="dateCreated" datetime="2017-03-04T23:04:24+08:00" content="2017-03-04">
+            2017-03-04
           </time>
         </span>
 
@@ -193,8 +193,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/09/18/2016 女生节许愿墙脚手架文档/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/18/2016 女生节许愿墙脚手架文档/" itemprop="commentsCount"></span>
+              <a href="/2017/03/04/Zepto 点击穿透问题深究与解决/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/04/Zepto 点击穿透问题深究与解决/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -208,22 +208,21 @@
       
 
       
-        <span itemprop="articleBody"><p>本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终<br>总结会在女生节结束后发布。<br><a id="more"></a></p>
-<h2 id="项目骨架">项目骨架</h2><p>本项目使用 react + react-router + es6<br>构建工具 gulp + webpack + babel<br>前端 UI 库：FrozenUI </p>
-<h3 id="前端自适应方法">前端自适应方法</h3><p>暂时使用了移动端自适应方法 <a href="https://github.com/amfe/lib-flexible/blob/master/README.md" target="_blank" rel="external">flexible</a> 方案，如果时间允许则使用 flex 布局。<br><a href="https://github.com/amfe/article/issues/17" target="_blank" rel="external">flexible 方案</a></p>
-<h2 id="注意事项">注意事项</h2><h3 id="CSS_编写">CSS 编写</h3><p>因为 react 使用组件化开发，但是 CSS 的痛点在于全局性，那么在 react 的组件式开发中需要使用 BEM 模式，或使用 container 类名来独特定义组件，但是在此项目中使用 CSS-Module 。<br>使用 CSS-Module 来配合 React 进行组件化开发，这里有人可能会问 React 不是提供了 CSS in JS 的方法即使用对象<br>来使用内联样式吗？问题在于对象方法无法表示伪类这样的 CSS 代码，使用起来 CSS 代码就没有复用性了，所以采用<br>CSS-Module。为什么不建议用 jsx 的 inine style ，因为这样是写不了伪元素的，建议使用 css-module 方法。<br>详细的关于 CSS-Module 的资料这里不再多说，详细请看 <a href="http://www.tuicool.com/articles/nYjyEzZ" target="_blank" rel="external">CSS-Module</a>.<br>这里我提一个疑问，使用 React 组件化开发 .css 文件写在哪里进行引用管理呢？<br>在 webpack 中使用 css-loader 就可以了，css 原生不支持 CSS-Module，使用 webpack 就可以模块化了。<br>但是又有个疑问就是使用 css-loader 加载出来的 css 文件是动态地插入到 index.html 中的，那么不是消耗了大量的 http 请求吗？<br>这样的话那还不如自己引入 css 文件然后合并压缩，这样反而性能更好，这样想是错的，因为插入的是 style 标签，而不是 link 标签，并不会消耗 http 请求数量。</p>
-<h3 id="首页加载">首页加载</h3><p>需要懒加载组件，因为许愿墙相对较大，并且我十分在乎初始化速度，react 的懒加载与 vue 的懒加载十分类似，<br>使用 require.ensure ，写进路由里面，需要的时候才进行加载。<br>并且根据我以往开发单页面项目的经验，在入口文件中的图片等资源的 CDN 加速也是很影响首页加载速度的，因此本次<br>项目开发使用七牛 CDN 加载静态资源。<br><a href="https://fakefish.github.io/react-webpack-cookbook/Optimizing-development" target="_blank" rel="external">React 小书—优化开发</a><br><a href="https://fakefish.github.io/react-webpack-cookbook/Lazy-loaded-entry-points.html" target="_blank" rel="external">懒加载入口文件</a></p>
-<h3 id="组件编写">组件编写</h3><p>本次组件采用 jsx 语法，组件保存在 components 文件夹内，一个组件一个文件名，文件夹内存放 css 文件与 jsx 文件。</p>
-<h3 id="使用_gulp-connect_而不是使用_webpack-dev-server">使用 gulp-connect 而不是使用 webpack-dev-server</h3><p>一般来说使用 gulp-connect 与 webpack-dev-server 都是合适的，但是对于此项目我希望更加自动化，将打包压缩好的代码自动上传到七牛 CDN 中，并且整个项目的流程更加清晰，webpack 当然也能完成项目构建的全部内容，但是就少了对项目整体的把控。</p>
-<h3 id="希望拥有高效的编译">希望拥有高效的编译</h3><p>高效的编译有 3 个方法：</p>
-<ol>
-<li>避免全局编译</li>
-<li>使用 gulp-cached 与 gulp-remember 配合，我使用的是 gulp-changed 只获取改变过的文件再编译<br>jsx 怎么避免全局编译，使用 gulp-changed 无法配合 webpack 使用</li>
-<li>在上线的时候才压缩优化</li>
-</ol>
-<h3 id="怎样才能有效地提高_react_的编译速度">怎样才能有效地提高 react 的编译速度</h3><p>使用优化重合并，避免每次都编译打包一次 react 整个库和它的依赖。<br><a href="https://fakefish.github.io/react-webpack-cookbook/Optimizing-rebundling.html" target="_blank" rel="external">优化重合并</a></p>
-<h3 id="Zepto_的坑">Zepto 的坑</h3><p>因为 Zepto 自带的 click 事件是有点击穿透的 bug 存在的，所以应该使用 fastclick 插件来解决。</p>
-<p>参考资料：<br><a href="https://zhuanlan.zhihu.com/p/21312474" target="_blank" rel="external">webpack + gulp 构建完整前端工作流</a><br><a href="https://segmentfault.com/a/1190000004825205" target="_blank" rel="external">react-js开发环境</a><br><a href="https://segmentfault.com/a/1190000005770042#articleHeader0" target="_blank" rel="external">开发工具心得：如何 10 倍提高你的 Webpack 构建效率</a><br>（未完持续）</p>
+        <span itemprop="articleBody"><h2 id="问题现象">问题现象</h2><p>在项目中,遇到的问题是有一个弹出层, 弹出层有一个按钮点击之后表示操作完成并且隐藏遮罩与弹出框,但是点击按钮之后<br>弹出层下面的元素却触发了 click 事件,导致 bug 的出现.<br><a id="more"></a></p>
+<h2 id="问题根源">问题根源</h2><p>首先, 在原生是没有 tap 事件的, 工具库中的 tap 事件是通过 touch 事件封装出来的, 基本上是下面这种顺序执行事件<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touchstart -&gt; touchmove -&gt; touchend -&gt; tap</span><br></pre></td></tr></table></figure></p>
+<p>通俗来讲, 可以理解为 tap 只是一个自定义事件, 当我们的手指点击到屏幕时, 触发了 touch 事件, 然后根据 Zepto 的<br>源码显示, 在 touchend 事件之后没有操作,也就是没有再次点击的话,就会使用定时器在 250 ms 后触发 tap 事件,从而<br>使 tap 的回调函数触发, 一般来说我们回调会隐藏函数等等.<br>第二点, 在移动端, 我们仍然需要 click 事件的支持, 因为响应式网站的存在, 因此通常是由 touch 事件带动触发 mouse<br>事件的, 触发事件顺序如下:<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touchstart -&gt; touchmove -&gt; touchend -&gt; click</span><br></pre></td></tr></table></figure></p>
+<p>其中, 在 touchend 事件结束之后, 浏览器会等待 300ms 观察用户是否会再次触发 touch 事件也就是是否有双击行为, 如<br>果没有的话, 那么就会执行 click 事件</p>
+<h3 id="Zepto_为什么要封装_tap?">Zepto 为什么要封装 tap?</h3><p>这是为了解决 click 在移动端设备有 300ms 的延迟, 因此封装了一个 tap 事件, 在 touchend 后 250ms 触发, 这也就是<br>为什么 tap 事件不能加到 320ms 或者 350ms 以及更多时间后响应,因为它本身的出现就是为了解决移动端 click 的 300<br>ms 的延迟出现,加快事件响应速度的, 如果是 300ms 以后根本没有意义.所以说 tap 在 300ms 之前执行不是在搞事情<br>那现在比较清晰了, tap 事件先于 click 事件执行, 因此当遮罩消失后, 也就是 tap 事件生效之后, click 事件会执行<br>但是先前点击的遮罩的位置遮罩已经消失了,此时如果有一个元素刚好绑定了 click 事件或者是 input 框,那么就会触发<br>click 事件或者 input 有焦点.</p>
+<p><strong>移动端 click 300ms 延迟不是为了搞事情而是浏览器需要知道用户到底是想要点击还是双击放大</strong>.</p>
+<h3 id="能不能阻止浏览器的默认行为?">能不能阻止浏览器的默认行为?</h3><p>理论上可以通过阻止 touchend 事件的默认行为,但是在 Zepto 中,由于 tag 事件是封装出来的, 而 tag 的触发是通过<br>setTimeout 定时器在设置 250ms 后触发的(详细可以看 Zepto 的 touch 模块), 换言之在回调中调用 event 对象的<br>event.preventDefault 根本无效, 因为 tag 事件根本没有事件对象, 更重要的是定时器是异步队列,也就是说 touchend<br>事件完成之后我们再在回调中阻止事件根本一点作用都没有.<br>而且这个方法遗憾的是并不是所有浏览器都支持, 安卓与 IOS 移动浏览器的不同.</p>
+<h2 id="解决方法">解决方法</h2><h3 id="在遮罩之后加一个透明的_div_在_350ms_后消失">在遮罩之后加一个透明的 div 在 350ms 后消失</h3><p>但是会增加一个累赘的 div 元素.</p>
+<h3 id="遮罩使用动画在_350ms_后消失">遮罩使用动画在 350ms 后消失</h3><p>基本是不用添加任何东西的情况下的最好选择</p>
+<h3 id="使用_CSS3_pointer-events">使用 CSS3 pointer-events</h3><p>在 tap 事件触发的时候, 将下层元素添加一个属性 poniter-events 为 none, 然后下层元素就不会响应 click 事件了,<br>也就是说设置了 poniter-events 为 none 不会成为 click 事件的目标, 然后设置一个定时器在 tap 事件响应后的<br>400ms 后将 pointer-events 设置为 auto 恢复正常.有人说如果下层元素并不是一个简单的层呢, 而是很多很多元素<br>那该怎么办? 这种情况下这个属性仍然适用, 因为它具有继承性, 我们只要在下层父级层添加就好了.</p>
+<h3 id="使用_fastclick">使用 fastclick</h3><p>使用了 fastclick 之后,所有点击事件就可以都用 click 事件了,因为已经解决了 click 事件原本的 300ms 延迟问题.<br>而对于 fastclick 的原理, 就是取消 touchend 延迟 300ms 后的 click 事件, 基本是通过 event.preventDefault()<br>与某些浏览器的兼容(比如需要取消 mousemove 的默认行为, 因为它有时会比 touchstart 还快而且触发 click), 然后<br>在 touchend 事件发生之后, 获取了点击元素, 并且马上触发了 click 事件,这样响应速度上来了,也不会点击穿透,需要<br>注意的是用了 fastclick 之后就使用 click 处理点击吧, 因为响应速度已经上来了,并且 tap 有点击穿透的现象(因<br>为 tap 事件的 setTimeout 原因).</p>
+<p>归根结底, 无论是 Zepto 的 tap 事件还是 fastClick 都是在解决移动端 click 300ms 延迟问题.个人觉得 fastclick<br>做得更好.</p>
+<h2 id="好文推荐:">好文推荐:</h2><ul>
+<li><a href="http://www.cnblogs.com/yexiaochai/p/3462657.html" target="_blank" rel="external">深入移动端事件</a></li>
+</ul>
 </span>
       
     </div>
@@ -235,13 +234,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/18/Parse 系列之 Parse Dashboard 搭建（译）/" rel="prev">Parse 系列之 Parse Dashboard 搭建（译）</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/09/11/Parse 系列之 Parse-server 搭建（译）/" rel="next">Parse 系列之 Parse-server 搭建（译）</a>
+              <a href="/2017/02/20/Event In Zepto/" rel="next">Event In Zepto</a>
             
           </div>
         </div>
@@ -256,10 +253,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/09/18/2016 女生节许愿墙脚手架文档/"
-     data-title="2016 女生节许愿墙脚手架文档"
+        <div class="ds-share flat" data-thread-key="2017/03/04/Zepto 点击穿透问题深究与解决/"
+     data-title="Zepto 点击穿透问题深究与解决"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2016/09/18/2016 女生节许愿墙脚手架文档/">
+     data-url="http://zhangxiang958.github.io/2017/03/04/Zepto 点击穿透问题深究与解决/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -286,8 +283,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2016/09/18/2016 女生节许愿墙脚手架文档/"
-                       data-title="2016 女生节许愿墙脚手架文档" data-url="http://zhangxiang958.github.io/2016/09/18/2016 女生节许愿墙脚手架文档/">
+                  <div class="ds-thread" data-thread-key="2017/03/04/Zepto 点击穿透问题深究与解决/"
+                       data-title="Zepto 点击穿透问题深究与解决" data-url="http://zhangxiang958.github.io/2017/03/04/Zepto 点击穿透问题深究与解决/">
                   </div>
                 
               </div>
@@ -387,7 +384,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目骨架"><span class="nav-number">1.</span> <span class="nav-text">项目骨架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端自适应方法"><span class="nav-number">1.1.</span> <span class="nav-text">前端自适应方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">2.</span> <span class="nav-text">注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS_编写"><span class="nav-number">2.1.</span> <span class="nav-text">CSS 编写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#首页加载"><span class="nav-number">2.2.</span> <span class="nav-text">首页加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件编写"><span class="nav-number">2.3.</span> <span class="nav-text">组件编写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用_gulp-connect_而不是使用_webpack-dev-server"><span class="nav-number">2.4.</span> <span class="nav-text">使用 gulp-connect 而不是使用 webpack-dev-server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#希望拥有高效的编译"><span class="nav-number">2.5.</span> <span class="nav-text">希望拥有高效的编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎样才能有效地提高_react_的编译速度"><span class="nav-number">2.6.</span> <span class="nav-text">怎样才能有效地提高 react 的编译速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zepto_的坑"><span class="nav-number">2.7.</span> <span class="nav-text">Zepto 的坑</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题现象"><span class="nav-number">1.</span> <span class="nav-text">问题现象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题根源"><span class="nav-number">2.</span> <span class="nav-text">问题根源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Zepto_为什么要封装_tap?"><span class="nav-number">2.1.</span> <span class="nav-text">Zepto 为什么要封装 tap?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#能不能阻止浏览器的默认行为?"><span class="nav-number">2.2.</span> <span class="nav-text">能不能阻止浏览器的默认行为?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在遮罩之后加一个透明的_div_在_350ms_后消失"><span class="nav-number">3.1.</span> <span class="nav-text">在遮罩之后加一个透明的 div 在 350ms 后消失</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遮罩使用动画在_350ms_后消失"><span class="nav-number">3.2.</span> <span class="nav-text">遮罩使用动画在 350ms 后消失</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用_CSS3_pointer-events"><span class="nav-number">3.3.</span> <span class="nav-text">使用 CSS3 pointer-events</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用_fastclick"><span class="nav-number">3.4.</span> <span class="nav-text">使用 fastclick</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#好文推荐:"><span class="nav-number">4.</span> <span class="nav-text">好文推荐:</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
