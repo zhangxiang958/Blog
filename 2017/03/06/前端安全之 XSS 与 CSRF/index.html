@@ -37,28 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="XSSXSS 攻击,即跨站脚本攻击, 理论上,任何可输入的地方没有对数据进行处理的话,就会有 XSS 漏洞.
-理解 XSS想要理解 XSS, 首先要知道 XSS 可以通过几种方式来进行攻击:
-
-反射型, 攻击者需要诱导用户点击一个链接进行攻击
-存储型, 通过将攻击代码储存在远程服务器中,这样所有用户在访问具有此代码数据的页面就会自动运行形成攻击,例如评论框没有过滤输入, 导致用户可以输入 这样的内">
+<meta name="description" content="前端安全至关重要, 如果在前端阻拦一些安全攻击, 对于用户体验也是极大提升.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="前端安全之 XSS 与 CSRF">
 <meta property="og:url" content="http://zhangxiang958.github.io/2017/03/06/前端安全之 XSS 与 CSRF/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="XSSXSS 攻击,即跨站脚本攻击, 理论上,任何可输入的地方没有对数据进行处理的话,就会有 XSS 漏洞.
-理解 XSS想要理解 XSS, 首先要知道 XSS 可以通过几种方式来进行攻击:
-
-反射型, 攻击者需要诱导用户点击一个链接进行攻击
-存储型, 通过将攻击代码储存在远程服务器中,这样所有用户在访问具有此代码数据的页面就会自动运行形成攻击,例如评论框没有过滤输入, 导致用户可以输入 这样的内">
-<meta property="og:updated_time" content="2017-03-12T13:58:17.689Z">
+<meta property="og:description" content="前端安全至关重要, 如果在前端阻拦一些安全攻击, 对于用户体验也是极大提升.">
+<meta property="og:updated_time" content="2017-03-12T14:03:06.785Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端安全之 XSS 与 CSRF">
-<meta name="twitter:description" content="XSSXSS 攻击,即跨站脚本攻击, 理论上,任何可输入的地方没有对数据进行处理的话,就会有 XSS 漏洞.
-理解 XSS想要理解 XSS, 首先要知道 XSS 可以通过几种方式来进行攻击:
-
-反射型, 攻击者需要诱导用户点击一个链接进行攻击
-存储型, 通过将攻击代码储存在远程服务器中,这样所有用户在访问具有此代码数据的页面就会自动运行形成攻击,例如评论框没有过滤输入, 导致用户可以输入 这样的内">
+<meta name="twitter:description" content="前端安全至关重要, 如果在前端阻拦一些安全攻击, 对于用户体验也是极大提升.">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -220,7 +208,7 @@
       
 
       
-        <span itemprop="articleBody"><a id="more"></a>
+        <span itemprop="articleBody"><p>前端安全至关重要, 如果在前端阻拦一些安全攻击, 对于用户体验也是极大提升.<br><a id="more"></a></p>
 <h2 id="XSS">XSS</h2><p>XSS 攻击,即跨站脚本攻击, 理论上,任何可输入的地方没有对数据进行处理的话,就会有 XSS 漏洞.</p>
 <h3 id="理解_XSS">理解 XSS</h3><p>想要理解 XSS, 首先要知道 XSS 可以通过几种方式来进行攻击:</p>
 <ol>
