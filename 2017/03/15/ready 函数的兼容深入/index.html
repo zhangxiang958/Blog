@@ -1,0 +1,670 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="广东工业大学14级网络工程张翔" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="原本以为高程里面说的模拟 DOMContentLoaded 方法是比较好的, 但是书也有自己本身的限制.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ready 函数的兼容深入">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/03/15/ready 函数的兼容深入/index.html">
+<meta property="og:site_name" content="JARVIS's blog">
+<meta property="og:description" content="原本以为高程里面说的模拟 DOMContentLoaded 方法是比较好的, 但是书也有自己本身的限制.">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/domcontentloaded.png">
+<meta property="og:updated_time" content="2017-03-15T00:50:00.380Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ready 函数的兼容深入">
+<meta name="twitter:description" content="原本以为高程里面说的模拟 DOMContentLoaded 方法是比较好的, 但是书也有自己本身的限制.">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+    <title> ready 函数的兼容深入 // JARVIS's blog </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">JARVIS's blog</span>
+  </a>
+
+
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+    <span class="logo-line-after"><i></i></span>
+
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              ready 函数的兼容深入
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-03-15T08:49:24+08:00" content="2017-03-15">
+            2017-03-15
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/03/15/ready 函数的兼容深入/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/15/ready 函数的兼容深入/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>原本以为高程里面说的模拟 DOMContentLoaded 方法是比较好的, 但是书也有自己本身的限制.<br><a id="more"></a></p>
+<h2 id="load_与_DOMContentLoaded">load 与 DOMContentLoaded</h2><h3 id="load">load</h3><p>load 事件是什么时候执行的 ? load 事件是等待页面所有资源加载好了之后才触发的一个事件, 一般来说比较慢,因为如果<br>页面有大量的图片资源, load 事件会等待图片资源全部加载好之后触发, 这样的话我们知道浏览器渲染是渐进式的, 会先显示一部分已经加载好的网页, 如果我们把事件绑定都绑定在 load 事件里面, 页面在完全加载好而又显示一部分的时候会陷入假死状态, 可见但不可交互, 大大降低了用户体验, 因此我们很少会使用到 load 事件用于绑定事件.</p>
+<p><em>load 事件需要注册在 window 对象.</em></p>
+<h3 id="DOMContentloaded">DOMContentloaded</h3><p>DOMContentLoaded 事件是什么时候执行的 ? DOMContentLoaded 事件到底在等待什么?<br>DOMContentLoaded 事件是会在完整的 DOM 树构建完之后触发, 不用等待图片等资源的加载, 网上有很多说法, 基本上是<br>DOMContentLoaded 事件是在 html, style, script 加载好了之后才触发, 但是在高程里面却是另外一种说法, 按照高程的说法, DOMContentLoaded 事件是不必等待图片, CSS 文件, JS 文件的加载, 在 DOM 树构建完成后就会触发, 这让我困惑,到底哪一种说法是正确的?<br>DOMContentLoaded 不等待使用 document.createelement(‘script’); 这样添加的 script, DOMContentLoaded 会等待<br>那些添加了 defer 属性的, 和 inline script, 使用 script 标签的 src 属性添加的脚本. DOMContentLoaded 会等待<br>这些脚本都执行完在触发. DOMContentLoaded 会确保 BODY 解析完与 HTML 文档解析完.<br>test demo:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">   <span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"event1"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">       setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">           <span class="keyword">var</span> div1 = <span class="built_in">document</span>.getElementById(<span class="string">'event1'</span>);</span><br><span class="line">           <span class="built_in">console</span>.log(div1 + <span class="string">'setTimeout'</span>);</span><br><span class="line">       &#125;,<span class="number">0</span>);</span><br><span class="line">       <span class="built_in">document</span>.addEventListener(<span class="string">'DOMContentLoaded'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">           <span class="keyword">var</span> div1 = <span class="built_in">document</span>.getElementById(<span class="string">'event1'</span>);</span><br><span class="line">           <span class="built_in">console</span>.log(div1);</span><br><span class="line">       &#125;,<span class="literal">false</span>);</span><br><span class="line">       <span class="built_in">window</span>.addEventListener(<span class="string">'load'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">'loaded'</span>);</span><br><span class="line">       &#125;, <span class="literal">false</span>);</span><br><span class="line">       </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="actionscript"></span><br><span class="line">   	    <span class="keyword">for</span>(<span class="keyword">var</span> x=<span class="number">0</span>;x&lt;<span class="number">5e8</span>;x++)&#123;&#125;<span class="comment">//模拟占用大大大量时间js代码</span></span><br><span class="line">    </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"./src.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">'./src2.js'</span> <span class="attribute">defer</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- &lt;script type="text/javascript"&gt;</span><br><span class="line">	    var script = document.createElement('script');</span><br><span class="line">	    script.src = './src2.js';</span><br><span class="line">	    script.setAttribute('defer', 'defer');</span><br><span class="line">	    document.body.appendChild(script);</span><br><span class="line">&lt;   /script&gt; --&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="怎么兼容_IE_9_以下版本的浏览器?">怎么兼容 IE 9 以下版本的浏览器?</h4><p>IE 9 以下版本的浏览器并不支持 DOMContentLoaded 事件, 我们需要 hack.<br>对于 IE 来说, 总体可以分为有 frame 与没有 frame 这两种, 而对于没有 frame 的文档来说, 可以使用那个著名的<br>hack — document.documentElement.doScroll(‘left’); 来判断 DOM 树是否已经渲染好了<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span><span class="params">(document.documentElement.doScroll)</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">tryScroll</span><span class="params">()</span>&#123;</span></span><br><span class="line">        try &#123;</span><br><span class="line">            document.documentElement.doScroll<span class="params">('left')</span>;</span><br><span class="line">            ready<span class="params">()</span>;</span><br><span class="line">        &#125; catch<span class="params">(e)</span> &#123;</span><br><span class="line">            setTimeout<span class="params">(tryScroll, <span class="number">10</span>)</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    tryScroll<span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果是有 frame 的话, 上述的方法不成功, 因此使用 onreadystatechange 来代替 DOMContentLoaded 事件.<br>但是对于 readystatechange 事件来说, 它有 5 个状态, 分别是未初始化, 加载中, 加载完成, 交互, 全部完成. 但是<br>并不是所有元素加载过程都会有这几个状态, 而且交互状态也并不是每次都在全部完成状态之前, 而且也不能保证交互<br>状态一定会发生在 load 事件前面, 所以我们在使用 onreadystatechange 事件的时候倾向于监听两个状态交互与全部<br>完成.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">'readystatechange'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">document</span>.readyState === <span class="string">'interavtive'</span> || <span class="built_in">document</span>.readyState === <span class="string">'ready'</span>) &#123;</span><br><span class="line">        ready();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure></p>
+<h4 id="高程里面所说的代码段是什么意思?_为什么可以模拟_DOMContentLoaded_?">高程里面所说的代码段是什么意思? 为什么可以模拟 DOMContentLoaded ?</h4><p>高程里面的代码段是:<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//事件绑定</span></span><br><span class="line">&#125;, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<p>有人可能会有疑惑, 我看到 segmentfault 上有人提出这个问题, 首先这个问题先理清 DOMContentLoaded 的发生时刻,<br>目前建立的前提是 HTML 页面中的 script 标签都不是动态插入的, 也就是说 DOMContentLoaded 等待这些脚本同步执行<br>完成之后再马上触发, 那么如果浏览器不支持 DOMContentLoaded 事件, 我通过代码模拟当这些脚本都执行完了之后马上<br>触发一个函数不也可以达到类似的效果吗? 答案是通过 setTimeout 定时器在 0ms 时将事件插入到异步队列中, 那么根<br>距 JavaScript 函数的执行机制, 当 callback stack 回调栈中已经执行完了函数(即那些 script 标签脚本执行完了),<br>就会调用异步队列中的函数, 而里面就会有我们刚刚通过 setTimeout 添加的函数被执行了, 这也就是为什么定时器设<br>置 0 时刻可以模拟 DOMContentLoaded 事件了.<br>当然像高程里面也说了, 这个方法不能百分百地模拟 DOMContentLoaded 事件, 需要根据你的代码来定, 比如你的异步队<br>列中已经有很多待执行函数了, 而此时再通过 setTimeout 添加函数, 那么和 DOMContentLoaded 事件的执行时刻就会相<br>差地比较远,因为 setTimeout 添加的函数的时间不是代表过了多久函数执行的意思, 而是添加到队列的意思.所以高程里<br>面建议使用这种方法需要设置这个定时器为第一个定时器.但是这样也并不能保证定时器中的函数会先于 load 事件发生<br>之前.(可以看上面的 demo) 结果如下:<br><img src="http://ofsur12wi.bkt.clouddn.com/domcontentloaded.png" alt=""></p>
+<p>总的跨浏览器兼容代码这里不再阐述, 这里只是讲解了为什么要这么做, 详细的兼容代码可以看下面的链接.</p>
+<h2 id="link">link</h2><ul>
+<li><a href="https://testdrive-archive.azurewebsites.net/HTML5/DOMContentLoaded/Default.html" target="_blank" rel="external">demo addr</a></li>
+<li><a href="http://javascript.info/tutorial/onload-ondomcontentloaded" target="_blank" rel="external">onload and DOMContentLoaded</a></li>
+<li><a href="http://www.cnblogs.com/pigtail/archive/2012/06/18/2553556.html" target="_blank" rel="external">主流框架 DOMContentLoaded 事件实现</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/13/浅析 ES6 特性/" rel="next">浅析 ES6 特性</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/03/15/ready 函数的兼容深入/"
+     data-title="ready 函数的兼容深入"
+     data-content=""
+     data-url="http://zhangxiang958.github.io/2017/03/15/ready 函数的兼容深入/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2017/03/15/ready 函数的兼容深入/"
+                       data-title="ready 函数的兼容深入" data-url="http://zhangxiang958.github.io/2017/03/15/ready 函数的兼容深入/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://7xns9g.com1.z0.glb.clouddn.com/015630179.jpg" alt="JARVIS" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">JARVIS</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">广东工业大学14级网络工程张翔</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiang958" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhang-xiang-78-5" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="zxiang702" target="_blank">WeChat</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="958033967" target="_blank">QQ</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#load_与_DOMContentLoaded"><span class="nav-number">1.</span> <span class="nav-text">load 与 DOMContentLoaded</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#load"><span class="nav-number">1.1.</span> <span class="nav-text">load</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOMContentloaded"><span class="nav-number">1.2.</span> <span class="nav-text">DOMContentloaded</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#怎么兼容_IE_9_以下版本的浏览器?"><span class="nav-number">1.2.1.</span> <span class="nav-text">怎么兼容 IE 9 以下版本的浏览器?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#高程里面所说的代码段是什么意思?_为什么可以模拟_DOMContentLoaded_?"><span class="nav-number">1.2.2.</span> <span class="nav-text">高程里面所说的代码段是什么意思? 为什么可以模拟 DOMContentLoaded ?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#link"><span class="nav-number">2.</span> <span class="nav-text">link</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JARVIS</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>
