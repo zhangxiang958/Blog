@@ -37,16 +37,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="description" content="“闻之我也野, 视之我也饶, 行之我也明” —- 前段时间感觉自己看的书比较多, 其中关于性能优化方面, 虽然知道一些对于 web 页面的性能优化手段, 像雅虎性能十四条这样的业界金规玉律, 但是对于其中为什么这样做以及什么时候这样做脑海始终有点模糊, 所以写篇博文来让自己理解性能方面的知识.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="试谈JavaScript事件处理机制">
-<meta property="og:url" content="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/index.html">
+<meta property="og:title" content="细说 window.performance">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/05/20/细说 window.performance/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
-<meta property="og:updated_time" content="2015-07-16T11:55:06.798Z">
+<meta property="og:description" content="“闻之我也野, 视之我也饶, 行之我也明” —- 前段时间感觉自己看的书比较多, 其中关于性能优化方面, 虽然知道一些对于 web 页面的性能优化手段, 像雅虎性能十四条这样的业界金规玉律, 但是对于其中为什么这样做以及什么时候这样做脑海始终有点模糊, 所以写篇博文来让自己理解性能方面的知识.">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/timgingfull.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/459304073.jpg">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/1129102037.jpg">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/window.performanceFull.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/performanceInfo.png">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/reource.png">
+<meta property="og:updated_time" content="2017-05-20T12:15:21.624Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="试谈JavaScript事件处理机制">
-<meta name="twitter:description" content="在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法">
+<meta name="twitter:title" content="细说 window.performance">
+<meta name="twitter:description" content="“闻之我也野, 视之我也饶, 行之我也明” —- 前段时间感觉自己看的书比较多, 其中关于性能优化方面, 虽然知道一些对于 web 页面的性能优化手段, 像雅虎性能十四条这样的业界金规玉律, 但是对于其中为什么这样做以及什么时候这样做脑海始终有点模糊, 所以写篇博文来让自己理解性能方面的知识.">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +62,7 @@
   };
 </script>
 
-    <title> 试谈JavaScript事件处理机制 // JARVIS's blog </title>
+    <title> 细说 window.performance // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -162,7 +168,7 @@
           
           
             
-              试谈JavaScript事件处理机制
+              细说 window.performance
             
           
         </h1>
@@ -171,8 +177,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-07-15T10:15:24+08:00" content="2015-07-15">
-            2015-07-15
+          <time itemprop="dateCreated" datetime="2017-05-20T20:15:24+08:00" content="2017-05-20">
+            2017-05-20
           </time>
         </span>
 
@@ -180,7 +186,7 @@
           <span class="post-category" >
             &nbsp; | &nbsp; 分类于
             
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/性能优化/" itemprop="url" rel="index"><span itemprop="name">性能优化</span></a></span>
 
               
               
@@ -193,8 +199,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/07/15/试谈JavaScript事件处理机制/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/" itemprop="commentsCount"></span>
+              <a href="/2017/05/20/细说 window.performance/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/20/细说 window.performance/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -208,22 +214,59 @@
       
 
       
-        <span itemprop="articleBody"><hr>
-<p>在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法<br><a id="more"></a></p>
-<h2 id="JavaScript的特色">JavaScript的特色</h2><p>Javascript是一门解释型的单线程语言，这是为了避免多线程时可能引起的冲突。浏览器在解释代码时是从上至下逐步进行解释翻译的，但是我们在电脑上CPU不一定是满载的，有可能是闲置的，这就导致了现在多核CPU计算能力的浪费，因此出现了事件处理机制去利用多核CPU的计算能力。</p>
-<hr>
-<h1 id="事件机制">事件机制</h1><h2 id="执行栈">执行栈</h2><p>JavaScript在执行代码的时候，每一个行为（函数）都会进入到一个栈中去等待执行————先进入后执行。<br>执行栈就是主线程，当CPU遇到需要花费时间长的任务（如setTimeout）时，会跳过，直接执行下一个任务。</p>
-<h2 id="回调队列Callback_queue">回调队列Callback queue</h2><p>上面所说CPU遇到花费时间长需要等待的任务也就是所谓的异步任务时，比如DOM/Ajax/setTimeout，此时会将任务放在一个队列中，此队列就叫做回调队列，也是异步处理机制的一部分。当主线程中的任务处理完后，就会调出队列中的任务去完成，先进入队列的就会先被处理。此外，任务队列还会存放一些具有定时器的回调函数。</p>
-<h2 id="运行机制">运行机制</h2><ol>
-<li>执行栈（主线程）执行所有的任务，回调队列不执行任务</li>
-<li>当主线程上的任务全部完成后，会一个一个调出任务队列中的任务进入到主线程中去执行</li>
-<li>就是不断重复以上两个步骤</li>
-</ol>
-<p>![事件机制]（<a href="http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）" target="_blank" rel="external">http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）</a></p>
-<h3 id="回调函数">回调函数</h3><p>所谓回调函数，就是会被主线程挂起来的代码。</p>
-<h2 id="定时器">定时器</h2><p>定时器主要是由setTimeout超时调用和setInterval间歇调用所组成，setTimeout接受两个参数，一个是回调函数，一个是执行的时间。<br>两者的区别是setTimeout是一次调用，而setInterval是不断调用。</p>
-<hr>
-<p>作者     张翔<br>2015 年 07月 15日    </p>
+        <span itemprop="articleBody"><p>“闻之我也野, 视之我也饶, 行之我也明” —- 前段时间感觉自己看的书比较多, 其中关于性能优化方面, 虽然知道一些<br>对于 web 页面的性能优化手段, 像雅虎性能十四条这样的业界金规玉律, 但是对于其中为什么这样做以及什么时候这样<br>做脑海始终有点模糊, 所以写篇博文来让自己理解性能方面的知识.<br><a id="more"></a></p>
+<h2 id="为什么要监测性能">为什么要监测性能</h2><p>因为在开发中, 性能是非常重要的部分, 我们在开发中可以不需要理会太多的性能问题, 正如那句老话: “不要过早地考<br>虑性能问题”, 但是在生产环境, 面对成百上千的 pv 量, 如何提高用户体验如何加快页面内容加载速度对于一个产品来<br>说非常重要, 一句话说: 性能既是金钱.<br>当然, 我们也已经有了很多工具来测试页面的性能, 个人比较常用的是 webpagetest, yslow 等等这些, 但是这些工具<br>测量的指标都比较单一而且测试环境比较单一, 如果我们需要比较详细的性能测量报告就无法做到了, 因为用户所用的<br>网络环境实在是非常复杂. 所以我们会建立性能监测系统通过上报的数据分析出页面的真实整体性能是如何的.</p>
+<h2 id="确定测量目标">确定测量目标</h2><p>在开始测量之前, 我们需要知道, 我们要测量什么时间, 不然根本无法下手.</p>
+<h3 id="性能指标">性能指标</h3><ul>
+<li>白屏时间</li>
+<li>首屏时间</li>
+<li>用户可操作时间</li>
+<li>资源总下载时间</li>
+<li>DNS 解析时间</li>
+<li>TCP 链接时间</li>
+<li>HTTP 请求时间</li>
+<li>HTTP 响应时间</li>
+<li>CSS 渲染时间</li>
+<li>Javascript 执行时间</li>
+</ul>
+<p>以上这些指标对于我们性能优化都非常有用.我们需要关注这些指标.</p>
+<h3 id="测量工具准备">测量工具准备</h3><p>W3C 性能小组提供了三个 API 供我们获取页面的详细性能信息.</p>
+<h4 id="Navigation_Timing_API">Navigation Timing API</h4><p>performance.timing 返回的是一个对象, 包含了页面加载的所有信息.<br><img src="http://ofsur12wi.bkt.clouddn.com/timgingfull.png" alt=""><br>这里不再细讲每个字段的值的含义, 下面添加一个个人画的图帮助大家理解.</p>
+<p><img src="http://ofsur12wi.bkt.clouddn.com/459304073.jpg" alt=""></p>
+<h4 id="Resource_Timing_API">Resource Timing API</h4><p>performance.getEntries()  返回的是数组, 每一个元素就是一个对象, 包含了每一个请求的静态资源的加载信息.<br>注意这里返回来的数组对象存储的 Performance Resource 对象不仅仅是图片, css, script 这种静态资源, 还包括了像<br>XMLHttpRequest 对象这种.</p>
+<p>根据请求资源的原因, Reource timing 也会根据不同的原因进行记录:</p>
+<ul>
+<li>如果有两个相同 url img 图片标签, 那么浏览器只会请求一次, 然后将记录记录到一个 resource object 中.</li>
+<li>如果 img src 属性被 script 改变, 那么 img 前后两个请求都会被记录到 resource object 中.</li>
+<li>当然如果 src 属性是 base64 格式的值, 则不会被记录到 resource object 中.</li>
+<li>如果一个资源请求因为网络中断或者另外诸如 DNS 查询失败, TCP 握手失败, TLS 握手失败, 那么请求时间也会被记录到 resourcce object 中, 只是时间值会被记录成之前步骤所用时间, 例如 TCP 握手失败会记录 DNS 查询时间</li>
+<li>如果一个资源因为资源位置丢失或者跨域失败那么将不会被记录到 resource timging 中.</li>
+</ul>
+<p>下面是自己画得一个图:(PS:字比较丑不要见怪),建议大家可以也画一下,可能会帮助理解.<br><img src="http://ofsur12wi.bkt.clouddn.com/1129102037.jpg" alt=""></p>
+<h4 id="Performance_API">Performance API</h4><p>也即是 window.performance 接口, 提供精细的接口供我们知道网页加载的详细信息.<br><img src="http://ofsur12wi.bkt.clouddn.com/window.performanceFull.png" alt=""></p>
+<ul>
+<li><strong>memory</strong> : 用于监测网页使用的内存情况, 如果 <em>usedJSHeapSize</em> 大于 <em>totalJSHeapSize</em> 就会可能存在内存泄漏.</li>
+<li><strong>navigation</strong>: 保存了网页文档加载的类型, TYPE_RELOAD, TYPE_BACK_FORWARD, TYPE_NAVIGATE 这些文档加载类型, redirectionCount 只能记录同源重定向的次数.</li>
+<li><strong>timing</strong>: 记录了页面加载各个步骤的详细时间.</li>
+</ul>
+<p>之前在面试的时候也有做过类似的一道题,就是计算打开一个页面的时间, 计算时间就可以使用上面这三个 API 进行计算</p>
+<h2 id="计算指标">计算指标</h2><p>其中有两个可以帮助我们检测真实用户环境下的页面加载 Timing 和页面资源加载 Timing : Navigation Timing 和 Resource Timing。<br>这两个API非常有用，可以帮助我们获取页面的Domready时间、onload时间、白屏时间等，以及单个页面资源在从发送请求到获取到rsponse各阶段的性能参数。</p>
+<p><img src="http://ofsur12wi.bkt.clouddn.com/performanceInfo.png" alt=""><br>按照文档上面所说的, 在 window 对象构建出来之前, 该 Navigation timing 与 Resource timing 都不可用.因此,<br>使用这两个API时需要在页面完全加载完成之后才能使用，最简单的办法是在window.onload事件中读取各种数据，因为很多值必须在页面完全加载之后才能得出。</p>
+<h3 id="Navigation_Timing">Navigation Timing</h3><p>Navigation Timing API 能够帮助网站开发者检测真实用户数据（RUM），例如带宽、延迟或主页的整体页面加载时间。用法如下：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> timinhObj</span> = performance.timing;</span><br></pre></td></tr></table></figure></p>
+<p>一般来说，我们需要获取到的页面性能参数包括：DNS查询耗时、TCP链接耗时、request请求耗时、解析dom树耗时、白屏时间、domready时间、onload时间等，而这些参数是通过上面的 performance.timing 各个属性的差值组成的.<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">DNS</span> 查询时间: domainlookupEnd - domainlookupstart</span><br><span class="line">TCP 链接时间: connectEnd - connectStart</span><br><span class="line">请求时间: requestEnd - requestStart</span><br><span class="line">响应时间: responseEnd - responseStart</span><br><span class="line">DOM 解析时间: domloadedEventEnd - navigationStart</span><br><span class="line">白屏时间: responseStart - navigationStart</span><br><span class="line">首屏时间: loadEventEnd - navigationStart</span><br></pre></td></tr></table></figure></p>
+<h3 id="Resource_Timing_API-1">Resource Timing API</h3><p>如果要获取个别资源（例如JS、图片）的性能指标，就需要使用 Resource Timing.</p>
+<p>浏览器获取网页时，会对网页中每一个静态资源（脚本文件、样式表、图片文件等等）发出一个HTTP请求。 Resource Timing 可以获取到单个静态资源从开始发出请求到获取响应之间各个阶段的Timing。用法如下:<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> resourcesObj</span> = performance.getEntries();</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://ofsur12wi.bkt.clouddn.com/reource.png" alt=""></p>
+<h2 id="附录">附录</h2><h3 id="什么是直出">什么是直出</h3><p>直出也就是数据直出, 为什么会有这个概念呢? 其实还是为了优化页面性能, 前后端分离带来了开发便利与效率,但是<br>也带来了一些性能问题, 前后端分离在首屏的时候, 首屏需要的数据仍然需要 ajax 去获取, 这时候需要 TCP 链接等等<br>的延迟,所以对于网络不好的用户等待的时间比较长, 所以有了使用 node 作为中间层作为数据直出加快页面渲染.</p>
+<p>相关文章:<br><a href="http://web.jobbole.com/84753/" target="_blank" rel="external">数据直出</a><br><a href="https://github.com/joeyguo/blog/issues/8" target="_blank" rel="external">Node直出理论与实践总结</a><br><a href="https://feclub.cn/post/content/qudian_koa" target="_blank" rel="external">趣店前端团队基于koajs的前后端分离实践</a><br><a href="http://2014.jsconf.cn/slides/herman-taobaoweb/#/3" target="_blank" rel="external">NodeJS 前后端分离</a></p>
+<h3 id="什么是_CGI">什么是 CGI</h3><p>即 Common Gateway Interface, 通用网关接口,在 web 中通常将为 HTML 提供服务器接口的程序叫做 CGI</p>
+<h2 id="links:">links:</h2><ul>
+<li><a href="https://www.w3.org/TR/navigation-timing/#sec-window.performance-attribute" target="_blank" rel="external">window.performance</a>: window.performance 官方文档</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigation_timing_API" target="_blank" rel="external">navigation MDN</a>: navigation MDN 文档</li>
+<li><a href="http://web.jobbole.com/84264/" target="_blank" rel="external">使用性能API快速分析web前端性能</a>: 详细讲述了 API 的各个字段的值的含义.</li>
+<li><a href="http://fex.baidu.com/blog/2014/05/build-performance-monitor-in-7-days/" target="_blank" rel="external">FEX 7天打造性能监测系统</a>: 很赞, 建议里面的链接都可以看看</li>
+<li><a href="https://github.com/fredshare/blog/issues/5" target="_blank" rel="external">performance 专题</a> 说的非常详细</li>
+</ul>
 </span>
       
     </div>
@@ -235,11 +278,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/27/JavaScript学习笔记/" rel="prev">JavaScript核心知识学习笔记</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/05/Modal In React/" rel="next">Modal In React</a>
             
           </div>
         </div>
@@ -254,10 +297,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-     data-title="试谈JavaScript事件处理机制"
+        <div class="ds-share flat" data-thread-key="2017/05/20/细说 window.performance/"
+     data-title="细说 window.performance"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+     data-url="http://zhangxiang958.github.io/2017/05/20/细说 window.performance/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -284,8 +327,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2015/07/15/试谈JavaScript事件处理机制/"
-                       data-title="试谈JavaScript事件处理机制" data-url="http://zhangxiang958.github.io/2015/07/15/试谈JavaScript事件处理机制/">
+                  <div class="ds-thread" data-thread-key="2017/05/20/细说 window.performance/"
+                       data-title="细说 window.performance" data-url="http://zhangxiang958.github.io/2017/05/20/细说 window.performance/">
                   </div>
                 
               </div>
@@ -385,7 +428,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript的特色"><span class="nav-number">1.</span> <span class="nav-text">JavaScript的特色</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事件机制"><span class="nav-number"></span> <span class="nav-text">事件机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">1.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回调队列Callback_queue"><span class="nav-number">2.</span> <span class="nav-text">回调队列Callback queue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行机制"><span class="nav-number">3.</span> <span class="nav-text">运行机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回调函数"><span class="nav-number">3.1.</span> <span class="nav-text">回调函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时器"><span class="nav-number">4.</span> <span class="nav-text">定时器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要监测性能"><span class="nav-number">1.</span> <span class="nav-text">为什么要监测性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#确定测量目标"><span class="nav-number">2.</span> <span class="nav-text">确定测量目标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#性能指标"><span class="nav-number">2.1.</span> <span class="nav-text">性能指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测量工具准备"><span class="nav-number">2.2.</span> <span class="nav-text">测量工具准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Navigation_Timing_API"><span class="nav-number">2.2.1.</span> <span class="nav-text">Navigation Timing API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Resource_Timing_API"><span class="nav-number">2.2.2.</span> <span class="nav-text">Resource Timing API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Performance_API"><span class="nav-number">2.2.3.</span> <span class="nav-text">Performance API</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算指标"><span class="nav-number">3.</span> <span class="nav-text">计算指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Navigation_Timing"><span class="nav-number">3.1.</span> <span class="nav-text">Navigation Timing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Resource_Timing_API-1"><span class="nav-number">3.2.</span> <span class="nav-text">Resource Timing API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">4.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是直出"><span class="nav-number">4.1.</span> <span class="nav-text">什么是直出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是_CGI"><span class="nav-number">4.2.</span> <span class="nav-text">什么是 CGI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#links:"><span class="nav-number">5.</span> <span class="nav-text">links:</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
