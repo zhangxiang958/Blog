@@ -37,16 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="这篇博文是对于许愿墙的使用 React 的总结.希望能够提高编写 React 的效率与优雅性.">
+<meta name="description" content="最近和后台小哥进行联调, 因为是一个后台页面, 直接使用了 JQuery 里面的 $.ajax 来调接口, 但是发现异步成功回调并不执行.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="React In GirlWall">
-<meta property="og:url" content="http://zhangxiang958.github.io/2017/01/22/React In GirlWall/index.html">
+<meta property="og:title" content="JQuery Promise 不执行成功回调">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/05/27/JQuery Promise 不执行成功回调/index.html">
 <meta property="og:site_name" content="JARVIS's blog">
-<meta property="og:description" content="这篇博文是对于许愿墙的使用 React 的总结.希望能够提高编写 React 的效率与优雅性.">
-<meta property="og:updated_time" content="2017-01-22T07:08:37.706Z">
+<meta property="og:description" content="最近和后台小哥进行联调, 因为是一个后台页面, 直接使用了 JQuery 里面的 $.ajax 来调接口, 但是发现异步成功回调并不执行.">
+<meta property="og:updated_time" content="2017-05-27T15:59:58.871Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="React In GirlWall">
-<meta name="twitter:description" content="这篇博文是对于许愿墙的使用 React 的总结.希望能够提高编写 React 的效率与优雅性.">
+<meta name="twitter:title" content="JQuery Promise 不执行成功回调">
+<meta name="twitter:description" content="最近和后台小哥进行联调, 因为是一个后台页面, 直接使用了 JQuery 里面的 $.ajax 来调接口, 但是发现异步成功回调并不执行.">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +56,7 @@
   };
 </script>
 
-    <title> React In GirlWall // JARVIS's blog </title>
+    <title> JQuery Promise 不执行成功回调 // JARVIS's blog </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 <!--[if lte IE 8]>
@@ -162,7 +162,7 @@
           
           
             
-              React In GirlWall
+              JQuery Promise 不执行成功回调
             
           
         </h1>
@@ -171,8 +171,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-01-22T15:08:24+08:00" content="2017-01-22">
-            2017-01-22
+          <time itemprop="dateCreated" datetime="2017-05-27T23:58:24+08:00" content="2017-05-27">
+            2017-05-27
           </time>
         </span>
 
@@ -193,8 +193,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2017/01/22/React In GirlWall/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/22/React In GirlWall/" itemprop="commentsCount"></span>
+              <a href="/2017/05/27/JQuery Promise 不执行成功回调/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/27/JQuery Promise 不执行成功回调/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -208,25 +208,10 @@
       
 
       
-        <span itemprop="articleBody"><p>这篇博文是对于许愿墙的使用 React 的总结.希望能够提高编写 React 的效率与优雅性.<br><a id="more"></a></p>
-<h2 id="编码规范">编码规范</h2><p>在编码的时候基本上都有遵循 React 的规范,但是在编写方法的时候并没有遵循, 应当在组件的构造函数中编写 bind<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Com</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Components</span> &#123;</span></span><br><span class="line">    constructor() &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">this</span>.fn = <span class="keyword">this</span>.fn.bind(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    fn() &#123;</span><br><span class="line">        console.log(<span class="string">"test"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    render() &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;div onClick=&#123; <span class="keyword">this</span>.fn &#125;&gt;</span><br><span class="line">                </span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样的好处是在 render 函数重复执行的时候不会重新创建一个函数. 另外 <em>“click”</em> 等回调函数应写在 render 函数<br>上面, 关于 componentUpdate 的函数应该写在一起.</p>
-<h2 id="使用_jsx_语法">使用 jsx 语法</h2><p>在选择 Vue 与 React 框架的时候,虽说 Vue 也可以使用 jsx 语法, React 也可以使用 template, 但是如果从他们较完整的生态上考虑,往往会面临选择 JSX 还是 template 的问题.<br>写 template 对于书写风格上无需太多改变,并且模板是声明式的.模板很好理解,学习成本很低.<br>对比 jsx, DOM 结构是用 render 函数, 即将 HTML 写进 Javascript 中,好处在于能够更快地看到报错信息.以及更好地<br>进行调试.<br>jsx 语法只是 JS 语法的一个映射,所以可以使用命名空间.</p>
-<p>应该使用变量来存样式(All In JS).但是不能表示伪类伪元素</p>
-<p><em>注</em>: 在使用 react 的时候千万要摆正一种思想: 你是在写 Javascript, 利用代码来构建 UI 界面,而不是在写模板,<br>尤其是在写列表数据渲染的时候注意 <em>v-for</em> 与 <em>var ul = array.map() return</em> 的数据,再进行 <em>render</em><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">ul</span>&gt;</span></span><br><span class="line">    &#123; ul &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="双向数据绑定与单向数据流">双向数据绑定与单向数据流</h2><p>双向数据绑定的出现是为了减轻数据更改时 UI 层的变动的繁琐,而单向数据流中的思想在于数据能够跨 UI 页面共享,<br>状态共享,方便管理数据,两者其实并不存在竞争关系,其实可以基于项目的需求来选择数据的交互方式,不必拘泥于某个框架<br>的某种形式.<br>但是 React 不建议使用双向数据绑定,这是因为考虑到深层次的子组件更改数据时,对于其他层级或最顶级的父组件的更改数据状态极其繁琐, 如果不使用 redux 这样的工具,往往需要花费较大的功夫来实现需求且通常这样的代码并不优雅甚至暴力.<br>假如只需要 React(React 只是一个 UI 层工具) ,而不是用 redux, 其实可以使用双向数据绑定,而不是网上很多人所说的并不清晰说明理由的 “不建议”.</p>
-<h3 id="使用_mobx">使用 mobx</h3><p>因为在开发项目的时候, 需要使用数据状态管理工具, 但是时间紧迫, 来不及上手学习成本比较大的 redux, 因此采取了<br>学习成本比较小的 <em>mobx</em>, 但是还是需要一点代价的.因为 mobx 使用的人数比较少,因此文档和实践比较少,因此参考的<br>样本比较少.<br>下面是我做项目时找的一些参考项目与文档:</p>
-<ol>
-<li><a href="https://github.com/mobxjs/mobx-react-boilerplate" target="_blank" rel="external">mobx-react-boilerpalte</a></li>
-<li><a href="https://mobx.js.org/faq/blogs.html" target="_blank" rel="external">mobx-blog</a></li>
-<li><a href="https://onsen.io/blog/mobx-tutorial-react-stopwatch/" target="_blank" rel="external">mobx-tutorial</a></li>
-</ol>
-<h2 id="理解虚拟DOM">理解虚拟DOM</h2><p>如果能够理解虚拟 DOM , 能够更好地理解一些在编码的过程中遇到的重新渲染的 bug. 而关于虚拟 DOM 的内部原理<br>我将会在后续的博文进行学习详细讲解和结合项目分析.</p>
-<h2 id="谈谈_MVVM_框架">谈谈 MVVM 框架</h2><p>其实以前我们准循的结构, 样式, javascript 脚本分离是不是就是正确的? 其实根据以前开发的项目,回想一下,其实这样<br>来说 debug 的难度并不小,因为如果需要 debug 需要了解 DOM 结构并且通读 js 脚本,这样非常耗精力, 而现在来说,基于<br>mvvm 框架, 将 DOM 结构与 js 脚本结合在一起,反而将调试的时间成本降低了, 我觉得这是一个非常好的征兆.</p>
-<h2 id="附录">附录</h2><ul>
-<li><a href="https://zhuanlan.zhihu.com/p/20616464?refer=FrontendMagazine" target="_blank" rel="external">Airbnb React编码规范</a></li>
-<li>希望能够逐渐拥有自己的一套组件库,符合自己的业务需求,逐渐抛弃一些组件框架.</li>
-</ul>
+        <span itemprop="articleBody"><p>最近和后台小哥进行联调, 因为是一个后台页面, 直接使用了 JQuery 里面的 $.ajax 来调接口, 但是发现异步成功回调<br>并不执行.<br><a id="more"></a></p>
+<h2 id="问题原因">问题原因</h2><p>原因在于对于 dataType 的误解. dataType 的意思的接收的数据按照指定的格式进行解析而非传输的数据格式.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">    dataType: <span class="string">'jsonp'</span>,</span><br><span class="line">    url: <span class="string">'/getData'</span></span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'success'</span>);</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'fail'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>因为这是之前的项目, 所以并不清楚到底接口是一个普通的 post/get 请求还是一个 jsonp 格式请求, 所以在 datatype<br>中使用了 jsonp 格式的数据解析, 这样会导致错误, 导致成功回调不会执行, 执行了失败回调, 这是因为接收的数据格式<br>如果是 json, 但是 dataType 指定使用 jsonp 格式进行解析, 这样会解析出错然后就会执行失败回调.</p>
+<h2 id="解决">解决</h2><p>去掉 dataType 属性或者与后台人员充分沟通之后使用相对应的 json/jsonp/xml 格式的值.</p>
 </span>
       
     </div>
@@ -238,13 +223,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/23/前端使用 Mock 与后端独立/" rel="prev">前端使用 Mock 与后端独立</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/20/Nginx 的反向代理/" rel="next">Nginx 的反向代理</a>
+              <a href="/2017/05/20/细说 window.performance/" rel="next">细说 window.performance</a>
             
           </div>
         </div>
@@ -259,10 +242,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/01/22/React In GirlWall/"
-     data-title="React In GirlWall"
+        <div class="ds-share flat" data-thread-key="2017/05/27/JQuery Promise 不执行成功回调/"
+     data-title="JQuery Promise 不执行成功回调"
      data-content=""
-     data-url="http://zhangxiang958.github.io/2017/01/22/React In GirlWall/">
+     data-url="http://zhangxiang958.github.io/2017/05/27/JQuery Promise 不执行成功回调/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -289,8 +272,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2017/01/22/React In GirlWall/"
-                       data-title="React In GirlWall" data-url="http://zhangxiang958.github.io/2017/01/22/React In GirlWall/">
+                  <div class="ds-thread" data-thread-key="2017/05/27/JQuery Promise 不执行成功回调/"
+                       data-title="JQuery Promise 不执行成功回调" data-url="http://zhangxiang958.github.io/2017/05/27/JQuery Promise 不执行成功回调/">
                   </div>
                 
               </div>
@@ -390,7 +373,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#编码规范"><span class="nav-number">1.</span> <span class="nav-text">编码规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用_jsx_语法"><span class="nav-number">2.</span> <span class="nav-text">使用 jsx 语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双向数据绑定与单向数据流"><span class="nav-number">3.</span> <span class="nav-text">双向数据绑定与单向数据流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用_mobx"><span class="nav-number">3.1.</span> <span class="nav-text">使用 mobx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#理解虚拟DOM"><span class="nav-number">4.</span> <span class="nav-text">理解虚拟DOM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谈谈_MVVM_框架"><span class="nav-number">5.</span> <span class="nav-text">谈谈 MVVM 框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">6.</span> <span class="nav-text">附录</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题原因"><span class="nav-number">1.</span> <span class="nav-text">问题原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决"><span class="nav-number">2.</span> <span class="nav-text">解决</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
