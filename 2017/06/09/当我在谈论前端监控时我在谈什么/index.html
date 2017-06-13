@@ -1,0 +1,703 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="广东工业大学14级网络工程张翔" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="“我的源码被猫吃了” — 出于对自己的代码, 功能负责的前提下, 应当为代码(项目)的可靠性可用性进行测试.此为我实习期间的所做的团队分享.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="当我在谈论前端监控时我在谈什么">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/06/09/当我在谈论前端监控时我在谈什么/index.html">
+<meta property="og:site_name" content="JARVIS's blog">
+<meta property="og:description" content="“我的源码被猫吃了” — 出于对自己的代码, 功能负责的前提下, 应当为代码(项目)的可靠性可用性进行测试.此为我实习期间的所做的团队分享.">
+<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/timgingfull.png">
+<meta property="og:image" content="http://fex.baidu.com/img/build-performance-monitor-in-7-days/timing.png">
+<meta property="og:image" content="https://pic4.zhimg.com/1d159b48ada0a69c81926897e0fbb1b7_b.jpg">
+<meta property="og:image" content="http://divio.qiniudn.com/FpwSmw5jQV8LdnVhvcbUyH6oCgER">
+<meta property="og:image" content="http://divio.qiniudn.com/FpQCHDStIIbTdG8LiJ3wh9rxaTlU">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2016/11/29/96abbad701ff9b83e4f0674ccdd28e33">
+<meta property="og:updated_time" content="2017-06-13T13:47:16.317Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="当我在谈论前端监控时我在谈什么">
+<meta name="twitter:description" content="“我的源码被猫吃了” — 出于对自己的代码, 功能负责的前提下, 应当为代码(项目)的可靠性可用性进行测试.此为我实习期间的所做的团队分享.">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'always'
+  };
+</script>
+
+    <title> 当我在谈论前端监控时我在谈什么 // JARVIS's blog </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">JARVIS's blog</span>
+  </a>
+
+
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+    <span class="logo-line-after"><i></i></span>
+
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              当我在谈论前端监控时我在谈什么
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-06-09T09:12:24+08:00" content="2017-06-09">
+            2017-06-09
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/Web-Develop/" itemprop="url" rel="index"><span itemprop="name">Web Develop</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/06/09/当我在谈论前端监控时我在谈什么/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/09/当我在谈论前端监控时我在谈什么/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>“我的源码被猫吃了” — 出于对自己的代码, 功能负责的前提下, 应当为代码(项目)的可靠性可用性进行测试.<br>此为我实习期间的所做的团队分享.<br><a id="more"></a></p>
+<h2 id="性能监控">性能监控</h2><p>性能监控是一个成熟的前端开发过程中必不可少的步骤之一。它能够比较准确地让前端工程师知道网页性能的问题所在从而解决问题。</p>
+<h3 id="为什么我们需要性能监控">为什么我们需要性能监控</h3><p>很多时候我们的页面会在 wifi 或者 4G 等网络条件比较好的情况下进行测试, 这也是为了保证工作效率的手段之一, 但是<br>考虑到目前国内移动端网络情况其实并不是特别乐观的情况下, 我们需要优化我们的网页, 让很多 2/3 G 网络的用户也能<br>体验秒开.<br>如果我们不进行性能的监控, 清晰地了解到网页打开的每个步骤, 一旦产品上线，如果网页打开速度比较慢的话， 就会严重影响<br>用户体验，当情况反映到开发的工程师那里， 往往已经造成了成片的影响了。</p>
+<h3 id="怎么做性能监控">怎么做性能监控</h3><p>业界已经有很多的 online 工具提供我们使用，例如 WebpageTest， YSlow 等等的这些工具，但是这些工具都有一些缺点让我们<br>无法大范围地使用它， 第一他们往往监控测试的指标比较单一， 例如只是检查页面 DOM 的大小与组件的大小， 第二，当我们在<br>内网测试网页的时候，就无法自如地使用这些 online 工具。因此，搭建性能监控是非常必要的。<br>做法是通过 window.performance 这个 API 去获取打开一个网页消耗的时间分布， 例如 DOM 解析的实践， TCP 建立连接的时间，<br>加载静态资源的数量与耗费时间，TTFB 等等的这些指标。编写客户端脚本，获取这些指标，然后通过 ajax 上传到后台系统中做分析。<br>需要进行统计的指标有：</p>
+<ul>
+<li>loadPage 时间 </li>
+<li>domReady DOM 解析时间</li>
+<li>ttfb 时间</li>
+<li>DNS 查询时间</li>
+<li>TCP 连接握手时间</li>
+</ul>
+<p><img src="http://ofsur12wi.bkt.clouddn.com/timgingfull.png" alt=""><br><img src="http://fex.baidu.com/img/build-performance-monitor-in-7-days/timing.png" alt=""></p>
+<h3 id="后台系统数据">后台系统数据</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	"<span class="attribute">userAgent</span>": <span class="value"><span class="string">"Mozilla/5.0 (Linux; U; Android 4.1; en-us; GT-N7100 Build/JRO03C) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"</span></span>,</span><br><span class="line">	"<span class="attribute">currentURL</span>": <span class="value"><span class="string">"www.example.com/m/"</span></span>,</span><br><span class="line">	"<span class="attribute">timestamp</span>": <span class="value"><span class="number">140000000</span></span>,</span><br><span class="line">	"<span class="attribute">pid</span>": <span class="value"><span class="string">"456"</span></span>,</span><br><span class="line">	"<span class="attribute">userId</span>": <span class="value"><span class="string">"123"</span></span>,</span><br><span class="line">    "<span class="attribute">perfData</span>": <span class="value">&#123;</span><br><span class="line">		"<span class="attribute">sourceInfo</span>": <span class="value">[</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">name</span>": <span class="value"><span class="string">"www.example.com/test.js"</span></span>,</span><br><span class="line">                "<span class="attribute">type</span>": <span class="value"><span class="string">"script"</span></span>,</span><br><span class="line">                "<span class="attribute">DNSQuery</span>": <span class="value"><span class="string">"100ms"</span></span>,</span><br><span class="line">                "<span class="attribute">connectTime</span>": <span class="value"><span class="string">"300ms"</span></span>,</span><br><span class="line">                "<span class="attribute">loadTime</span>": <span class="value"><span class="string">"200ms"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">name</span>": <span class="value"><span class="string">"www.example.com/test.js"</span></span>,</span><br><span class="line">                "<span class="attribute">type</span>": <span class="value"><span class="string">"script"</span></span>,</span><br><span class="line">                "<span class="attribute">DNSQuery</span>": <span class="value"><span class="string">"100ms"</span></span>,</span><br><span class="line">                "<span class="attribute">connectTime</span>": <span class="value"><span class="string">"300ms"</span></span>,</span><br><span class="line">                "<span class="attribute">loadTime</span>": <span class="value"><span class="string">"200ms"</span></span><br><span class="line">            </span>&#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">name</span>": <span class="value"><span class="string">"www.example.com/test.js"</span></span>,</span><br><span class="line">                "<span class="attribute">type</span>": <span class="value"><span class="string">"script"</span></span>,</span><br><span class="line">                "<span class="attribute">DNSQuery</span>": <span class="value"><span class="string">"100ms"</span></span>,</span><br><span class="line">                "<span class="attribute">connectTime</span>": <span class="value"><span class="string">"300ms"</span></span>,</span><br><span class="line">                "<span class="attribute">loadTime</span>": <span class="value"><span class="string">"200ms"</span></span><br><span class="line">            </span>&#125;</span><br><span class="line">		]</span>,</span><br><span class="line">        "<span class="attribute">loadInfo</span>": <span class="value">&#123;</span><br><span class="line">            "<span class="attribute">DNS Query</span>": <span class="value"><span class="string">"100ms"</span></span>,</span><br><span class="line">            "<span class="attribute">TCP Connect</span>": <span class="value"><span class="string">"200ms"</span></span>,</span><br><span class="line">            "<span class="attribute">Request Time</span>": <span class="value"><span class="string">"12ms"</span></span>,</span><br><span class="line">            "<span class="attribute">WhiteScreen Time</span>": <span class="value"><span class="string">"1000ms"</span></span>,</span><br><span class="line">            "<span class="attribute">DOM Analysis</span>": <span class="value"><span class="string">"100ms"</span></span>,</span><br><span class="line">            "<span class="attribute">Load Time</span>": <span class="value"><span class="string">"1200ms"</span></span><br><span class="line">        </span>&#125;</span><br><span class="line">	</span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="异常监控">异常监控</h2><p>异常监控对于我们的调试也是非常重要的。能够比较迅速地让工程师知道错误的信息，方便复现 Bug，解决问题。</p>
+<h3 id="项目反思">项目反思</h3><p>实际情景，在做 ME 移动端官网的时候，发现因为 Zepto 某些兼容性问题在 Samsung 手机浏览器上报错，但是需要真机调试加 fiddler来定位问题。如果我们有异常监控脚本的话，那么就可以在后台系统中获取到这些报错信息，迅速地定位问题。<br><img src="https://pic4.zhimg.com/1d159b48ada0a69c81926897e0fbb1b7_b.jpg" alt=""></p>
+<h3 id="为什么我们需要异常监控">为什么我们需要异常监控</h3><p>后端服务通常都有服务器日志，异常记录等等的系统，可以帮助开发者快速定位系统的状态，追查 bug，了解异常情况，但是反观前端却没有这样的成熟的监控系统。<br>这样的话，一旦代码出现问题，只能通过测试或者用户反馈，这样的反馈效率就会显得有点慢。</p>
+<h3 id="监控异常怎么做？">监控异常怎么做？</h3><p>一个前端异常监控系统一般需要:</p>
+<ul>
+<li>前端 SDK 需要实现，主要是错误拦截，上报策略，API设计，以及日志接口。</li>
+<li>监控日志可视化管理后台的开发</li>
+<li>压缩后的单行文件如何定位源码错误<br>图</li>
+</ul>
+<h3 id="怎么监控异常">怎么监控异常</h3><p><img src="http://divio.qiniudn.com/FpwSmw5jQV8LdnVhvcbUyH6oCgER" alt=""><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// onerror</span></span><br><span class="line"><span class="built_in">window</span>.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">msg, url, row, col, error</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// <span class="doctag"><span class="keyword">todo</span></span> report</span></span><br><span class="line">    report(&#123;</span><br><span class="line">        msg: msg,</span><br><span class="line">        url: url,</span><br><span class="line">        row: row,</span><br><span class="line">        col: col</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>前端 SDK 实现，实现前端主动上报数据到服务端监控日志, 使用 try catch 或者 window.onerror 进行监测，将 Javascript 的错误堆栈收集起来.<br><img src="http://divio.qiniudn.com/FpQCHDStIIbTdG8LiJ3wh9rxaTlU" alt=""></p>
+<p>1、onerror 捕获 JavaScript 异常，对应跨域检测也有方案;<br>2、addEventListener(‘error’, handler, true)来捕获静态资源异常，包括js、img、css等；<br>3、Resource Timing API 和 Performance Timing API来进行性能检测和内存检测;<br>4、扩展XHR原型，检测返回的状态码，如404等，来检测ajax请求失败、错误;<br>5、通过正则匹配等方式去检测DOM结构的合法性，如ID重复、文档类型未声明之类的;<br>6、页面的死链接可以通过Nodejs的第三方模块，如request等，来检测。</p>
+<h4 id="实现难点">实现难点</h4><p>上面所说的其实是常规的做法，如果想从异常中定位错误的话，那么就需要显示错误在第几行，但是一般生产环境的代码都是经过 uglify 的，压缩后的源文件无论<br>是什么报错都只会显示在第一行，所以对于我们的异常定位非常不利，因此需要一些特别的手段。<br>一般作为开发者，我们都会拥有网页脚本的源代码，那么这时候只需要将代码压缩后对应的 sourcemap 文件与压缩后的文件上传到后台，那么就可以显示出正确的<br>对应源文件的真实报错信息。<br>配 sourcemap 图</p>
+<h2 id="HTTP_劫持监控">HTTP 劫持监控</h2><h3 id="运营商原罪">运营商原罪</h3><p>何为 HTTP 劫持？ 由于 HTTP 明文传输的特性，运营商通过一些精心设计的网络包的侵入，将我们原本的网页改造，嵌套在一个 iframe 标签中，<br>从而投放广告等等的信息。</p>
+<h3 id="监控">监控</h3><p>虽然我们可以通过脚本让网页重定向到我们的真实 url ，但是如果再次重定向又被嵌套了怎么办？ 所以如果我们能够将这些错误的 url 收集起来, 可以一定程度上规避 HTTP 劫持。<br>一般来说，运营商 ISP 的手法就是讲原来的页面嵌入到一个 iframe 中，我们可以监测 window.top 与 window.self 是否相同，如果不同很可能就是被 HTTP 劫持插入广告了。<br>但是也有可能我们的页面本来就需要嵌套 iframe，所以可以通过一个白名单，如果不在这个白名单内的网页就上报。<br><img src="https://user-gold-cdn.xitu.io/2016/11/29/96abbad701ff9b83e4f0674ccdd28e33" alt=""><br>HTTP 劫持一般都会通过 url 后面加上一个查询字符串形如 <code>？hijack=1</code> 这样的形式，所以我们可以将我们的 url 也加上这样类似的后缀来伪装已经被劫持。<br>通过分析劫持 url 后缀，不断加强我们的防护手段。</p>
+<h2 id="页面监控">页面监控</h2><p>利用类似于 React 的 DOM diff 算法，将页面的 DOM 结构进行遍历，如果出现大范围大面积的 DOM 结构异常，就会进行报警。这里的页面监控其实属于异常监控的一种，将其分出来是为了将样式，DOM 结构的异常与脚本的异常进行区分。</p>
+<h3 id="所谓页面监控">所谓页面监控</h3><p>所谓的页面监控是为了防止页面裸奔的情况出现，一般会有 CSS 样式文件出现 404 NOT Found 的情况。这样就会导致页面样式会有极大程度的改变。</p>
+<h3 id="节流">节流</h3><h4 id="减少数据上传次数">减少数据上传次数</h4><p>比如设定一些条件，满足条件的才会上报，减轻服务器压力。或者设定一个队列，在一定时间内的报错合并后再提交</p>
+<h4 id="压缩数据">压缩数据</h4><p>一些数据为 0 的默认不上报，像性能监控那样如果 DNS 查询时间为零，那么在上传的时候将不会上报这个字段。</p>
+<h3 id="差异化">差异化</h3><p>相同原因导致不同浏览器的异常可以合并起来，后台需要将这部分的信息进行合并，消除差异化，避免信息过于冗余。</p>
+<h2 id="Reference">Reference</h2><ul>
+<li><a href="https://saijs.github.io/wiki/" target="_blank" rel="external">Javascript 异常文档</a></li>
+<li><a href="http://slides.com/loskael/badjs/fullscreen#/2" target="_blank" rel="external">BadJS Javascript Error</a></li>
+<li><a href="http://div.io/topic/743" target="_blank" rel="external">Div.io Javascript Error</a></li>
+<li><a href="http://www.ctolib.com/topics-115283.html" target="_blank" rel="external">Javascript 错误堆栈处理</a></li>
+<li><a href="https://juejin.im/entry/57b3cd362e958a0056228410" target="_blank" rel="external">HTTP 劫持</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/13/ES6 小结/" rel="prev">ES6 小结</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/27/JQuery Promise 不执行成功回调/" rel="next">JQuery Promise 不执行成功回调</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/06/09/当我在谈论前端监控时我在谈什么/"
+     data-title="当我在谈论前端监控时我在谈什么"
+     data-content=""
+     data-url="http://zhangxiang958.github.io/2017/06/09/当我在谈论前端监控时我在谈什么/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2017/06/09/当我在谈论前端监控时我在谈什么/"
+                       data-title="当我在谈论前端监控时我在谈什么" data-url="http://zhangxiang958.github.io/2017/06/09/当我在谈论前端监控时我在谈什么/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="http://7xns9g.com1.z0.glb.clouddn.com/015630179.jpg" alt="JARVIS" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">JARVIS</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">广东工业大学14级网络工程张翔</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiang958" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/zhang-xiang-78-5" target="_blank">zhihu</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="zxiang702" target="_blank">WeChat</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="958033967" target="_blank">QQ</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能监控"><span class="nav-number">1.</span> <span class="nav-text">性能监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么我们需要性能监控"><span class="nav-number">1.1.</span> <span class="nav-text">为什么我们需要性能监控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么做性能监控"><span class="nav-number">1.2.</span> <span class="nav-text">怎么做性能监控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后台系统数据"><span class="nav-number">1.3.</span> <span class="nav-text">后台系统数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常监控"><span class="nav-number">2.</span> <span class="nav-text">异常监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目反思"><span class="nav-number">2.1.</span> <span class="nav-text">项目反思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么我们需要异常监控"><span class="nav-number">2.2.</span> <span class="nav-text">为什么我们需要异常监控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监控异常怎么做？"><span class="nav-number">2.3.</span> <span class="nav-text">监控异常怎么做？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么监控异常"><span class="nav-number">2.4.</span> <span class="nav-text">怎么监控异常</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现难点"><span class="nav-number">2.4.1.</span> <span class="nav-text">实现难点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP_劫持监控"><span class="nav-number">3.</span> <span class="nav-text">HTTP 劫持监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运营商原罪"><span class="nav-number">3.1.</span> <span class="nav-text">运营商原罪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监控"><span class="nav-number">3.2.</span> <span class="nav-text">监控</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#页面监控"><span class="nav-number">4.</span> <span class="nav-text">页面监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#所谓页面监控"><span class="nav-number">4.1.</span> <span class="nav-text">所谓页面监控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节流"><span class="nav-number">4.2.</span> <span class="nav-text">节流</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#减少数据上传次数"><span class="nav-number">4.2.1.</span> <span class="nav-text">减少数据上传次数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩数据"><span class="nav-number">4.2.2.</span> <span class="nav-text">压缩数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#差异化"><span class="nav-number">4.3.</span> <span class="nav-text">差异化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JARVIS</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/images/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>
