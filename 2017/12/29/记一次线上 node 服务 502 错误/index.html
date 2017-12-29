@@ -86,16 +86,16 @@
 
 
 
-<meta name="description" content="ES6 语法解决了很多过往 JS 的一些痛点, 但是我们不能只是使用它们, 而是弄清楚他们为什么可以这么做.这里列举一些我常用的 ES6 语法的命令详解.">
+<meta name="description" content="问题描述: 线上 node 服务在压力测试高并发的时候, 3 分钟后请求逐渐失败, 查看服务器日志发现 Error: spawn find EMFILE 错误, 进而导致 node 进程 crash 并不再重启.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="浅析 ES6 特性">
-<meta property="og:url" content="http://zhangxiang958.github.io/2017/03/13/浅析 ES6 特性/index.html">
+<meta property="og:title" content="记一次 node 服务高并发 502 错误">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/12/29/记一次线上 node 服务 502 错误/index.html">
 <meta property="og:site_name" content="Shawn's blog">
-<meta property="og:description" content="ES6 语法解决了很多过往 JS 的一些痛点, 但是我们不能只是使用它们, 而是弄清楚他们为什么可以这么做.这里列举一些我常用的 ES6 语法的命令详解.">
-<meta property="og:updated_time" content="2017-03-13T03:07:13.023Z">
+<meta property="og:description" content="问题描述: 线上 node 服务在压力测试高并发的时候, 3 分钟后请求逐渐失败, 查看服务器日志发现 Error: spawn find EMFILE 错误, 进而导致 node 进程 crash 并不再重启.">
+<meta property="og:updated_time" content="2017-12-29T07:03:52.184Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="浅析 ES6 特性">
-<meta name="twitter:description" content="ES6 语法解决了很多过往 JS 的一些痛点, 但是我们不能只是使用它们, 而是弄清楚他们为什么可以这么做.这里列举一些我常用的 ES6 语法的命令详解.">
+<meta name="twitter:title" content="记一次 node 服务高并发 502 错误">
+<meta name="twitter:description" content="问题描述: 线上 node 服务在压力测试高并发的时候, 3 分钟后请求逐渐失败, 查看服务器日志发现 Error: spawn find EMFILE 错误, 进而导致 node 进程 crash 并不再重启.">
 
 
 
@@ -125,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://zhangxiang958.github.io/2017/03/13/浅析 ES6 特性/"/>
+  <link rel="canonical" href="http://zhangxiang958.github.io/2017/12/29/记一次线上 node 服务 502 错误/"/>
 
 
 
 
 
-  <title>浅析 ES6 特性 | Shawn's blog</title>
+  <title>记一次 node 服务高并发 502 错误 | Shawn's blog</title>
   
 
 
@@ -258,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/03/13/浅析 ES6 特性/">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/12/29/记一次线上 node 服务 502 错误/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ShawnCheung">
@@ -275,7 +275,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">浅析 ES6 特性</h2>
+          <h2 class="post-title" itemprop="name headline">记一次 node 服务高并发 502 错误</h2>
         
 
         <div class="post-meta">
@@ -287,8 +287,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-13T11:06:24+08:00">
-                2017-03-13
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-29T14:40:24+08:00">
+                2017-12-29
               </time>
             
 
@@ -310,8 +310,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
+                  <a href="/categories/Server/" itemprop="url" rel="index">
+                    <span itemprop="name">Server</span>
                   </a>
                 </span>
 
@@ -328,8 +328,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/03/13/浅析 ES6 特性/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/13/浅析 ES6 特性/" itemprop="commentCount"></span>
+                <a href="/2017/12/29/记一次线上 node 服务 502 错误/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/29/记一次线上 node 服务 502 错误/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -357,13 +357,10 @@
       
 
       
-        <p>ES6 语法解决了很多过往 JS 的一些痛点, 但是我们不能只是使用它们, 而是弄清楚他们为什么可以这么做.<br>这里列举一些我常用的 ES6 语法的命令详解.<br><a id="more"></a></p>
-<h2 id="Let,_Const_特点">Let, Const 特点</h2><p>很多人知道 let, const 是 ES6 中新增的命令, 用于声明变量的, 其中 let 是声明了块级作用域中的变量, 使用 let, 它<br>遇大括号就会将该变量锁定在该区域中, 如果在大括号中使用了 let 命令声明了变量, 即使这个变量是全局变量, 那么在<br>let 命令之前使用或修改这个变量的值都是不允许的, 因为 let 命令不存在变量提升, 并且绑定了该作用域, 只能在声明<br>之后使用它.<br>而对于 const 命令, 是用于声明一个常量的, 对于常量, 我们在初始化的时候就应当赋值, 之后进行修改将会报错, 但是<br>const 命令保持不变的其实是它指向的那个内存单元的值不变, 对于基本类型来说, 指向的内存单元就是他们的值, 所以声<br>名了基本类型的常量保持不变, 但是如果声明了对象等引用类型的常量是不一样的, 常量指向的内存单元指向的是引用类型<br>的地址, 而地址指向的数据类型可以改变, 也就是说 const 声明的引用类型保证地址不变, 而其中的数据结构是可以改变<br>的, 用 const 声明的对象可以修改属性.</p>
-<h2 id="Class,_extends,_super">Class, extends, super</h2><p>class, extends, super 是 ES6 中对象继承的语法糖, 消除了原型继承的混乱的 .prototype/ .<strong><strong>pro</strong></strong> 与构造器<br>constructor 指针, 用简洁的 class 声明与 extends 命令来实现继承.</p>
-<h3 id="class_缺点">class 缺点</h3><p>class 也有缺点, 比如 class 声明的类还是相当原型继承中的构造函数, 它只是一个语法糖, class Pro 其实就是相当<br>于 Pro.protoytpe.constructor, class 声明的类也没有办法声明类成员属性, 在 constructor 中使用 this 绑定的<br>属性都是在实例中的, 没有办法声明类共有的属性, 注意是属性不是方法, 如果想类的所有实例都有一个共同属性的话,<br>class 就只能通过比较不优雅的方式来声明, 在 constructor 中利用 Pro.prototype.name = ‘zhangxiang’; 这样声明.</p>
-<h3 id="super">super</h3><p>对于 super ,我们会在使用 class extends 实现继承的时候, 在 constructor 中使用 super 来继承父类的属性与方法.<br>在构造器中, 需要先调用 super 再使用 this 进行增强, 这是因为子类的实例构建是基于父类实例之上的, 先使用创建<br>父类实例, 再在子类构造器中进行增强.这个是和 ES5 中的组合继承中在子类构造函数中调用父类构造函数的道理是类似<br>的(Farther.call(this)), 只是在实现上有点不同.</p>
-<h2 id="箭头函数如何绑定_this_?">箭头函数如何绑定 this ?</h2><p>箭头函数有很多特点, 但是我们最喜欢的应该是它可以默认绑定 this 对象的值, 但是为什么呢? 因为箭头函数根本没有<br>this 对象, 它在创建的时候, 在 [[ scope ]] 属性中绑定了上一层上下文变量对象, 而它本身没有 this 对象, 所以当我<br>们使用箭头函数的 this 值的时候, 其实是直接借用了函数声明绑定的上一层上下文的 this 对象.</p>
-<h2 id="模板字符串">模板字符串</h2><p>在 ES6 中有一个好用的特性就是模板字符串, 它利用反引号来声明一个字符串, 抛弃了以前 ES5 中使用字符串拼接的方<br>式, 并且可以在字符串中使用 ${} 这样的符号进行变量内嵌.十分高效:<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">'zhangxiang'</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="keyword">string</span> = `<span class="keyword">this</span> <span class="keyword">is</span> a <span class="keyword">string</span> named $&#123;name&#125;`;</span><br></pre></td></tr></table></figure></p>
+        <p>问题描述: 线上 node 服务在压力测试高并发的时候, 3 分钟后请求逐渐失败, 查看服务器日志发现 Error: spawn find EMFILE 错误, 进而导致 node 进程 crash 并不再重启.<br><a id="more"></a><br>解决问题与复盘:<br>通过查询服务端 checklist, EMFILE 错误是由于 unix 服务器打开文件过多导致系统触发安全机制抛出错误.<br>通过全面审视后端业务逻辑, 发现并没有打开文件的相关逻辑, 从而定位网络 I/O socket 是问题所在. 根据 unix 哲学一切皆文件, socket 是以一种特殊的文件形式存在系统中的,<br>但是通常业务逻辑是不会使用太多的 socket 的, 第一 TCP 中的 socket 会尽可能复用, 第二 mysql 连接池一般也只会用到 255 个链接, 第三即使在优化 redis 客户端链接后<br>仍然未解决问题, 所以定位在服务器的调优方向上.</p>
+<h2 id="ulimit">ulimit</h2><p>ulimit 值是服务器调优的一个方面, 它限定了服务器允许当前 shell 打开的进程能够打开的 socket 数量, 我们可以通过 ulimit -a 来查看 open file 的数量.<br>一般来说, 1024 是足够的, 但是面对高并发业务, 1024 是不足的, 通常需要调高, 至于调多高需要视业务需求而定.<br>所以通过上调 ulimit 的 s(soft) 与 h(hard) 值可以达到调优效果, 但是在实际中发现, 线上服务器的 ulimit 值已经达到 100 w 以上.<br>通过对比开发环境与线上环境, 定位问题出现在 docker 容器. docker 容器继承了宿主机的内核, 但是偏偏不继承宿主机的 ulimit 值, 所以查看 docker 容器的 ulimit 值发现只有<br>4096, 通过上调 docker 容器的 ulimit 值, 再次压测, 没有报错并且 node 进程不会 crash. 问题解决.</p>
+<p>解决方法: 上调系统(docker 容器, 宿主机)的 ulimit 值达到服务器调优效果.</p>
+<p>PS: 线上环境极其复杂, 必须要熟悉业务的人员才能更快速地定位问题.(大厂的 bug 果然不一样)</p>
 
       
     </div>
@@ -384,7 +381,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://zhangxiang958.github.io/2017/03/13/浅析 ES6 特性/" title="浅析 ES6 特性">http://zhangxiang958.github.io/2017/03/13/浅析 ES6 特性/</a>
+    <a href="http://zhangxiang958.github.io/2017/12/29/记一次线上 node 服务 502 错误/" title="记一次 node 服务高并发 502 错误">http://zhangxiang958.github.io/2017/12/29/记一次线上 node 服务 502 错误/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -406,8 +403,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/06/前端安全之 XSS 与 CSRF/" rel="next" title="前端安全之 XSS 与 CSRF">
-                <i class="fa fa-chevron-left"></i> 前端安全之 XSS 与 CSRF
+              <a href="/2017/12/09/关于 CORS 的小细节/" rel="next" title="关于 CORS 的小细节">
+                <i class="fa fa-chevron-left"></i> 关于 CORS 的小细节
               </a>
             
           </div>
@@ -415,10 +412,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/15/ready 函数的兼容深入/" rel="prev" title="ready 函数的兼容深入">
-                ready 函数的兼容深入 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -448,8 +441,8 @@
           
   
     <div class="comments" id="comments">
-      <div class="ds-thread" data-thread-key="2017/03/13/浅析 ES6 特性/"
-           data-title="浅析 ES6 特性" data-url="http://zhangxiang958.github.io/2017/03/13/浅析 ES6 特性/">
+      <div class="ds-thread" data-thread-key="2017/12/29/记一次线上 node 服务 502 错误/"
+           data-title="记一次 node 服务高并发 502 错误" data-url="http://zhangxiang958.github.io/2017/12/29/记一次线上 node 服务 502 错误/">
       </div>
     </div>
   
@@ -565,7 +558,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Let,_Const_特点"><span class="nav-number">1.</span> <span class="nav-text">Let, Const 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Class,_extends,_super"><span class="nav-number">2.</span> <span class="nav-text">Class, extends, super</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#class_缺点"><span class="nav-number">2.1.</span> <span class="nav-text">class 缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#super"><span class="nav-number">2.2.</span> <span class="nav-text">super</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#箭头函数如何绑定_this_?"><span class="nav-number">3.</span> <span class="nav-text">箭头函数如何绑定 this ?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模板字符串"><span class="nav-number">4.</span> <span class="nav-text">模板字符串</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ulimit"><span class="nav-number">1.</span> <span class="nav-text">ulimit</span></a></li></ol></div>
             
 
           </div>
