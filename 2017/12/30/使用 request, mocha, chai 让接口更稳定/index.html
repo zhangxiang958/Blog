@@ -86,22 +86,16 @@
 
 
 
-<meta name="description" content="目前来说,前端的单页面应用十分广泛,但是单页面应用有个先天的缺点是将所有的文件或页面打包在一个文件内,虽然提高了应用的响应速度,但是却大大增加了首页的渲染时间与白屏时间.虽然目前的打包工具 webpack 支持懒加载代码分块,一定程度上减轻了这一症状,但是当业务复杂起来,只包括首页 js 文件也会相当庞大,这时候如果能够采用 Gzip 压缩文件将会显著减少白屏时间.">
+<meta name="description" content="对于接口而言, 稳定与准确是第一要义, 前端需要稳定不会出现不明错误而且结果数据正确的接口, 这样才能保页面渲染的正确性.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="开启 Gzip 为前端加速">
-<meta property="og:url" content="http://zhangxiang958.github.io/2017/01/08/开启 Gzip 为前端加速/index.html">
+<meta property="og:title" content="使用 request, mocha, chai 让接口更稳定">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/12/30/使用 request, mocha, chai 让接口更稳定/index.html">
 <meta property="og:site_name" content="Shawn's blog">
-<meta property="og:description" content="目前来说,前端的单页面应用十分广泛,但是单页面应用有个先天的缺点是将所有的文件或页面打包在一个文件内,虽然提高了应用的响应速度,但是却大大增加了首页的渲染时间与白屏时间.虽然目前的打包工具 webpack 支持懒加载代码分块,一定程度上减轻了这一症状,但是当业务复杂起来,只包括首页 js 文件也会相当庞大,这时候如果能够采用 Gzip 压缩文件将会显著减少白屏时间.">
-<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/gzipSet.png">
-<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/gzipsetme.png">
-<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/gzip.png">
-<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/gzipRe.png">
-<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/notgzipTime.png">
-<meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/gzipTime.png">
-<meta property="og:updated_time" content="2017-01-07T17:13:49.558Z">
+<meta property="og:description" content="对于接口而言, 稳定与准确是第一要义, 前端需要稳定不会出现不明错误而且结果数据正确的接口, 这样才能保页面渲染的正确性.">
+<meta property="og:updated_time" content="2017-12-30T06:41:41.501Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="开启 Gzip 为前端加速">
-<meta name="twitter:description" content="目前来说,前端的单页面应用十分广泛,但是单页面应用有个先天的缺点是将所有的文件或页面打包在一个文件内,虽然提高了应用的响应速度,但是却大大增加了首页的渲染时间与白屏时间.虽然目前的打包工具 webpack 支持懒加载代码分块,一定程度上减轻了这一症状,但是当业务复杂起来,只包括首页 js 文件也会相当庞大,这时候如果能够采用 Gzip 压缩文件将会显著减少白屏时间.">
+<meta name="twitter:title" content="使用 request, mocha, chai 让接口更稳定">
+<meta name="twitter:description" content="对于接口而言, 稳定与准确是第一要义, 前端需要稳定不会出现不明错误而且结果数据正确的接口, 这样才能保页面渲染的正确性.">
 
 
 
@@ -131,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://zhangxiang958.github.io/2017/01/08/开启 Gzip 为前端加速/"/>
+  <link rel="canonical" href="http://zhangxiang958.github.io/2017/12/30/使用 request, mocha, chai 让接口更稳定/"/>
 
 
 
 
 
-  <title>开启 Gzip 为前端加速 | Shawn's blog</title>
+  <title>使用 request, mocha, chai 让接口更稳定 | Shawn's blog</title>
   
 
 
@@ -264,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/01/08/开启 Gzip 为前端加速/">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/12/30/使用 request, mocha, chai 让接口更稳定/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Shawn">
@@ -281,7 +275,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">开启 Gzip 为前端加速</h2>
+          <h2 class="post-title" itemprop="name headline">使用 request, mocha, chai 让接口更稳定</h2>
         
 
         <div class="post-meta">
@@ -293,8 +287,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-08T01:12:24+08:00">
-                2017-01-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-30T13:47:24+08:00">
+                2017-12-30
               </time>
             
 
@@ -316,8 +310,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Web-Develop/" itemprop="url" rel="index">
-                    <span itemprop="name">Web Develop</span>
+                  <a href="/categories/单元测试/" itemprop="url" rel="index">
+                    <span itemprop="name">单元测试</span>
                   </a>
                 </span>
 
@@ -334,8 +328,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/08/开启 Gzip 为前端加速/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/08/开启 Gzip 为前端加速/" itemprop="commentCount"></span>
+                <a href="/2017/12/30/使用 request, mocha, chai 让接口更稳定/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/30/使用 request, mocha, chai 让接口更稳定/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -363,23 +357,9 @@
       
 
       
-        <p>目前来说,前端的单页面应用十分广泛,但是单页面应用有个先天的缺点是将所有的文件或页面打包在一个文件内,虽然提高<br>了应用的响应速度,但是却大大增加了首页的渲染时间与白屏时间.虽然目前的打包工具 webpack 支持懒加载代码分块,一<br>定程度上减轻了这一症状,但是当业务复杂起来,只包括首页 js 文件也会相当庞大,这时候如果能够采用 Gzip 压缩文件将<br>会显著减少白屏时间.<br><a id="more"></a><br>由于目前 nginx 服务器使用非常广泛,加上本人平时都是使用 nginx 服务器,因此本文使用 nginx 的配置作为示例.</p>
-<h2 id="开启_Gzip">开启 Gzip</h2><h3 id="全局">全局</h3><p>如果想要在全局下开启 gzip,那么只需在<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>nginx<span class="regexp">/nginx.conf</span></span><br></pre></td></tr></table></figure></p>
-<p><img src="http://ofsur12wi.bkt.clouddn.com/gzipSet.png" alt=""><br>这个文件中 <strong>http {…}</strong> 找到 gzip 配置段,去掉前面的 <strong>#</strong> 符号.</p>
-<h3 id="二级域名">二级域名</h3><p>如果想要在二级域名开启 gzip, 那么需要在该二级域名的 nginx 配置文件中,<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>nginx<span class="regexp">/sites-available/</span>second.host</span><br></pre></td></tr></table></figure></p>
-<p>文件中的 <strong>server {…}</strong> 中写上 gzip 配置项即可.<br><img src="http://ofsur12wi.bkt.clouddn.com/gzipsetme.png" alt=""></p>
-<h2 id="配置说明">配置说明</h2><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment"># Gzip Setings</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"></span><br><span class="line">gzip <span class="command"><span class="keyword">on</span>;  // 开启 <span class="title">gzip</span></span></span><br><span class="line">gzip_disable <span class="string">"msie6"</span>;<span class="comment"> //禁用 ie6 的 gzip 选项,由于 ie6 的性能差,启用 gzip 容易导致页面假死</span></span><br><span class="line"></span><br><span class="line">gzip_vary <span class="command"><span class="keyword">on</span>;    //<span class="title">http</span> 头部,意在对于不支持 <span class="title">gzip</span> 压缩的浏览器不进行压缩.</span></span><br><span class="line">gzip_comp_level <span class="number">6</span>; <span class="comment"> //压缩比, 0 - 9, 越高压缩时间越长, 高压缩比节省带宽消耗 CPU, 视自身的服务器性能与带宽决定. </span></span><br><span class="line">gzip_buffers <span class="number">16</span> <span class="number">8</span>k;<span class="comment"> //设置系统使用多少个单位去缓存 gzip 压缩数据流, 与压缩速度有关, 这里意思是原始数据以 8k 为单位的 16 倍申请内存.</span></span><br><span class="line">gzip_min_length <span class="number">1</span>k;<span class="comment"> //最小需要 gzip 压缩的文件大小, 默认为 0, 建议设置,否则小文件反而压缩后变大.</span></span><br><span class="line">gzip_http_version <span class="number">1.1</span>; <span class="comment"> //只有 http 协议版本为 1.1 , gzip 才会生效</span></span><br><span class="line">gzip_types <span class="keyword">text</span>/plain <span class="keyword">text</span>/css application/json application/x-javascript <span class="keyword">text</span>/xml application/xml application/xml+css <span class="keyword">text</span>/javascript;<span class="comment"> // gzip 作用的文件类型</span></span><br></pre></td></tr></table></figure>
-<p><strong>*注意</strong>:需要开启 gzip_min_length 1k;<br>当文件大小大于 1k 的时候, gzip 生效</p>
-<p><strong>备注</strong>: vary 响应首部是用于选择文档的, vary: Accpet-Encoding; 意思在于文档的类型取决于 Accpet-Encoding<br>字段.</p>
-<h2 id="测试">测试</h2><p>测试可以使用命令行的形式<br><figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -<span class="keyword">I</span> -H <span class="string">"Accept-Encoding: gzip,deflate"</span> <span class="string">"http://me.ijarvis.cn/javascripts/index.js"</span></span><br></pre></td></tr></table></figure></p>
-<p><img src="http://ofsur12wi.bkt.clouddn.com/gzip.png" alt=""><br>可以看到有 Content-Encoding: gzip; 证明已经开启了 gzip</p>
-<p>也可以使用在线测试工具 <a href="https://gtmetrix.com/" target="_blank" rel="external">https://gtmetrix.com/</a>, 输入域名即可测试.</p>
-<h2 id="效果">效果</h2><p>index.js 原大小: 1.1 kb<br>index.html 原大小: 1.3 kb<br>style.css 原大小: 6.7 kb<br><img src="http://ofsur12wi.bkt.clouddn.com/gzipRe.png" alt=""></p>
-<h3 id="响应时间">响应时间</h3><p>没有设置 Gzip的时间:<br><img src="http://ofsur12wi.bkt.clouddn.com/notgzipTime.png" alt=""></p>
-<p>设置了 Gzip 的时间:<br><img src="http://ofsur12wi.bkt.clouddn.com/gzipTime.png" alt=""></p>
-<p>从响应时间与压缩文件大小两种角度来看, gzip 确实是优化利器.<br>虽然两者在时间上并没有相差太多,但是相信这是测试文件样本过小的原因,如果对于大文件,优化的结果应该是相当好的.</p>
-<h2 id="开销成本">开销成本</h2><p>服务器消耗 CPU 来对文件进行压缩,浏览器等客户端需要解压,节约了带宽.通常是 1k 以上的文件才需要压缩.</p>
-<p>参考: <a href="https://segmentfault.com/a/1190000006105756" target="_blank" rel="external">https://segmentfault.com/a/1190000006105756</a></p>
+        <p>对于接口而言, 稳定与准确是第一要义, 前端需要稳定不会出现不明错误而且结果数据正确的接口, 这样才能保页面渲染的正确性.<br><a id="more"></a><br>废话少说, show you the code:<br><figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">const request = require(<span class="symbol">'request'</span>);</span><br><span class="line"><span class="keyword">let</span> sessionToken;</span><br><span class="line"></span><br><span class="line">describe(<span class="symbol">'CGI</span> test', <span class="keyword">function</span><span class="literal">()</span>&#123;</span><br><span class="line">    it(<span class="symbol">'GET</span> /login', <span class="keyword">function</span>(<span class="keyword">done</span>)&#123;</span><br><span class="line">        request(&#123;</span><br><span class="line">            <span class="keyword">method</span>: <span class="symbol">'GET'</span>,</span><br><span class="line">            data: &#123;&#125;,</span><br><span class="line">            <span class="keyword">type</span>: <span class="symbol">'json'</span>,</span><br><span class="line">            headers: &#123;</span><br><span class="line">                postman-token: <span class="symbol">'test'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="keyword">function</span>(res)&#123;</span><br><span class="line">            res.code.should.be.equal(<span class="number">200</span>);</span><br><span class="line">            sessionToken = res;</span><br><span class="line">            <span class="keyword">done</span><span class="literal">()</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="symbol">'POST</span> /update', <span class="keyword">function</span><span class="literal">()</span>&#123;</span><br><span class="line">        request(&#123;</span><br><span class="line">            <span class="keyword">method</span>: <span class="symbol">'POST'</span>,</span><br><span class="line">            data: &#123;</span><br><span class="line">                test: <span class="symbol">'shawn'</span></span><br><span class="line">            &#125;,</span><br><span class="line">            headers: &#123;</span><br><span class="line">                postman-token: <span class="symbol">'test'</span>,</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="keyword">function</span>(<span class="keyword">done</span>)&#123;</span><br><span class="line">            res.statusCode.should.be.equal(<span class="number">200</span>);</span><br><span class="line">            <span class="keyword">done</span><span class="literal">()</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>这里并不准备讲如果使用 reuqets(http 请求客户端), mocha(测试框架), chai(断言库)这些是如何去使用的, 而是注意力在为何要这么做上面.<br>写好单元测试代码有利于前端在请求接口的时候, 提升接口的稳定性, 而不是前端在请求接口的时候, 出现一堆未知的错误, 第二写好测试代码能够减少给自己挖坑的几率,<br>如果你的代码需要改动, 但是业务逻辑并不需要改动, 这时候测试代码能够快速地保证你的接口的正确性, 第三测试代码能够让后来者能容易看懂业务逻辑.</p>
+<p>至于为什么使用 request 而不是 supertest, 这里是因为我并不追求形式的正确, 而是追求结果正确, request 我非常熟悉能够快速写出测试代码, 其二 supertest 的 agent 功能并不好用,<br>而且文档很烂.</p>
 
       
     </div>
@@ -400,7 +380,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://zhangxiang958.github.io/2017/01/08/开启 Gzip 为前端加速/" title="开启 Gzip 为前端加速">http://zhangxiang958.github.io/2017/01/08/开启 Gzip 为前端加速/</a>
+    <a href="http://zhangxiang958.github.io/2017/12/30/使用 request, mocha, chai 让接口更稳定/" title="使用 request, mocha, chai 让接口更稳定">http://zhangxiang958.github.io/2017/12/30/使用 request, mocha, chai 让接口更稳定/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -422,8 +402,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/20/script 标签的 defer 与 async/" rel="next" title="script 标签的 defer 与 async">
-                <i class="fa fa-chevron-left"></i> script 标签的 defer 与 async
+              <a href="/2017/12/29/记一次线上 node 服务 502 错误/" rel="next" title="记一次 node 服务高并发 502 错误">
+                <i class="fa fa-chevron-left"></i> 记一次 node 服务高并发 502 错误
               </a>
             
           </div>
@@ -431,10 +411,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/09/Throttle In LazyLoad/" rel="prev" title="Throttle In LazyLoad">
-                Throttle In LazyLoad <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -464,8 +440,8 @@
           
   
     <div class="comments" id="comments">
-      <div class="ds-thread" data-thread-key="2017/01/08/开启 Gzip 为前端加速/"
-           data-title="开启 Gzip 为前端加速" data-url="http://zhangxiang958.github.io/2017/01/08/开启 Gzip 为前端加速/">
+      <div class="ds-thread" data-thread-key="2017/12/30/使用 request, mocha, chai 让接口更稳定/"
+           data-title="使用 request, mocha, chai 让接口更稳定" data-url="http://zhangxiang958.github.io/2017/12/30/使用 request, mocha, chai 让接口更稳定/">
       </div>
     </div>
   
@@ -490,17 +466,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -571,22 +538,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开启_Gzip"><span class="nav-number">1.</span> <span class="nav-text">开启 Gzip</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全局"><span class="nav-number">1.1.</span> <span class="nav-text">全局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二级域名"><span class="nav-number">1.2.</span> <span class="nav-text">二级域名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置说明"><span class="nav-number">2.</span> <span class="nav-text">配置说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#效果"><span class="nav-number">4.</span> <span class="nav-text">效果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#响应时间"><span class="nav-number">4.1.</span> <span class="nav-text">响应时间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开销成本"><span class="nav-number">5.</span> <span class="nav-text">开销成本</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
