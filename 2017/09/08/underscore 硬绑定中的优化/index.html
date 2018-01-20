@@ -86,18 +86,16 @@
 
 
 
-<meta name="description" content="原本我不想写得这么罗嗦，但是我好几次想找你们谈心，你们都敷衍过去了，所以——">
+<meta name="description" content="underscore 源码中有下面这一段代码1234567891011121314151617181920var optimizeCb = function(func, context, argCount) &amp;#123;    if (context === void 0) return func;    switch (argCount) &amp;#123;      case 1: return f">
 <meta property="og:type" content="article">
-<meta property="og:title" content="你们无法逃避的谈心">
-<meta property="og:url" content="http://zhangxiang958.github.io/2016/08/14/你们无法逃避的谈心/index.html">
+<meta property="og:title" content="Underscore 硬绑定中的性能优化">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/09/08/underscore 硬绑定中的优化/index.html">
 <meta property="og:site_name" content="Shawn's blog">
-<meta property="og:description" content="原本我不想写得这么罗嗦，但是我好几次想找你们谈心，你们都敷衍过去了，所以——">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/1373149176.jpg">
-<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/383412283.jpg">
-<meta property="og:updated_time" content="2016-08-15T16:20:55.453Z">
+<meta property="og:description" content="underscore 源码中有下面这一段代码1234567891011121314151617181920var optimizeCb = function(func, context, argCount) &amp;#123;    if (context === void 0) return func;    switch (argCount) &amp;#123;      case 1: return f">
+<meta property="og:updated_time" content="2018-01-20T07:32:12.393Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="你们无法逃避的谈心">
-<meta name="twitter:description" content="原本我不想写得这么罗嗦，但是我好几次想找你们谈心，你们都敷衍过去了，所以——">
+<meta name="twitter:title" content="Underscore 硬绑定中的性能优化">
+<meta name="twitter:description" content="underscore 源码中有下面这一段代码1234567891011121314151617181920var optimizeCb = function(func, context, argCount) &amp;#123;    if (context === void 0) return func;    switch (argCount) &amp;#123;      case 1: return f">
 
 
 
@@ -127,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://zhangxiang958.github.io/2016/08/14/你们无法逃避的谈心/"/>
+  <link rel="canonical" href="http://zhangxiang958.github.io/2017/09/08/underscore 硬绑定中的优化/"/>
 
 
 
 
 
-  <title>你们无法逃避的谈心 | Shawn's blog</title>
+  <title>Underscore 硬绑定中的性能优化 | Shawn's blog</title>
   
 
 
@@ -260,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2016/08/14/你们无法逃避的谈心/">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/09/08/underscore 硬绑定中的优化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Shawn">
@@ -277,7 +275,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">你们无法逃避的谈心</h2>
+          <h2 class="post-title" itemprop="name headline">Underscore 硬绑定中的性能优化</h2>
         
 
         <div class="post-meta">
@@ -289,8 +287,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-14T00:15:24+08:00">
-                2016-08-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-08T21:24:24+08:00">
+                2017-09-08
               </time>
             
 
@@ -312,8 +310,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Life/" itemprop="url" rel="index">
-                    <span itemprop="name">Life</span>
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
                   </a>
                 </span>
 
@@ -349,17 +347,11 @@
       
 
       
-        <p>原本我不想写得这么罗嗦，但是我好几次想找你们谈心，你们都敷衍过去了，所以——<br><a id="more"></a></p>
-<h2 id="朋友">朋友</h2><p>一直都觉得朋友很难得，而且一起工作过，一起熬夜过的伙伴更难得。我希望我们像家人一样，无话不说，有话直说。<br>这部分我没有办法用言语来表达，记住一句话就好了。</p>
-<blockquote>
-<p>你们见过我所有的模样</p>
-</blockquote>
-<h2 id="风水">风水</h2><p>自从搬到理学馆，原本在工一 511 相安无事的我们接连发生一些我不愿意看到的事情。大脸大福撞车了，都伤得很严重，<br>大福从第二个星期就没来上课在家休养了。小鸡和小白兔老是流鼻血，果姐姐和毛姐姐也都经常不舒服。我就觉得这边风<br>水不太好的样子。我倒是没什么，不过就老是感觉有一个黑影在我身后注视着我敲代码，而且黑影每隔十分钟就会来我的<br>身后拍一下我的肩膀，非常打扰我的学习和项目进度，非常诡异。<br>不过，风水不可信，希望各位桑还是要多运动运动，保重身体。</p>
-<h2 id="笑声">笑声</h2><p>啊，终于，我们的别墅 party 要开始了！哈哈，先和各位说声对不起啊，原本那天要好好一起玩的，但是中间我用了 1<br>个多小时来帮一个快要上线的项目 debug。<br>不过，我坐在客厅里面，看着各位大姐姐在厨房忙忙碌碌地，心里有一种幸福的感觉，“有桑如此，夫复何求”。<br>所以 debug 完，我和猪<strong>故意</strong>输给小白兔和大果一场球赛（认真脸），赌注是吃完饭要洗碗。</p>
-<p>吃饭。啊，这…居然，大脸和果姐姐毛姐姐 bra 合力煮的菜好好吃！！  有哦多桑的风范，我特别喜欢咖喱鸡，水煮鱼<br>也不错，芝士西兰花也挺好吃的，汤很好喝！！  所以吃完我都只能躺在那里动不了了。</p>
-<p>吃完饭，为了消耗一下能量，我们玩狼人杀，结果不重要（这不是逃避），虽然我几乎每局都是狼人：），我看到各位桑<br>最后玩得都不愿意离开，最后玩得我实在撑不下去了，就沉沉睡去了，导致我早上迷迷糊糊的。<br>哦，对了，我有几张照片，有笑声的。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/1373149176.jpg" alt=""><br><img src="http://7xns9g.com1.z0.glb.clouddn.com/383412283.jpg" alt=""></p>
-<h2 id="成长">成长</h2><p>这一个月，我觉得我成长了很多，因为接触的人多了，和别人合作的时候，学到了很多项目管理的东西，也慢慢地懂<br>当时经理暴君捞文说的那些道理。<br>虽然做了两个很赶很赶的项目，猪桑和果桑都病倒了，心疼，但是我们都一致认为技术上收获很大，但是也出现了很多<br>不必要的问题，导致项目中有情绪问题，这都要归咎我在构建项目的时候没有考虑周到，所以我会总结出这两个项目的<br>东西，以求不再犯同样的错误，还有为许愿墙做最充分的准备。<br>各位桑都要成长起来，像一个真正的男人一样，战斗吧斯巴达！<br>最后给自己加个油，希望可以完成自己的目标。</p>
-<p>以上。</p>
+        <p>underscore 源码中有下面这一段代码<br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">var optimizeCb = <span class="function"><span class="keyword">function</span><span class="params">(func, context, argCount)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (context === void <span class="number">0</span>) <span class="keyword">return</span> func;</span><br><span class="line">    switch (argCount) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">(value)</span></span> &#123;</span><br><span class="line">        <span class="keyword">return</span> func.<span class="keyword">call</span>(context, <span class="keyword">value</span>);</span><br><span class="line">      &#125;;</span><br><span class="line">      // The <span class="number">2</span>-<span class="type">parameter</span> <span class="keyword">case</span> has been omitted <span class="keyword">only</span> because no current consumers</span><br><span class="line">      // made <span class="keyword">use</span> of it.</span><br><span class="line">      <span class="keyword">case</span> null:</span><br><span class="line">      <span class="keyword">case</span> <span class="number">3</span>: <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">(value, index, collection)</span></span> &#123;</span><br><span class="line">        <span class="keyword">return</span> func.<span class="keyword">call</span>(context, <span class="keyword">value</span>, <span class="built_in">index</span>, collection);</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">4</span>: <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">(accumulator, value, index, collection)</span></span> &#123;</span><br><span class="line">        <span class="keyword">return</span> func.<span class="keyword">call</span>(context, accumulator, <span class="keyword">value</span>, <span class="built_in">index</span>, collection);</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span> &#123;</span><br><span class="line">      <span class="keyword">return</span> func.apply(context, arguments);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>这个函数是什么意思？从整体上看并没有特别的意思，我们知道 this 的指向是动态的，所以在实际开发中肯定免不了对函数的 this 值进行硬绑定的做法，但是 bind 函数会有兼容性问题，<br>所以会倾向于使用 call 方法和 apply 方法，这两个原生函数在使用的时候区别就在于 call 后面是可以跟随 n 的参数，而 apply 后面是跟随数组形式的参数的，<br>那为什么 underscore 源码需要将这两种方法区分呢？可以看到 optimizeCb 函数会将传递参数少于或等于 4 个的采用 call 方法来绑定 this，<br>而对于多于 4 个参数的方法则会采用 apply 方法来进行绑定，其实这是代码性能优化的手段，apply 方法在执行的时候其实是比 call 方法要慢得多， apply 方法在执行的时候需要对传进来的参数数组<br>进行深拷贝：apply 内部执行伪代码<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">argList = [];</span><br><span class="line"></span><br><span class="line">len = argArray.<span class="keyword">length</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">index</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(<span class="keyword">index</span> &lt; len)&#123;</span><br><span class="line">  indexName = <span class="keyword">index</span>.toString();</span><br><span class="line">  argList.<span class="keyword">push</span>(argArray[indexName]);</span><br><span class="line">  <span class="keyword">index</span> = <span class="keyword">index</span> + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> func(argList);</span><br></pre></td></tr></table></figure></p>
+<p>此外，apply 内部还需要对传进来的参数数组进行判断到底是不是一个数组对象，是否是 null 或者 undefined，而对于 call 则简单许多：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">argList = [];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(argCount &gt; <span class="number">1</span>) &#123;</span><br><span class="line">  <span class="keyword">while</span>(arg) &#123;</span><br><span class="line">    argList.push(arg);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="func"><span class="keyword">func</span><span class="params">(argList)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>总的来说就是 apply 不管在什么时候，对参数的循环遍历都是必定执行的，而对于 call 来说则是当参数数目大于 1 的时候才会执行循环遍历，而且 apply 比 call 多了一些对参数的检查，<br>所以 call 比 apply 快，基于这一点，underscore 使用 optimize 函数优化需要硬绑定的代码性能。</p>
 
       
     </div>
@@ -380,7 +372,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://zhangxiang958.github.io/2016/08/14/你们无法逃避的谈心/" title="你们无法逃避的谈心">http://zhangxiang958.github.io/2016/08/14/你们无法逃避的谈心/</a>
+    <a href="http://zhangxiang958.github.io/2017/09/08/underscore 硬绑定中的优化/" title="Underscore 硬绑定中的性能优化">http://zhangxiang958.github.io/2017/09/08/underscore 硬绑定中的优化/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -402,8 +394,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/18/浏览器从输入 URL 到页面显示的过程/" rel="next" title="浏览器从输入 URL 到页面显示的过程">
-                <i class="fa fa-chevron-left"></i> 浏览器从输入 URL 到页面显示的过程
+              <a href="/2017/08/12/Vue 2 in Android webView throw Uncaught ReferenceError_create2 is not defined exception/" rel="next" title="Vue2 throw Uncaught ReferenceError_create2 is not defined exception">
+                <i class="fa fa-chevron-left"></i> Vue2 throw Uncaught ReferenceError_create2 is not defined exception
               </a>
             
           </div>
@@ -412,8 +404,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/01/Vue 项目总结/" rel="prev" title="Vue 项目总结">
-                Vue 项目总结 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/25/git/" rel="prev" title="git 小结">
+                git 小结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -471,17 +463,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -552,22 +535,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#朋友"><span class="nav-number">1.</span> <span class="nav-text">朋友</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#风水"><span class="nav-number">2.</span> <span class="nav-text">风水</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笑声"><span class="nav-number">3.</span> <span class="nav-text">笑声</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#成长"><span class="nav-number">4.</span> <span class="nav-text">成长</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
