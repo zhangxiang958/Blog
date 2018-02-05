@@ -86,19 +86,16 @@
 
 
 
-<meta name="description" content="rebase —ontohttps://git-scm.com/docs/git-rebasehttp://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/
-cherry-pickhttps://git-scm.com/docs/git-cherry-pickhttps">
+<meta name="description" content="rebase —onto在实际的协同开发中, 我们可能会面对的并不是一个分支, 很可能是很多并行的分支. 例如我们在开发中正在开发的一个新的功能, 但是突然发现线上代码有 bug,所以需要为线上的 master 分支切出一个 bugfix 分支, 但是由于粗心, 我们并没有切换到 master 分支再切出一个新的分支, 而是从当前的 feature 分支上切出了一个分支,https://git-s">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Git 杂记">
 <meta property="og:url" content="http://zhangxiang958.github.io/Git 杂记.html">
 <meta property="og:site_name" content="Shawn's blog">
-<meta property="og:description" content="rebase —ontohttps://git-scm.com/docs/git-rebasehttp://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/
-cherry-pickhttps://git-scm.com/docs/git-cherry-pickhttps">
-<meta property="og:updated_time" content="2018-01-28T13:09:50.493Z">
+<meta property="og:description" content="rebase —onto在实际的协同开发中, 我们可能会面对的并不是一个分支, 很可能是很多并行的分支. 例如我们在开发中正在开发的一个新的功能, 但是突然发现线上代码有 bug,所以需要为线上的 master 分支切出一个 bugfix 分支, 但是由于粗心, 我们并没有切换到 master 分支再切出一个新的分支, 而是从当前的 feature 分支上切出了一个分支,https://git-s">
+<meta property="og:updated_time" content="2018-02-03T12:44:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git 杂记">
-<meta name="twitter:description" content="rebase —ontohttps://git-scm.com/docs/git-rebasehttp://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/
-cherry-pickhttps://git-scm.com/docs/git-cherry-pickhttps">
+<meta name="twitter:description" content="rebase —onto在实际的协同开发中, 我们可能会面对的并不是一个分支, 很可能是很多并行的分支. 例如我们在开发中正在开发的一个新的功能, 但是突然发现线上代码有 bug,所以需要为线上的 master 分支切出一个 bugfix 分支, 但是由于粗心, 我们并没有切换到 master 分支再切出一个新的分支, 而是从当前的 feature 分支上切出了一个分支,https://git-s">
 
 
 
@@ -266,7 +263,7 @@ cherry-pickhttps://git-scm.com/docs/git-cherry-pickhttps">
       <div class="post-body">
         
         
-          <h2 id="rebase_—onto">rebase —onto</h2><p><a href="https://git-scm.com/docs/git-rebase" target="_blank" rel="external">https://git-scm.com/docs/git-rebase</a><br><a href="http://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/" target="_blank" rel="external">http://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/</a></p>
+          <h2 id="rebase_—onto">rebase —onto</h2><p>在实际的协同开发中, 我们可能会面对的并不是一个分支, 很可能是很多并行的分支. 例如我们在开发中正在开发的一个新的功能, 但是突然发现线上代码有 bug,<br>所以需要为线上的 master 分支切出一个 bugfix 分支, 但是由于粗心, 我们并没有切换到 master 分支再切出一个新的分支, 而是从当前的 feature 分支上<br>切出了一个分支,<br><a href="https://git-scm.com/docs/git-rebase" target="_blank" rel="external">https://git-scm.com/docs/git-rebase</a><br><a href="http://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/" target="_blank" rel="external">http://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/</a></p>
 <h2 id="cherry-pick">cherry-pick</h2><p><a href="https://git-scm.com/docs/git-cherry-pick" target="_blank" rel="external">https://git-scm.com/docs/git-cherry-pick</a><br><a href="https://www.jianshu.com/p/d577dcc36a08" target="_blank" rel="external">https://www.jianshu.com/p/d577dcc36a08</a></p>
 <h2 id="rebase_-i">rebase -i</h2><p>可以修改 commit 信息<br>保持线性信息<br>修改 commit 顺序<br>合并 commit</p>
 <h2 id="merge_—squash">merge —squash</h2><h2 id="git_add_-p">git add -p</h2><p><a href="https://stackoverflow.com/questions/10605405/what-does-each-of-the-y-n-q-a-d-k-j-j-g-e-stand-for-in-context-of-git-p" target="_blank" rel="external">https://stackoverflow.com/questions/10605405/what-does-each-of-the-y-n-q-a-d-k-j-j-g-e-stand-for-in-context-of-git-p</a></p>
@@ -348,7 +345,7 @@ cherry-pickhttps://git-scm.com/docs/git-cherry-pickhttps">
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -359,7 +356,7 @@ cherry-pickhttps://git-scm.com/docs/git-cherry-pickhttps">
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
