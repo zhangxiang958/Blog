@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="记录一下日常的 git 使用与我平时用的 git 小窍门.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 小手记">
+<meta property="og:url" content="http://zhangxiang958.github.io/2018/01/27/Git 小手记/index.html">
+<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:description" content="记录一下日常的 git 使用与我平时用的 git 小窍门.">
+<meta property="og:updated_time" content="2018-02-14T09:25:05.279Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git 小手记">
+<meta name="twitter:description" content="记录一下日常的 git 使用与我平时用的 git 小窍门.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2018/01/27/Git 小手记/"/>
+
+
+
+
+
+  <title>Git 小手记 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2018/01/27/Git 小手记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofsur12wi.bkt.clouddn.com/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Git 小手记</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-27T21:24:24+08:00">
+                2018-01-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index">
+                    <span itemprop="name">Git</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>记录一下日常的 git 使用与我平时用的 git 小窍门.<br><a id="more"></a></p>
+<h2 id="关于_rebase">关于 rebase</h2><h3 id="为什么不能在_master_上做_rebase_操作?">为什么不能在 master 上做 rebase 操作?</h3><p>rebase 与 merge 操作是同一类的操作, 都是用于合并的, 但是对比起 merge, rebase 会显得更危险, 同时还有个优点就是可以保持线性的干净的历史提交记录.<br>使用 rebase 的一条黄金法则就是不要在公共分支上做 rebase 操作, 为什么呢?<br>核心的原因在于 rebase 会将需要移动的 commit hash 重新生成一遍.<br>rebase 的本质是将需要衍合分支上的 commit 从与当前分支最近祖先 commit 起的所有 commit 重新在当前分支做一遍.<br>既然是重新做一遍, 那么 commit hash 肯定会改变的.这个操作就很不妙, 因为比如说你是在 master 分支上做 rebase,<br>通俗地说, 你是在将 master 上的 commit 移到 feature 分支的后面, 也就是说祖先元素之后的 master 分支上的 commit 都会重新生成一遍, 虽然做的事情, 提交时间, 作者相同, 但是 commit<br>hash 值是不同的. 这样的操作在公共分支上是非常危险的, 比如原本 master 上的 A commit 很多人基于这个 commit 开展了很多工作, 然后你在 master 分支上做了 rebase,<br>A 就变成了 A’, 之前的 A 就不见了, 这样别人在开发的时候就会非常困惑.<br>另外, 由于 commit hash 值不同了, 但是别人或者远程仓库都保留着之前的 A commit, 改变的只是你自己本地 master A commit, 变成了 A’, 所以在你提交的时候, 因为 commit hash 已经<br>不同, git 会认为这是一个新的提交, 然后像新的 commit 一样提交到仓库里面, 这样可以说 master 分支已经分叉了, 因为别人的 master 分支和你的已经不一样了, 而且即使没有冲突发生,<br>当你查看 git 历史的时候会发现很困扰就是 A 和 A’ 做的操作, 内容, 时间, 操作者都是一样的, 但是就是 commit hash 不同被看作两个 commit, 这样 git 历史其实已经混乱了, 而且后续<br>别人基于这样的历史进行开发并不能担保不会出现问题, 因为本身历史就是乱套的.所以这就是为什么不要在公共分支上做 rebase 操作.<br>那么问题又来了, 所谓的公共分支是指什么, 多人协作就是公共分支吗?<br>并不是, 我觉得公共分支是指共同的主分支, 会有很多协作分支的主分支才是公共分支, 假如你有一个 feature 分支并在上面开发,<br>你还有其他同事一起在这个分支上开发, 这个时候 feature 并不能算公共分支, 而相反在这样的 feature 分支上做 rebase 是被提倡的, 比如同事新提交了几个 commit, 你也有几个分支需要提交,<br>那么你只需要 git fetch, 然后 git rebasse, 意思就是将你的 commit 移到远程的同事已经提交的 commit 后面, 对没错, 我说的就是使用 git fetch + git rebase 代替 git fetch +<br>git merge, 也就是常用的 git pull. 这样做的好处是保证分支的历史的整洁性, 保持线性提交记录, 保持清爽.</p>
+<h3 id="rebase_—onto">rebase —onto</h3><p>在实际的协同开发中, 我们可能会面对的并不是一个分支, 很可能是很多并行的分支. 例如我们在开发中正在开发的一个新的功能, 但是突然发现线上代码有 bug,<br>所以需要为线上的 master 分支切出一个 bugfix 分支, 但是由于粗心, 我们并没有切换到 master 分支再切出一个新的分支, 而是从当前的 feature 分支上<br>切出了一个分支, </p>
+<h3 id="rebase_-i">rebase -i</h3><p>rebase 后面加上 -i 参数, 其实是交互式的 rebase 命令.它可以可以修改 commit 信息, 顺序, 合并 commit.</p>
+<h2 id="cherry-pick">cherry-pick</h2><p>开发中常会有这样的场景, 比如你在开发 3.10 版本的功能, 但是同时 3.9 版本正在发布, 但是有几个小的简单的功能产品需要提前上线(可能并不会这么荒谬),<br>这个时候, 也就是说, 需要将 3.10 分支上的代码上的某些修改提前交到 3.9 分支上.这时你需要 cherry-pick.<br>cherry-pick 会重演某些 commit, 就是将某些 commit 重新在某些分支上执行一遍.就像这样, 你先需要在需要上线的分支切出一个分支出来, 这里是 dev-3.9:<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">git</span> <span class="tag">checkout</span> <span class="tag">dev-3</span><span class="class">.9</span></span><br><span class="line"><span class="tag">git</span> <span class="tag">checkout</span> <span class="tag">-b</span> <span class="tag">dev-3</span><span class="class">.9</span><span class="class">.1</span></span><br></pre></td></tr></table></figure></p>
+<p>然后你可以 checkout 到你需要查找的 commit 所在的分支上:<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">git</span> <span class="tag">checkout</span> <span class="tag">dev-3</span><span class="class">.10</span></span><br></pre></td></tr></table></figure></p>
+<p>然后通过 git log 来查看你需要的一个或者是多个 commit 的 hash 值, 并把他们记录下来, 然后通过 cherry-pick 来重演:<br><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cherry-pick commit<span class="variable">Hash1</span> commit<span class="variable">Hash2</span> commit<span class="variable">Hash3</span> ....</span><br></pre></td></tr></table></figure></p>
+<p>多个 commit hash 之间用空格隔开, 然后 commit 的顺序最好是按照时间顺序进行排列, 最先提交的也就是按照时间先后进行排列.<br>因为每一个 commit hash 是特殊的, 所以你不用担心另一个分支的 commit 能不能在这个分支上被 pick 过去, git 会根据 hash 找到这个对应的 commit 进行 pick.<br>而且不仅可以在不同分支做 pick, 同一个分支也可以进行 pick.比如你曾经 reset 了某个 commit, 你想把它找回来, 可以使用 pick, 至于这个 commit 怎么找回来就需要 git reflog 了.</p>
+<h2 id="merge_—squash">merge —squash</h2><p>git merge —squash 是合并 merge 操作.遇到的场景是你需要在 deve 分支上修复某个 bug, 你需要切出一个 bugfix 分支, 在 bugfix 分支上修复这个 bug, 但是这个 bug 你会在分支上提交<br>多个 commit(保持 commit 的原子性), 但是到最后合并到 deve 分支上的时候, 为了保持清爽的提交历史, 你可能会需要 git merge —squash, 你可能会有:<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">添加文件</span><br><span class="line">添加文件2</span><br><span class="line">添加文件3</span><br></pre></td></tr></table></figure></p>
+<p>这样的 bugfix 提交, 如果将这些合并到 deve 会显得有点乱, 所以使用 git merge —squash 让 bugfix 分支上的提交合并为一个提交(fix xxx bug)然后合并到 deve.</p>
+<h2 id="git_add_-p">git add -p</h2><p>所谓 -p 其实是 —patch, 也就是块级, 补丁的意思.git add -p 可以交互式地, 单文件内选择性提交.我们会经常遇到这样的场景, 也就是我们在单个文件里面一连修复了很多个 bug, 但是我们<br>忘记逐个 bug 进行提交记录, 但是如果直接将整个文件进行提交, 我们将不能保持 commit 的原子性, 这个时候就需要 git add -p:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add -<span class="tag">p</span> filename</span><br></pre></td></tr></table></figure></p>
+<p>输入这个命令就会进入一个交互式界面, 可以看到下面有命令的选择:<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Stage this hunk [y,<span class="keyword">n</span>,q,a,<span class="keyword">d</span>,/,s,<span class="keyword">e</span>,?]?</span><br></pre></td></tr></table></figure></p>
+<p>上面的命令就是为了对文件的修改区域进行交互式选择提交的:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">y:</span> 缓存该块</span><br><span class="line"><span class="string">n:</span> 不缓存该块</span><br><span class="line"><span class="string">q:</span> 退出</span><br><span class="line"><span class="string">a:</span> 缓存当前块与其之后所有块</span><br><span class="line"><span class="string">d:</span> 不缓存当前块与其之后所有块</span><br><span class="line">/: 搜索与某个正则匹配的块</span><br><span class="line"><span class="string">s:</span> 将块进行粒度更细的划分</span><br><span class="line"><span class="string">e:</span> 进入编辑模式</span><br><span class="line">?: 显示帮助信息</span><br></pre></td></tr></table></figure></p>
+<p>如果对当前块进行 y 命令操作, 你可以看到文件已经进行了一次加入到缓存区的操作了.</p>
+<h2 id="区分_reset_的几个参数">区分 reset 的几个参数</h2><p>reset 有三个参数:<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1. </span>soft, 将历史库回退, 但是缓存区与工作区不回退.</span><br><span class="line"><span class="bullet">2. </span>hard 历史记录, 缓存区, 工作区全部回退.</span><br><span class="line"><span class="bullet">3. </span>mixed 将历史记录与缓存区回退, 但是工作区不回退, mixed 是默认参数.</span><br></pre></td></tr></table></figure></p>
+<h2 id="git_reflog">git reflog</h2><p>git reflog 堪称 git 协同工作的最后一根救命稻草. git reflog 是保存在本地的, 记录各个分支 HEAD 指针指向情况的.而 git log 是记录当前 HEAD 指针的指向与其的祖先, 是一个递归的结构.<br>git reflog 是记录 HEAD 指针曾经指向过的历史, 它是撤销操作历史库, 它并不会包括在仓库中, 它只存在于本地.也就是说, 一旦你的修改被提交到缓存区, 即 commit 过, 那么就可以通过 git reflog<br>找回来.</p>
+<p>参考资料:</p>
+<ol>
+<li><a href="https://git-scm.com/docs/git-rebase" target="_blank" rel="external">https://git-scm.com/docs/git-rebase</a></li>
+<li><a href="http://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/" target="_blank" rel="external">http://weblog.avp-ptr.de/20120928/git-how-to-copy-a-range-of-commits-from-one-branch-to-another/</a></li>
+<li><a href="https://git-scm.com/docs/git-cherry-pick" target="_blank" rel="external">https://git-scm.com/docs/git-cherry-pick</a></li>
+<li><a href="https://stackoverflow.com/questions/10605405/what-does-each-of-the-y-n-q-a-d-k-j-j-g-e-stand-for-in-context-of-git-p" target="_blank" rel="external">https://stackoverflow.com/questions/10605405/what-does-each-of-the-y-n-q-a-d-k-j-j-g-e-stand-for-in-context-of-git-p</a></li>
+<li><a href="https://stackoverflow.com/questions/17857723/whats-the-difference-between-git-reflog-and-log" target="_blank" rel="external">https://stackoverflow.com/questions/17857723/whats-the-difference-between-git-reflog-and-log</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2018/01/27/Git 小手记/" title="Git 小手记">http://zhangxiang958.github.io/2018/01/27/Git 小手记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/30/使用 request, mocha, chai 让接口更稳定/" rel="next" title="使用 request, mocha, chai 让接口更稳定">
+                <i class="fa fa-chevron-left"></i> 使用 request, mocha, chai 让接口更稳定
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/03/Event Loop 中的 microtask 与 macrotask/" rel="prev" title="Event Loop 中的 microtask 与 macrotask">
+                Event Loop 中的 microtask 与 macrotask <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://ofsur12wi.bkt.clouddn.com/916161494.jpg"
+                alt="Shawn" />
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于_rebase"><span class="nav-number">1.</span> <span class="nav-text">关于 rebase</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么不能在_master_上做_rebase_操作?"><span class="nav-number">1.1.</span> <span class="nav-text">为什么不能在 master 上做 rebase 操作?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rebase_—onto"><span class="nav-number">1.2.</span> <span class="nav-text">rebase —onto</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rebase_-i"><span class="nav-number">1.3.</span> <span class="nav-text">rebase -i</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cherry-pick"><span class="nav-number">2.</span> <span class="nav-text">cherry-pick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#merge_—squash"><span class="nav-number">3.</span> <span class="nav-text">merge —squash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git_add_-p"><span class="nav-number">4.</span> <span class="nav-text">git add -p</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区分_reset_的几个参数"><span class="nav-number">5.</span> <span class="nav-text">区分 reset 的几个参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git_reflog"><span class="nav-number">6.</span> <span class="nav-text">git reflog</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
