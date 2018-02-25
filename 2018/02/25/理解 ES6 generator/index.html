@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="工作中经常使用 generator, 让我们来全面了解一下它.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解 ES6 generator">
+<meta property="og:url" content="http://zhangxiang958.github.io/2018/02/25/理解 ES6 generator/index.html">
+<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:description" content="工作中经常使用 generator, 让我们来全面了解一下它.">
+<meta property="og:updated_time" content="2018-02-25T10:13:06.817Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解 ES6 generator">
+<meta name="twitter:description" content="工作中经常使用 generator, 让我们来全面了解一下它.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2018/02/25/理解 ES6 generator/"/>
+
+
+
+
+
+  <title>理解 ES6 generator | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2018/02/25/理解 ES6 generator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofsur12wi.bkt.clouddn.com/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">理解 ES6 generator</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-25T18:06:24+08:00">
+                2018-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>工作中经常使用 generator, 让我们来全面了解一下它.<br><a id="more"></a></p>
+<h2 id="生成器的类型判断">生成器的类型判断</h2><h3 id="如何判断生成器对象">如何判断生成器对象</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isGenerator</span><span class="params">(obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> obj &amp;&amp; <span class="keyword">typeof</span> obj.next === <span class="string">'function'</span> &amp;&amp; <span class="keyword">typeof</span> obj.<span class="keyword">throw</span> === <span class="string">'function'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与 promise 对象类似，这里运用鸭子模型进行判断，如果对象中有 next 与 throw 两个方法，那么就认为这个对象是一个生成器对象。</p>
+<h3 id="如何判断生成器函数">如何判断生成器函数</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isGeneratorFunction</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="constructor"><span class="keyword">constructor</span> = obj.<span class="keyword">constructor</span>;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="keyword">constructor</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span>('GeneratorFunction' === <span class="keyword">constructor</span>.name || 'GeneratorFunction' === <span class="keyword">constructor</span>.displayName) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>利用函数的 constructor 构造器的名字来判断，为了兼容性使用 name 与 displayName 两个属性来进行判断.</p>
+<h2 id="yield_与_next_传值问题">yield 与 next 传值问题</h2><p>这个问题的答案需要清楚， 因为单独的 generator 是没有办法做异步任务流程化的。<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function *<span class="keyword">gen</span>() &#123;</span><br><span class="line">    <span class="keyword">var</span> re = yield 1;</span><br><span class="line">    <span class="keyword">return</span> re + 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">gen</span> = <span class="keyword">gen</span>();</span><br><span class="line"><span class="keyword">var</span> <span class="keyword">g</span> = <span class="keyword">gen</span>.next();</span><br><span class="line">console.<span class="literal">log</span>('1: ', <span class="keyword">g</span>.value);</span><br><span class="line"><span class="keyword">g</span> = <span class="keyword">gen</span>.next();</span><br><span class="line">console.<span class="literal">log</span>('2: ', <span class="keyword">g</span>.value);</span><br><span class="line"><span class="keyword">g</span> = <span class="keyword">gen</span>.next();</span><br><span class="line">console.<span class="literal">log</span>('3: ', <span class="keyword">g</span>.value);</span><br></pre></td></tr></table></figure></p>
+<p>猜一下以上代码的 value 值分别为多少? 答案是 1, NaN, undefined. 为什么会出现这样的结果呢? gen 生成器函数本意是想做一个 1 + 2 简单的加法运算, 但是最后得到的结果是 NaN. 其实 generator 函数内部的 yield 是需要我们一个一个<br>使用 next 函数去调用一步一步得到的. 而 next 函数调用之后, 返回一个对象, 对象中有两个属性值:<br><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    value: <span class="keyword">val</span>,  <span class="comment">// 任意值</span></span><br><span class="line">    <span class="keyword">done</span>: <span class="keyword">true</span> <span class="comment">// 或者 false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而其中的 value 的值就是 yield 语句后面的 “值”, 注意这里的值不一定是 javascript 中的基本数据类型，yield 后面可以是函数，表达式(运算结果)，对象等等的值。可以查看下面的例子:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">gen</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">yield</span> &#123; who: <span class="string">'me'</span> &#125;;</span><br><span class="line">    <span class="keyword">yield</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'hello'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span> + <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gen = gen();</span><br><span class="line"><span class="keyword">var</span> g1 = gen.next();</span><br><span class="line"><span class="built_in">console</span>.log(g1.value);  <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">var</span> g2 = gen.next();</span><br><span class="line"><span class="built_in">console</span>.log(g2.value);  <span class="comment">// &#123; who: 'me' &#125;</span></span><br><span class="line"><span class="keyword">var</span> g3 = gen.next();</span><br><span class="line"><span class="built_in">console</span>.log(g3.value);  <span class="comment">// function()&#123; console.log('hello'); &#125;</span></span><br><span class="line"><span class="keyword">var</span> g4 = gen.next();</span><br><span class="line"><span class="built_in">console</span>.log(g4.value); <span class="comment">// 3</span></span><br></pre></td></tr></table></figure></p>
+<p>那么问题出现了，既然 yield 后面的值可以通过 next 方法得到，那 yield 语句本身有没有返回值或者 yield 语句返回值如何得到呢？这个问题是 generator 异步流程控制的第一个问题， 上面说到 yield 后面是可以接函数或者表达式或基本值等等，但是<br>如果像 var tmp = yield 1; 这样的语句， tmp 变量并没有取到 1 的话，流程控制就无从谈起，甚至 yield 与生成器函数本身的作用也不太大， 所以这里就需要一个消息数据双向通道。<br>所谓消息双向通道就是我们可以从 next 函数中拿到 yield 语句后面的值，然后可以通过 next 函数传值把传进去的值变为 yield 语句的返回值。所以这也就解释了第一段代码为什么得到值是 NaN 了， 因为在处理的时候，我们没有给 next 函数传值，导致<br>yield 语句返回值为 undefined， undefined + 2 得到的当然就是 NaN.<br>这里还要解释一下第一段函数最后没有 yield 语句，但是 value 还有有值， 而且得到最后的结果 NaN，因为 value 的值是如果存在 yield 那么, 它的值就是 yield 后面接着的值, 如果没有 yield 那么就取 return 后面的值, 若都没有则返回 undefined(其实是相当于有个默认的 return undefined).<br>所以为了实现第一段代码的功能，我们需要：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function *<span class="keyword">gen</span>() &#123;</span><br><span class="line">    <span class="keyword">var</span> re = yield 1;</span><br><span class="line">    <span class="keyword">return</span> re + 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">gen</span> = <span class="keyword">gen</span>();</span><br><span class="line"><span class="keyword">var</span> <span class="keyword">g</span> = <span class="keyword">gen</span>.next();</span><br><span class="line">console.<span class="literal">log</span>('1: ', <span class="keyword">g</span>.value);  <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">g</span> = <span class="keyword">gen</span>.next(<span class="keyword">g</span>.value);</span><br><span class="line">console.<span class="literal">log</span>('2: ', <span class="keyword">g</span>.value);  <span class="comment">// 3</span></span><br><span class="line"><span class="keyword">g</span> = <span class="keyword">gen</span>.next();</span><br><span class="line">console.<span class="literal">log</span>('3: ', <span class="keyword">g</span>.value);  <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure></p>
+<p>最后一个是 undefined 是因为 yield 语句数量只有一个，在调用两个 next 函数之后已经结束( done === true )了， 所以 value 为 undefined.</p>
+<h2 id="next_函数与_yield_个数不对等?">next 函数与 yield 个数不对等?</h2><p>先看一个例子:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">gen</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> ret = <span class="keyword">yield</span> <span class="number">1</span> + <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">var</span> num = <span class="keyword">yield</span> <span class="number">43</span>;</span><br><span class="line">    ret = <span class="keyword">yield</span> ret + num;</span><br><span class="line">    <span class="built_in">console</span>.log(ret);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们怎么实现 1 + 2 + 4 这个功能呢？来看以下代码:<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">gen</span> = <span class="keyword">gen</span>(); <span class="comment">// 转换为 generator 对象</span></span><br><span class="line"><span class="keyword">var</span> <span class="keyword">g</span> = <span class="keyword">gen</span>.next(); <span class="comment">// 第一步启动</span></span><br><span class="line"><span class="keyword">var</span> firstStep = <span class="keyword">g</span>.value; <span class="comment">// 取得第一个 yield 后面的表达式，即 1 + 2 为 3 </span></span><br><span class="line"><span class="keyword">g</span> = <span class="keyword">gen</span>.next(firstStep); <span class="comment">// 从 next 函数传入第一步的值，则 ret 值为 3</span></span><br><span class="line"><span class="keyword">var</span> secondStep = <span class="keyword">g</span>.value; <span class="comment">// 取得第二步 yield 的值，即 4</span></span><br><span class="line"><span class="keyword">g</span> = <span class="keyword">gen</span>.next(secondStep); <span class="comment">// 从 next 函数传入第二步的值， 即 num 为 4</span></span><br><span class="line"><span class="comment">// 由于下面没有了 yield 语句，所以直接执行完函数，ret 为 &#123; value: 7, done: false &#125;</span></span><br><span class="line"><span class="keyword">g</span> = <span class="keyword">gen</span>.next(<span class="keyword">g</span>.value);</span><br><span class="line">console.<span class="literal">log</span>(<span class="keyword">g</span>.done); <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到， 其实第一个 next 函数是为了启动 generator，因为在还没有启动的时候，前面还没有 yield 语句，<br>所以即使你往第一个 next 函数中传值也没有用，它不会替代任何一个 yield 语句的值，所以我们会倾向于不向<br>第一个 next 函数中传值(undefined)。<br>然后接下来你可以看到，第一个 next 函数之后每个 next 函数对应着一个 yield 语句, 其实 next 函数通俗来讲就是<br>运行上一个 yield 语句与当前 yield 语句之间的代码, 而 next 函数传进去的值会变成上一个 yield 语句的返回值.<br>由此可知, next 函数调用次数与 yield 语句个数总是不对等, next 函数调用次数总是比 yield 语句多 1, 因为需要<br>第一个进行启动.</p>
+<h2 id="异步流程控制">异步流程控制</h2><p>单独的生成器作用并不大, 特别是在异步流程控制中, 即使 yield 后面可以添加异步任务, 但是我们仍然需要一个一个<br>地调用 next 函数, 如果需要流程化控制, 就需要自动执行 next 函数.而对于 yield + promise 结合的异步流程控制,<br>核心思想就是通过 next 函数取得 yield 后面的值, 然后将这个值转化为 Promise, 通过 Promise 来控制异步任务,<br>异步任务完成后递归重新调用 next 函数重复上面的操作.这里我推荐阅读 co 类库的源码, 它的思想与上面一致, 是<br>yield + promise 的精妙实现.具体可以查看我的另一篇博文— <a href="http://zhangxiang958.github.io/2018/02/25/co%20源码剖析/">co 源码剖析</a>.<br>这里我们试试写一个简单的 promise + yield 控制器来理解一下:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params">gen</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> args = [].slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> gen === <span class="string">'function'</span>) gen = gen.apply(<span class="keyword">this</span>, args);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">        onFulfilled();</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">onFulfilled</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">var</span> it = gen.next(res);</span><br><span class="line">            next(it);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(res.done) <span class="keyword">return</span> resolve(res.value);</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(res.value)</span><br><span class="line">                    .then(onFulfilled);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意此时 yield 后面的东西需要是一个 Promise 对象.</p>
+<h2 id="yield_与_yield_*_的区别">yield 与 yield * 的区别</h2><p>在实际场景中, 异步任务可能并没有像 demo 中那么简单的关系, 可能会有 A-B-C 的异步任务, 而 B 中又包含 B-1,<br>B-2, B-3 这样的异步任务, 按照逻辑是需要完成 A 后再逐个完成 B-i 再执行 C.<br>问题在于不可能在一个函数内完成全部逻辑, 我们会需要在多个函数中编写逻辑, 这个时候 yield 后面可能需要加上<br>一个包裹型的函数:<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function *doTask() &#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="function"><span class="keyword">yield</span> <span class="title">A</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="keyword">var</span> b = <span class="function"><span class="keyword">yield</span> <span class="title">run</span>(<span class="params">B</span>)</span>;</span><br><span class="line">    <span class="keyword">var</span> c = <span class="function">yeld <span class="title">C</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function *B() &#123;</span><br><span class="line">    <span class="keyword">var</span> b1 = <span class="function"><span class="keyword">yield</span> <span class="title">B1</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="keyword">var</span> b2 = <span class="function"><span class="keyword">yield</span> <span class="title">B2</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="keyword">var</span> b3 = <span class="function"><span class="keyword">yield</span> <span class="title">B3</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">run(doTask);</span><br></pre></td></tr></table></figure></p>
+<p>我们可以使用上面编写的 run 函数来做管理, 但是存在更好的方式就是使用 yield <em>, 注意这里和常规的 yield 多了<br>一个 </em> 符号.其实 yield * 的”学名”叫做 yield 委托, 看下面的例子:<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">()</span> &#123;</span></span><br><span class="line">    console.<span class="built_in">log</span><span class="params">('start *foo')</span>;</span><br><span class="line">    yield <span class="number">3</span>;</span><br><span class="line">    yield <span class="number">4</span>;</span><br><span class="line">    console.<span class="built_in">log</span><span class="params">('end *foo')</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">()</span>&#123;</span></span><br><span class="line">    yield <span class="number">1</span>;</span><br><span class="line">    yield <span class="number">2</span>;</span><br><span class="line">    yield <span class="built_in">*</span>foo<span class="params">()</span>;</span><br><span class="line">    yield <span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> var g = bar<span class="params">()</span>;</span><br><span class="line"> console.<span class="built_in">log</span><span class="params">(g.next<span class="params">()</span>.value)</span>; <span class="comment">// 1</span></span><br><span class="line"> console.<span class="built_in">log</span><span class="params">(g.next<span class="params">()</span>.value)</span>; <span class="comment">// 2</span></span><br><span class="line"> <span class="comment">// start *foo</span></span><br><span class="line"> console.<span class="built_in">log</span><span class="params">(g.next<span class="params">()</span>.value)</span>; <span class="comment">// 3</span></span><br><span class="line"> console.<span class="built_in">log</span><span class="params">(g.next<span class="params">()</span>.value)</span>; <span class="comment">// 4</span></span><br><span class="line"> <span class="comment">// end *foo</span></span><br><span class="line"> console.<span class="built_in">log</span><span class="params">(g.next<span class="params">()</span>.value)</span>; <span class="comment">// 5</span></span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到, 使用 yield <em> 可以让函数先进入另外一个生成器函数内部执行完内部的步骤之后, 再返回上一层继续<br>执行上一层剩下的步骤.<br>简单地来说, yield </em> 提供了调用生成器函数的方法, 由于生成器方法的特殊, 所以 generator 提供了一个特殊的方式<br>调用生成器函数.好处在于你可以简单地执行嵌套的 yield, 而无需自己编写像 run 函数这样的工具.<br>yield * 除了后面加我们自己编写的生成器函数, 还可以加非一般的生成器函数, 比如数组的迭代器:<br><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yield *[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">it.<span class="built_in">next</span>().<span class="built_in">value</span>; <span class="comment">// 1</span></span><br><span class="line">it.<span class="built_in">next</span>().<span class="built_in">value</span>; <span class="comment">// 2</span></span><br><span class="line">it.<span class="built_in">next</span>().<span class="built_in">value</span>; <span class="comment">// 3</span></span><br></pre></td></tr></table></figure></p>
+<p>但是注意这里这样的 yield * 语句是始终没有返回值的, 或者说是 undefined.</p>
+<h2 id="ES5_中的生成器">ES5 中的生成器</h2><p>生成器是 ES6 中的语法, 但是 ES6 的语法都是可以通过工具来转化为 ES5 的语法的, 为了更全面地认识生成器, 我们<br>来自己转化一下, 先假定有一个生成器函数:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>)</span>&#123;</span><br><span class="line">        request(<span class="string">'www.test.com/api'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">            resolve(res);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'start yield'</span>);</span><br><span class="line">        <span class="keyword">var</span> tmp = <span class="keyword">yield</span> bar();</span><br><span class="line">        <span class="built_in">console</span>.log(tmp);</span><br><span class="line">    &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(err);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> it = foo();</span><br></pre></td></tr></table></figure></p>
+<p>既然是转化为 ES5 的语法, 那么变量 it, 也就是 foo 函数的返回值就应该是:<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ....</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        next: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="keyword">throw</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们知道 yield 可以”暂停”函数运行, 那么换言之, 在内部就应该有一个对应的状态变量来标记函数运行到哪一步, 而<br>对于控制来说, switch 语句很合适, 根据变量采取对应的操作: 看一下完整代码<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> state;  <span class="comment">// 全局状态, 一开始值并不是 1, 因为需要一个 next 函数来启动</span></span><br><span class="line">    <span class="keyword">var</span> val; <span class="comment">// val 代表的是 yield 语句的返回值</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">progress</span>(<span class="params">v</span>) </span>&#123;</span><br><span class="line">        swtich(state)&#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'start yield'</span>);</span><br><span class="line">                <span class="keyword">return</span> bar();</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                val = v;</span><br><span class="line">                <span class="built_in">console</span>.log(v);</span><br><span class="line">                <span class="comment">// yield 之后没有 return, 默认提供一个 return;</span></span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                <span class="comment">// catch 中的逻辑</span></span><br><span class="line">                <span class="keyword">var</span> err = v;</span><br><span class="line">                <span class="built_in">console</span>.log(err);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 生成器返回值</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        next: <span class="function"><span class="keyword">function</span>(<span class="params">v</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(!state) &#123;</span><br><span class="line">                state = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">return</span> &#123;</span><br><span class="line">                    done: <span class="literal">false</span>,</span><br><span class="line">                    value: progress()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span>(state == <span class="number">1</span>)&#123;</span><br><span class="line">                state = <span class="number">2</span>;</span><br><span class="line">                <span class="keyword">return</span> &#123;</span><br><span class="line">                    done: <span class="literal">true</span>,</span><br><span class="line">                    value: progress(v)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> &#123;</span><br><span class="line">                    done: <span class="literal">true</span>,</span><br><span class="line">                    value: <span class="literal">undefined</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="keyword">throw</span>: <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(state == <span class="number">1</span>) &#123;</span><br><span class="line">                state = <span class="number">3</span>;</span><br><span class="line">                <span class="keyword">return</span> &#123;</span><br><span class="line">                    done: <span class="literal">true</span>,</span><br><span class="line">                    value: progress(e)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">throw</span> e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>也就是说在转化为 ES5 的语法的时候, 生成器函数中的代码逻辑被分段, 上一个 yield 与下一个 yield 之间的代码被<br>放到 switch 语句的中一个 case 中去, 然后根据一个闭包中的状态变量 state 执行一个个 case.然后 switch 包含在<br>一个类似 progress 可供重复执行的函数中. progress 可以传入值, 值记录在一个闭包变量 val 中, 会使用在需要<br>yield 语句返回值的地方( var v = yield fn(), v 的值就是闭包变量 val 的值), progress 函数是一个私有方法.<br>然后原生成器函数变为一个函数, 包含以上的逻辑, 返回值是一个对象, 其中包含 next 函数与 throw 函数的实现.<br>next 函数通过判断 state 的值, 不断将 state 值改变, 比如当 state 为 1 时, 执行 progress case 为 1 的逻辑,<br>然后修改 state 为 2(下一个状态), 当然 next 函数也可以直接传值, 传入值直接传到 progress 中, 然后执行刚说的<br>val 的逻辑.<br>throw 函数就是传入一个错误, 将初始状态(1)转为错误状态, 执行错误时的逻辑( progress ), 其他的状态直接抛出错<br>误 throw.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2018/02/25/理解 ES6 generator/" title="理解 ES6 generator">http://zhangxiang958.github.io/2018/02/25/理解 ES6 generator/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/25/co 源码剖析/" rel="next" title="co 源码剖析">
+                <i class="fa fa-chevron-left"></i> co 源码剖析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://ofsur12wi.bkt.clouddn.com/916161494.jpg"
+                alt="Shawn" />
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成器的类型判断"><span class="nav-number">1.</span> <span class="nav-text">生成器的类型判断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何判断生成器对象"><span class="nav-number">1.1.</span> <span class="nav-text">如何判断生成器对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何判断生成器函数"><span class="nav-number">1.2.</span> <span class="nav-text">如何判断生成器函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yield_与_next_传值问题"><span class="nav-number">2.</span> <span class="nav-text">yield 与 next 传值问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#next_函数与_yield_个数不对等?"><span class="nav-number">3.</span> <span class="nav-text">next 函数与 yield 个数不对等?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异步流程控制"><span class="nav-number">4.</span> <span class="nav-text">异步流程控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yield_与_yield_*_的区别"><span class="nav-number">5.</span> <span class="nav-text">yield 与 yield * 的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES5_中的生成器"><span class="nav-number">6.</span> <span class="nav-text">ES5 中的生成器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

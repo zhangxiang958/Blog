@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="对于如何将生成器与 Promise 结合作为异步任务流程控制，这里我推荐阅读 co 类库的代码，co 类库是一个很优秀的异步流程控制的工具库，下面我们就阅读它的代码，领会它的思想:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="co 源码剖析">
+<meta property="og:url" content="http://zhangxiang958.github.io/2018/02/25/co 源码剖析/index.html">
+<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:description" content="对于如何将生成器与 Promise 结合作为异步任务流程控制，这里我推荐阅读 co 类库的代码，co 类库是一个很优秀的异步流程控制的工具库，下面我们就阅读它的代码，领会它的思想:">
+<meta property="og:updated_time" content="2018-02-25T10:10:36.724Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="co 源码剖析">
+<meta name="twitter:description" content="对于如何将生成器与 Promise 结合作为异步任务流程控制，这里我推荐阅读 co 类库的代码，co 类库是一个很优秀的异步流程控制的工具库，下面我们就阅读它的代码，领会它的思想:">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2018/02/25/co 源码剖析/"/>
+
+
+
+
+
+  <title>co 源码剖析 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2018/02/25/co 源码剖析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ofsur12wi.bkt.clouddn.com/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">co 源码剖析</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-25T18:06:24+08:00">
+                2018-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>对于如何将生成器与 Promise 结合作为异步任务流程控制，这里我推荐阅读 co 类库的代码，co 类库是一个很优秀的异步流程控制的工具库，下面我们就阅读它的代码，领会它的思想:<br><a id="more"></a><br>co 有两种调用形式，一种是 co(fn), 一种是 co.wrap(fn), 两者原理是一样的，只是 co 会将传入的函数立刻执行，而 co.wrap 会返回一个函数，你可以理解为 co.wrap 返回一个函数表达式。<br>而 co 的思想在于不管 yield 后面的是什么，先全部转化为 Promise 对象，注意这里的不管是指是数组，对象，生成器对象，生成器，函数这几种类型，如果不是这几种类型就会报错的。<br>另外我们知道生成器对象需要一个一个调用 next 函数来逐个执行 yield 语句，但是在流程化控制里面我们不可能一个一个去执行，所以需要自动化地执行 next 函数。那么所谓自动化执行，在 co 里面就是将上面所说的转化为 Promise，然后为 Promise<br>添加 then 处理逻辑，成功后自动调用下一个 yield 也就是 next 函数。<br>上面就是 co 类库实现的核心思想，下面来看看代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">co</span>(<span class="params">gen</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 记录当前作用域</span></span><br><span class="line">    <span class="keyword">var</span> ctx = <span class="keyword">this</span>;</span><br><span class="line">    <span class="comment">// 记录 gen 函数传参，gen 可能需要传递参数</span></span><br><span class="line">    <span class="keyword">var</span> args = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// co 本身返回一个 Promise</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>((resolve, reject) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> gen === <span class="string">'function'</span>) gen = gen.apply(ctx, args);</span><br><span class="line">        <span class="keyword">if</span>(!gen || <span class="keyword">typeof</span> gen.next !== <span class="string">'function'</span>) <span class="keyword">return</span> resolve(gen);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 先调用一次 generator, 启动 generator</span></span><br><span class="line">        onFulfilled();</span><br><span class="line">        <span class="comment">// fulfilled 态处理函数</span></span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">onFulfilled</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> ret;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 将 res 也就是异步任务的结果传入 next 函数, 那么对应 yield 语句的值就是 res</span></span><br><span class="line">                ret = gen.next(res);  <span class="comment">// ret 这里是 &#123; value: val, done: false &#125; 这样的对象</span></span><br><span class="line">            &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">                reject(err);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 递归调用 next 函数</span></span><br><span class="line">            next(ret);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// reject 态的处理函数</span></span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">onRejected</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> ret;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 利用 throw 函数抛出错误</span></span><br><span class="line">                ret = gen.throw(res);</span><br><span class="line">            &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">                reject(err);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//递归调用 next</span></span><br><span class="line">            next(ret);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params">ret</span>) </span>&#123;</span><br><span class="line">            <span class="comment">// 如果 done 为 true, 结束流程</span></span><br><span class="line">            <span class="keyword">if</span>(ret.done) <span class="keyword">return</span> resolve(ret.value);</span><br><span class="line">            <span class="comment">// 将 value 转化为 promise 对象</span></span><br><span class="line">            <span class="keyword">var</span> value = toPromise(ret.value);</span><br><span class="line">            <span class="comment">// 这里需要检测 value 是不是一个 promise 对象, value 并不一定是一个 promise 对象</span></span><br><span class="line">            <span class="comment">// 如果是则为该 promise 添加 resolve 与 reject 处理函数</span></span><br><span class="line">            <span class="keyword">if</span>(value &amp;&amp; isPromise(value)) <span class="keyword">return</span> value.then(onFulfilled, onRejected);</span><br><span class="line">            <span class="comment">// 如果不是一个 promise 对象, 说明 toPromise 函数转化不成功,抛出错误</span></span><br><span class="line">            <span class="keyword">return</span> onRejected(<span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">'you only can yield array, object, function, generator'</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到实际上就是将 yield 后面的东西包装成一个 Promise 对象, 然后等待 Promise 完成之后, 将结果传入<br>next 函数中实现 yield 语句的替换(var ret = yield xPromise), 然后通过递归调用 next, 也就是递归调用 gen 的<br>next 函数实现流程自动化.<br>然后接下来就是最重要的 toPromise 函数的实现, 这个函数支持对象, 数组, 偏函数, generator 的 primise 转化:<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">toPromise</span><span class="params">(obj)</span> &#123;</span></span><br><span class="line">    <span class="keyword">if</span><span class="params">(!obj)</span> return obj;</span><br><span class="line">    <span class="keyword">if</span><span class="params">(isPromise<span class="params">(obj)</span>)</span> return obj;</span><br><span class="line">    <span class="comment">// 如果是生成器相关直接调用 co 函数</span></span><br><span class="line">    <span class="keyword">if</span><span class="params">(isGenerator<span class="params">(obj)</span> || isGeneratorFunction<span class="params">(obj)</span>)</span> return co.call<span class="params">(this, obj)</span>;</span><br><span class="line">    <span class="comment">// 对偏函数进行转化</span></span><br><span class="line">    <span class="keyword">if</span><span class="params">(typeof obj === 'function')</span> return thunkToPromise.call<span class="params">(this, obj)</span>;</span><br><span class="line">    <span class="comment">// 对数组进行转化</span></span><br><span class="line">    <span class="keyword">if</span><span class="params">(Array.isArray<span class="params">(obj)</span>)</span> return arrayToPromise.call<span class="params">(this, obj)</span>;</span><br><span class="line">    <span class="comment">// 对对象进行转化</span></span><br><span class="line">    <span class="keyword">if</span><span class="params">(isObject<span class="params">(obj)</span>)</span> return objectToPromise.call<span class="params">(this, obj)</span>;</span><br><span class="line">    <span class="comment">// 不属于上面的类型直接返回</span></span><br><span class="line">    return obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于生成器的 promise 转化无需多说, 也就是 co 函数的逻辑. 对于偏函数的 promise 转化实际也很简单, 也就是包裹<br>一层 promise.所谓偏函数就是使用了函数柯里化固定了某若干个函数参数的函数, 举个例子:<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readFile</span><span class="params">(path)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">(callback)</span></span>&#123;</span><br><span class="line">        fs.readFile(path, <span class="keyword">callback</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 如果使用 co 类库，这里的 callback 是 co 自动填入的，详细请看下面源码</span></span><br><span class="line"><span class="keyword">var</span> file = yield readFile(<span class="string">'a.js'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>所以对应的转化函数为:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">thunkToPromise</span>(<span class="params">fn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> ctx = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 调用函数，自动传入 callback 函数，callback 的作用是将返回结果传入 promise 中</span></span><br><span class="line">        <span class="comment">// 然后通过 promise(onFulfilled 函数) 中 generator 函数的 next 函数进行 yield 语句返回值替换</span></span><br><span class="line">        fn.call(ctx, <span class="function"><span class="keyword">function</span>(<span class="params">err, res</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(err) <span class="keyword">return</span> reject(err);</span><br><span class="line">            <span class="comment">// 这里的 arguments 不是指 thunkToPromise 的， 而是指当前这个 function回调的</span></span><br><span class="line">            <span class="comment">// 这里这个 if 判断是为了支持回调传入多个参数的，如果返回值是以 callback(null, 1, 2, 3);</span></span><br><span class="line">            <span class="comment">// 这样的方式进行回调，那么 res 就是 [1, 2, 3].</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">arguments</span>.length &gt; <span class="number">2</span>) res = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>);</span><br><span class="line">            resolve(res);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于数组的转化, 需要注意的就是数组内部递归的转化, 数组里面的值可能是复杂类型的:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">function <span class="title">arrayToPromise</span><span class="params">(<span class="built_in">array</span>)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 使用 map 函数进行递归转化</span></span><br><span class="line">    <span class="keyword">return</span> Promise.all(<span class="built_in">array</span>.<span class="built_in">map</span>(toPromise, <span class="keyword">this</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于对象的转化, 需要注意的是如果对象属性值为基本类型, 那么直接将对应值附到结果集对象中，如果是一个异步任务(promise, function 等)，就需要转化为 Promise，当结果返回再将值<br>附到结果集上：对于属性值是否是基本类型可以通过 toPromise 函数本身来做判断<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">objectToPromise</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> results = <span class="keyword">new</span> obj.constructor();</span><br><span class="line">    <span class="keyword">var</span> keys = <span class="built_in">Object</span>.keys(obj);</span><br><span class="line">    <span class="keyword">var</span> promises = [];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; keys.length; i++) &#123;</span><br><span class="line">        <span class="keyword">var</span> key = keys[i];</span><br><span class="line">        <span class="keyword">var</span> value = toPromise(obj[key]);</span><br><span class="line">        <span class="keyword">if</span>(value &amp;&amp; isPromise(value))  defer(key, value);</span><br><span class="line">        <span class="keyword">else</span> results[key] = value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.all(promises).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> results;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">defer</span>(<span class="params">key, promise</span>) </span>&#123;</span><br><span class="line">        results[key] = <span class="literal">undefined</span>;</span><br><span class="line">        promises.push(promise.then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">            results[key] = res;</span><br><span class="line">        &#125;));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>说到这里，co 的核心代码已经细读过一遍了。</p>
+<h2 id="一些类型判断">一些类型判断</h2><p>上面的就是 co 类库中的核心代码，接下来就简单说说 co 源码中用到的一些数据类型判断函数：</p>
+<h3 id="1-_判断_Promise_对象：使用鸭子模型进行判断">1. 判断 Promise 对象：使用鸭子模型进行判断</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isPromise</span><span class="params">(obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> obj &amp;&amp; <span class="keyword">typeof</span> obj.then === <span class="string">'function'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-_判断_generator_对象：使用鸭子模型进行判断">2. 判断 generator 对象：使用鸭子模型进行判断</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isGenerator</span><span class="params">(obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> obj &amp;&amp; <span class="keyword">typeof</span> obj.next === <span class="string">'function'</span> &amp;&amp; <span class="keyword">typeof</span> obj.<span class="keyword">throw</span> === <span class="string">'function'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-_判断_generator_函数：">3. 判断 generator 函数：</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isGeneratorFunction</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="constructor"><span class="keyword">constructor</span> = obj.<span class="keyword">constructor</span>;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="keyword">constructor</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span>('GeneratorFunction' === <span class="keyword">constructor</span>.name || 'GeneratorFunction' === <span class="keyword">constructor</span>.displayName) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> isGenerator(<span class="keyword">constructor</span>.prototype);</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>思考一下这里为什么需要递归使用 isGenerator 函数进行判断？<br>这个是因为可能存在自定义迭代器， 用户可能有特殊需要进行自定义迭代器:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeIterator</span><span class="params">(array)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        next: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> index &lt; <span class="keyword">array</span>.length ? &#123; value: <span class="keyword">array</span>[index], done: <span class="keyword">false</span> &#125; : &#123; done: <span class="keyword">true</span> &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的 makeIterator 也是一个生成器函数，只不过是自定义的，上面的代码是简单的说明，如果是实际使用，<br>还应该加上 throw 函数的实现。</p>
+<h3 id="4-_判断数值是否是对象：">4. 判断数值是否是对象：</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isObject</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Object</span> === obj.constructor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="一些关于源码的思考与收获">一些关于源码的思考与收获</h2><h3 id="为什么要将_onFulfilled，onRejected_等函数包裹在一个_Promise_里面呢？">为什么要将 onFulfilled，onRejected 等函数包裹在一个 Promise 里面呢？</h3><p>原本在旧版本的 co 类库中， 会创建一个 Promise 链，并且这个链会因为一直保持引用而不会被 v8 回收:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单模仿旧代码</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">co</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    ....</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(onFulfilled());</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">onFulfilled</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> next();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(res.done) <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(res.value);</span><br><span class="line">        ....</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>像上面的代码会创建一个 Promise 链，而 next 中使用 Promise.resolve 是会创建一个新的 Promise 的，而且这个 promise 因为保持引用所以无法被 v8 回收。<br>所以在 co@4.x 修复了这个 bug，将 onFulfilled，onRejected， next 函数包裹在一个 Promise 中，并且不直接 return Promise.resolve 而是直接使用 resolve。</p>
+<h3 id="throw_语句与_throw()_的区别">throw 语句与 throw() 的区别</h3><p>说说 co 中为什么调用 generator 的 throw 而不是直接 throw, throw 语句是肯定不能用的, 因为这里包裹了很多层函数<br>直接 throw 没有任何作用, 异步函数外层的 try…catch 无法捕获内部的错误。<br>而使用 generator 的 throw 函数, 可以抛出一个错误, 也就是说可以通过以下方式捕获:<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> ret = <span class="function"><span class="keyword">yield</span> <span class="title">doFuture</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以使用 try…catch 捕捉错误而不影响后续的函数执行.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2018/02/25/co 源码剖析/" title="co 源码剖析">http://zhangxiang958.github.io/2018/02/25/co 源码剖析/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/03/Event Loop 中的 microtask 与 macrotask/" rel="next" title="Event Loop 中的 microtask 与 macrotask">
+                <i class="fa fa-chevron-left"></i> Event Loop 中的 microtask 与 macrotask
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/25/理解 ES6 generator/" rel="prev" title="理解 ES6 generator">
+                理解 ES6 generator <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://ofsur12wi.bkt.clouddn.com/916161494.jpg"
+                alt="Shawn" />
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些类型判断"><span class="nav-number">1.</span> <span class="nav-text">一些类型判断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_判断_Promise_对象：使用鸭子模型进行判断"><span class="nav-number">1.1.</span> <span class="nav-text">1. 判断 Promise 对象：使用鸭子模型进行判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_判断_generator_对象：使用鸭子模型进行判断"><span class="nav-number">1.2.</span> <span class="nav-text">2. 判断 generator 对象：使用鸭子模型进行判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_判断_generator_函数："><span class="nav-number">1.3.</span> <span class="nav-text">3. 判断 generator 函数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-_判断数值是否是对象："><span class="nav-number">1.4.</span> <span class="nav-text">4. 判断数值是否是对象：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些关于源码的思考与收获"><span class="nav-number">2.</span> <span class="nav-text">一些关于源码的思考与收获</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要将_onFulfilled，onRejected_等函数包裹在一个_Promise_里面呢？"><span class="nav-number">2.1.</span> <span class="nav-text">为什么要将 onFulfilled，onRejected 等函数包裹在一个 Promise 里面呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#throw_语句与_throw()_的区别"><span class="nav-number">2.2.</span> <span class="nav-text">throw 语句与 throw() 的区别</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
