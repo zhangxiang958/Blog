@@ -90,8 +90,9 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zepto 点击穿透问题深究与解决">
 <meta property="og:url" content="http://zhangxiang958.github.io/2017/03/04/Zepto 点击穿透问题深究与解决/index.html">
-<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:site_name" content="Shawn&#39;s blog">
 <meta property="og:description" content="问题现象在项目中,遇到的问题是有一个弹出层, 弹出层有一个按钮点击之后表示操作完成并且隐藏遮罩与弹出框,但是点击按钮之后弹出层下面的元素却触发了 click 事件,导致 bug 的出现.">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-03-04T15:04:59.597Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zepto 点击穿透问题深究与解决">
@@ -353,8 +354,8 @@
 
       
         <h2 id="问题现象">问题现象</h2><p>在项目中,遇到的问题是有一个弹出层, 弹出层有一个按钮点击之后表示操作完成并且隐藏遮罩与弹出框,但是点击按钮之后<br>弹出层下面的元素却触发了 click 事件,导致 bug 的出现.<br><a id="more"></a></p>
-<h2 id="问题根源">问题根源</h2><p>首先, 在原生是没有 tap 事件的, 工具库中的 tap 事件是通过 touch 事件封装出来的, 基本上是下面这种顺序执行事件<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touchstart -&gt; touchmove -&gt; touchend -&gt; tap</span><br></pre></td></tr></table></figure></p>
-<p>通俗来讲, 可以理解为 tap 只是一个自定义事件, 当我们的手指点击到屏幕时, 触发了 touch 事件, 然后根据 Zepto 的<br>源码显示, 在 touchend 事件之后没有操作,也就是没有再次点击的话,就会使用定时器在 250 ms 后触发 tap 事件,从而<br>使 tap 的回调函数触发, 一般来说我们回调会隐藏函数等等.<br>第二点, 在移动端, 我们仍然需要 click 事件的支持, 因为响应式网站的存在, 因此通常是由 touch 事件带动触发 mouse<br>事件的, 触发事件顺序如下:<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touchstart -&gt; touchmove -&gt; touchend -&gt; click</span><br></pre></td></tr></table></figure></p>
+<h2 id="问题根源">问题根源</h2><p>首先, 在原生是没有 tap 事件的, 工具库中的 tap 事件是通过 touch 事件封装出来的, 基本上是下面这种顺序执行事件<br><figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">touchstart</span> -&gt;</span> <span class="function"><span class="title">touchmove</span> -&gt;</span> <span class="function"><span class="title">touchend</span> -&gt;</span> tap</span><br></pre></td></tr></table></figure></p>
+<p>通俗来讲, 可以理解为 tap 只是一个自定义事件, 当我们的手指点击到屏幕时, 触发了 touch 事件, 然后根据 Zepto 的<br>源码显示, 在 touchend 事件之后没有操作,也就是没有再次点击的话,就会使用定时器在 250 ms 后触发 tap 事件,从而<br>使 tap 的回调函数触发, 一般来说我们回调会隐藏函数等等.<br>第二点, 在移动端, 我们仍然需要 click 事件的支持, 因为响应式网站的存在, 因此通常是由 touch 事件带动触发 mouse<br>事件的, 触发事件顺序如下:<br><figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">touchstart</span> -&gt;</span> <span class="function"><span class="title">touchmove</span> -&gt;</span> <span class="function"><span class="title">touchend</span> -&gt;</span> click</span><br></pre></td></tr></table></figure></p>
 <p>其中, 在 touchend 事件结束之后, 浏览器会等待 300ms 观察用户是否会再次触发 touch 事件也就是是否有双击行为, 如<br>果没有的话, 那么就会执行 click 事件</p>
 <h3 id="Zepto_为什么要封装_tap?">Zepto 为什么要封装 tap?</h3><p>这是为了解决 click 在移动端设备有 300ms 的延迟, 因此封装了一个 tap 事件, 在 touchend 后 250ms 触发, 这也就是<br>为什么 tap 事件不能加到 320ms 或者 350ms 以及更多时间后响应,因为它本身的出现就是为了解决移动端 click 的 300<br>ms 的延迟出现,加快事件响应速度的, 如果是 300ms 以后根本没有意义.所以说 tap 在 300ms 之前执行不是在搞事情<br>那现在比较清晰了, tap 事件先于 click 事件执行, 因此当遮罩消失后, 也就是 tap 事件生效之后, click 事件会执行<br>但是先前点击的遮罩的位置遮罩已经消失了,此时如果有一个元素刚好绑定了 click 事件或者是 input 框,那么就会触发<br>click 事件或者 input 有焦点.</p>
 <p><strong>移动端 click 300ms 延迟不是为了搞事情而是浏览器需要知道用户到底是想要点击还是双击放大</strong>.</p>
@@ -365,7 +366,7 @@
 <h3 id="使用_fastclick">使用 fastclick</h3><p>使用了 fastclick 之后,所有点击事件就可以都用 click 事件了,因为已经解决了 click 事件原本的 300ms 延迟问题.<br>而对于 fastclick 的原理, 就是取消 touchend 延迟 300ms 后的 click 事件, 基本是通过 event.preventDefault()<br>与某些浏览器的兼容(比如需要取消 mousemove 的默认行为, 因为它有时会比 touchstart 还快而且触发 click), 然后<br>在 touchend 事件发生之后, 获取了点击元素, 并且马上触发了 click 事件,这样响应速度上来了,也不会点击穿透,需要<br>注意的是用了 fastclick 之后就使用 click 处理点击吧, 因为响应速度已经上来了,并且 tap 有点击穿透的现象(因<br>为 tap 事件的 setTimeout 原因).</p>
 <p>归根结底, 无论是 Zepto 的 tap 事件还是 fastClick 都是在解决移动端 click 300ms 延迟问题.个人觉得 fastclick<br>做得更好.</p>
 <h2 id="好文推荐:">好文推荐:</h2><ul>
-<li><a href="http://www.cnblogs.com/yexiaochai/p/3462657.html" target="_blank" rel="external">深入移动端事件</a></li>
+<li><a href="http://www.cnblogs.com/yexiaochai/p/3462657.html" target="_blank" rel="noopener">深入移动端事件</a></li>
 </ul>
 
       
@@ -507,7 +508,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

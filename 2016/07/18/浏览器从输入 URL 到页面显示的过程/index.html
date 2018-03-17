@@ -90,8 +90,9 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="浏览器从输入 URL 到页面显示的过程">
 <meta property="og:url" content="http://zhangxiang958.github.io/2016/07/18/浏览器从输入 URL 到页面显示的过程/index.html">
-<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:site_name" content="Shawn&#39;s blog">
 <meta property="og:description" content="看完 《计算机网络》，对从应用层到物理层有了一个全面的了解，下面我结合自己在前端方面的理解，在浏览器的角度浅薄阐释从输入 URL 到页面显示的过程。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/DNS.jpg">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/1340365235_4267.jpg">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/request.png">
@@ -101,6 +102,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器从输入 URL 到页面显示的过程">
 <meta name="twitter:description" content="看完 《计算机网络》，对从应用层到物理层有了一个全面的了解，下面我结合自己在前端方面的理解，在浏览器的角度浅薄阐释从输入 URL 到页面显示的过程。">
+<meta name="twitter:image" content="http://7xns9g.com1.z0.glb.clouddn.com/DNS.jpg">
 
 
 
@@ -371,7 +373,7 @@
 <h4 id="规则树">规则树</h4><p>第三步就是将上面解析出来的 DOM 树与 CSS 树结合在一起，形成一个规则树(上下文树)。这里这个树不<br>一定就等于 DOM 树加上 CSS 规则树，因为有些 display 为 none 的节点就不会在这个树里面，因为不会<br>被渲染出来。</p>
 <h3 id="repaint_与_reflow">repaint 与 reflow</h3><p>这里渲染会分为四步：计算 CSS 样式，构建规则树，进行布局定位(position,z-index等等)，启动渲染。<br>这里值得注意的就是 repaint 与 reflow，这两者的区别在于 repaint 是在元素的背景颜色或文字颜色等<br>与元素尺寸无关的属性变化的时候发生的，而 reflow 是在元素的尺寸发生变化的时候发生的。两者相比，<br>reflow 的性能要求较高，因此这就是为什么我们之前强调减少 reflow 。</p>
 <h4 id="关于渲染的小小彩蛋">关于渲染的小小彩蛋</h4><p>浏览器是聪明的，它不会一次改变属性就马上 reflow，而是积攒一批变化后一次 reflow。但是我们某些<br>行为会引起强制 reflow，比如 offsetWidth,offsetHeight, offsetTop, offsetLeft,client/scrollWidth<br>等和 getComputedStyle ,都会引起强制 reflow。</p>
-<p><a href="http://taligarsiel.com/Projects/howbrowserswork1.htm" target="_blank" rel="external">关于页面渲染的一篇神文</a></p>
+<p><a href="http://taligarsiel.com/Projects/howbrowserswork1.htm" target="_blank" rel="noopener">关于页面渲染的一篇神文</a></p>
 <h2 id="附录：我们是怎么连接到网络的？">附录：我们是怎么连接到网络的？</h2><p>不管你用的是什么网络（校园网或是 ADSL ），都会有一个 ISP（网络提供商），他们负责分配一个可用的<br>IP 地址给你的主机。<br>当我们连接网络的时候，我们的主机设备就会发送一个广播包，这个广播包是操作系统生成的 DHCP 报文。这个报文包装在 UDP 协议报中，广播给与交换机连接的所有设备，其中就会包括 DHCP 服务器。<br>当报文发送到 DHCP 服务器，DHCP 服务器分配一个 IP 地址，根据接收的报文的源 MAC 地址，发送回一个包含有有效 IP 地址，DNS 服务器地址，默认网关地址，子网块的 ACK 报文。<br>这个报文通过 UDP 协议，包裹在 IP 数据报里面，再被嵌入以太网帧中，发还给源主机。<br>我们的主机接收到数据包之后，抽取里面的 DHCP ACK 报文，记录下 IP 地址等信息，这样我们的主机就完<br>成了网络组件的初始化。即表示我们的主机拥有了一个 IP 地址，这样就可以连接到网络了。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/address.png" alt="address"></p>
 <p><strong>注：</strong><br><strong>IP 地址</strong>：用来标识网络上的主机的地址，32位，使用 16 进制表示，一般使用点分十进制来表示使用。<br><strong>MAC 地址</strong>：每个主机或路由器的端口都不一样，是制造商给每台主机区分开来的物理地址。<br><strong>默认网关</strong>：主机直接连接的那个路由器的 IP 地址，主机记录默认网关，然后通过 ARP 协议知道路由器连接<br>主机的那个端口的 MAC 地址。<br><strong>DHCP 协议</strong>：用来动态分配 IP 地址的协议，属于网络层。<br><strong>DHCP 服务器</strong>：使用 CIDR 分配地址，CIDR 块是通过路由聚合集合的 IP 地址块。<br><strong>路由聚合</strong>：指将 IP 地址的前面相同的几位聚合起来，路由器通过这个来减少路由表的规模。<br><strong>ARP 协议</strong>：用于将 IP 地址转换为 MAC 地址的协议，类似于在链路层中的 “DNS 服务”。<br><strong>套接字</strong>：指双向连接数据交换的一端，称为 socket，可以形象地看作是一个房子的门。</p>
 
@@ -514,7 +516,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

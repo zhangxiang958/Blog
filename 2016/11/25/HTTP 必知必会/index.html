@@ -90,8 +90,9 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="HTTP 必知必会">
 <meta property="og:url" content="http://zhangxiang958.github.io/2016/11/25/HTTP 必知必会/index.html">
-<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:site_name" content="Shawn&#39;s blog">
 <meta property="og:description" content="作为一个前端开发者，是后台数据的第一个消费者，并且日常与 AJAX 等前后端数据交互，如果对与 WEB 核心的 HTTP协议不熟悉实在是不应该，并且不了解 HTTP 协议的话，长时间下来有可能会成为你的短板。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/general.png">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/request.png">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/response.png">
@@ -99,6 +100,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP 必知必会">
 <meta name="twitter:description" content="作为一个前端开发者，是后台数据的第一个消费者，并且日常与 AJAX 等前后端数据交互，如果对与 WEB 核心的 HTTP协议不熟悉实在是不应该，并且不了解 HTTP 协议的话，长时间下来有可能会成为你的短板。">
+<meta name="twitter:image" content="http://ofsur12wi.bkt.clouddn.com/general.png">
 
 
 
@@ -361,7 +363,7 @@
 <p>URI 表示的是更为广泛的唯一资源标识符，而 URL 表示的是特殊的 URI，表示唯一资源定位符。</p>
 <h2 id="HTTP_报文">HTTP 报文</h2><p>HTTP 有两种报文，一种是客户端发送请求时的请求报文，一种是服务端响应客户端请求时的响应报文。我们来看一些<br>真实的 HTTP 报文段这样可以方便真正理解。</p>
 <h3 id="请求报文">请求报文</h3><p>先来看通用头部：<br><img src="http://ofsur12wi.bkt.clouddn.com/general.png" alt=""></p>
-<p><strong>Request URL</strong>: 请求的 url，这里可以看到请求的 url 是 <a href="https://www.baidu.com/，即通俗的" target="_blank" rel="external">https://www.baidu.com/，即通俗的</a> ajax 请求中的 url。<br><strong>Request Method</strong>: GET, 这里请求方法是使用 GET 方法，除了 GET ，还有 POST ，DELETE，PUT 等请求。<br><strong>Status Code: 200 OK</strong>, 这里是状态码，前面的 200 是 HTTP 状态码，后面的 OK 是状态码的文本信息。<br><strong>Remote Address</strong>：从字面上看就很好理解，这是远程服务器的 IP 地址与端口号，这里 IP 地址是 14.215.177.37，<br>端口号是 443。</p>
+<p><strong>Request URL</strong>: 请求的 url，这里可以看到请求的 url 是 <a href="https://www.baidu.com/，即通俗的" target="_blank" rel="noopener">https://www.baidu.com/，即通俗的</a> ajax 请求中的 url。<br><strong>Request Method</strong>: GET, 这里请求方法是使用 GET 方法，除了 GET ，还有 POST ，DELETE，PUT 等请求。<br><strong>Status Code: 200 OK</strong>, 这里是状态码，前面的 200 是 HTTP 状态码，后面的 OK 是状态码的文本信息。<br><strong>Remote Address</strong>：从字面上看就很好理解，这是远程服务器的 IP 地址与端口号，这里 IP 地址是 14.215.177.37，<br>端口号是 443。</p>
 <p>一个百度首页的请求首部：<br><img src="http://ofsur12wi.bkt.clouddn.com/request.png" alt=""><br><strong>Accept</strong>：接收文档/信息的格式，这里可以看到文档格式有 text/html, application/xhtml+xml, application/xml,<br>image/webp，前面三个表示的是文本文件，后面一个是表示图像文件的格式，其中看到报文中有 q=0.9/0.8 这样的字样<br>表明的是文档格式的优先级，默认优先级为 1, 优先级设置是 0 - 1,形如 0.9,0.8 等，使用 ；来隔开，这里的意思是<br>文本文档的优先级为 0.9,优于图像文件的优先级 0.8。<br><strong>Accept-Encoding</strong>: 文档的压缩模式，使用 gzip 压缩的文档优先。<br><strong>Accept-Language</strong>: 文档语言类型，这里是 zh-CN 表示采用中文编码。<br><strong>Cache-Control</strong>: 缓存控制字段，max-age 表示缓存有效时间，max-age=0 表示缓存服务器不对资源有效性验证，直<br>接将请求转给源服务器。<br><strong>Connection</strong>: 有两个值，一个是 close，一个是 keep-alive。区别请阅读下面的 HTTP 持久链接章节。<br><strong>Cookie</strong>: 这里存储的值就是我们常说的 cookie 了，也就是需要在客户端较长时间存储的信息。<br><strong>Host</strong>: 主机域名。<br><strong>Referer</strong>: 说明发起这个请求的原始资源 URL。<br><strong>User-Agent</strong>: 用户代理，一般是用于判别浏览器的类别。从这里可以知道访问的是哪种浏览器。</p>
 <p>另外增加几个这里没有体现但我觉得同样重要的首部字段：<br><strong>If-Modified-since</strong>: 可能有一些敏感的同学会注意到有时候我们访问某个 html 文件或者图像文件的时候，看控制<br>台的信息的时候会看到 304 状态码，而 304 与这里的 If-Modified-since 有关，浏览器会缓存一些静态文件，当再次<br>访问这些文件的时候，浏览器会发出一个条件 GET 请求，如果文件的修改日期与原先的相同，那么就认为文件没有修改<br>就会继续使用本地的缓存文件，极大节约了带宽，此时返回的状态码就是 304 Not Modified。 </p>
 <h3 id="响应报文">响应报文</h3><p><img src="http://ofsur12wi.bkt.clouddn.com/response.png" alt=""><br><strong>Cache-Control</strong>: 缓存控制字段，这里使用 no-cache ，表示不缓存文件，强制客户端向服务器确认文件有效性。<br><strong>Connection</strong>: 说明持久链接的，请阅读下面的 HTTP 链接章节。<br><strong>Content-Encoding</strong>: 文档的压缩模式。使用 gzip 模式。<br><strong>Content-Length</strong>: 文档文件长度。这里有 56821 字节。<br><strong>Content-Type</strong>: 文档类型，这里是 text/html 的 html 文档，使用 utf-8 编码。<br><strong>Date</strong>:<br><strong>Server</strong>: 表明使用的服务器的版本，类型等，与客户端的 User-Agent 字段类似。<br><strong>Set-Cookie</strong>: 通知客户端创建一个 cookie 文件，设置保存路径为 /，存储的值。</p>
@@ -385,13 +387,13 @@
 <p>服务端可以通过 set-cookie 来通知客户端来创建一个 cookie，一旦有请求就将 cookie 里面的存值传给服务端。这<br>也就是为什么不建议 cookie 存储过多信息，因为会增加请求压力。</p>
 <h3 id="Session">Session</h3><p>session 与 cookie 不同，session 的值是存在服务端的，所以不像 cookie 那样安全性较低，但是相对应的会增加服<br>务器的压力，一般来说 session 在各大后端框架都有封装，像 express 3.x  可以使用 express.session 来设置 session。一般会使用 session 来做二次免登录，免于泄露密码与用户信息。</p>
 <h2 id="常见的_WEB_攻击">常见的 WEB 攻击</h2><p>因为 HTTP 自身的来者不拒，传输不加密的特点，虽然是 HTTP 能够快速方便地传输，但是也使得 HTTP 协议不安全。<br>常见的 WEB 攻击有 XSS 攻击，SQL 注入攻击，会话劫持等。</p>
-<h3 id="XSS_攻击">XSS 攻击</h3><p>XSS 攻击，相信大家会有所耳闻，但是它的中文名其实叫做跨站脚本攻击。它有三种类型，储存型、反射型、DOM 型。<br>储存型是将脚本留在服务器中，不断地从内部发出攻击。<br>反射型是诱导用户点击某些链接而后发送了自己的信息给攻击者，攻击者利用这样的信息攻击服务器。<br>DOM 型是本地行为，在更新 DOM 节点的时候发生。<br>防御 XSS 攻击一般有在两端（客户端，服务端）都加上数据验证，验证数据是否正确且从真正的源发出，另外还有对<br>数据进行转码，或在 HTTP 头部加上 X-XSS-Protection=1 这样的头部。<br>编码其实一方面为了能够保证传输参数的正确性，另一方面是为了防止黑客的直接注入。编码降低了潜在的语义攻击。<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当构建参数传入&#123;“name” : ”Mitty&amp;<span class="variable">isLogin=</span><span class="constant">true</span>”&#125;。此时拼接字符串编成了http://www.baidu.com?<span class="variable">name=</span>Mitty&amp;<span class="variable">isLogin=</span><span class="constant">true</span>，如果isLogin真的是有意义的queryKey时，直接造成服务器接收了额外的参数。</span><br></pre></td></tr></table></figure></p>
+<h3 id="XSS_攻击">XSS 攻击</h3><p>XSS 攻击，相信大家会有所耳闻，但是它的中文名其实叫做跨站脚本攻击。它有三种类型，储存型、反射型、DOM 型。<br>储存型是将脚本留在服务器中，不断地从内部发出攻击。<br>反射型是诱导用户点击某些链接而后发送了自己的信息给攻击者，攻击者利用这样的信息攻击服务器。<br>DOM 型是本地行为，在更新 DOM 节点的时候发生。<br>防御 XSS 攻击一般有在两端（客户端，服务端）都加上数据验证，验证数据是否正确且从真正的源发出，另外还有对<br>数据进行转码，或在 HTTP 头部加上 X-XSS-Protection=1 这样的头部。<br>编码其实一方面为了能够保证传输参数的正确性，另一方面是为了防止黑客的直接注入。编码降低了潜在的语义攻击。<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当构建参数传入&#123;“name” : ”<span class="type">Mitty</span>&amp;isLogin=<span class="literal">true</span>”&#125;。此时拼接字符串编成了http://www.baidu.com?name=Mitty&amp;isLogin=<span class="literal">true</span>，如果isLogin真的是有意义的queryKey时，直接造成服务器接收了额外的参数。</span><br></pre></td></tr></table></figure></p>
 <h3 id="SQL_注入">SQL 注入</h3><p>SQL 注入生效需要两个先决事件，1.需要使用 SQL 操作数据库，2.用户传入的数据直接被写入数据库中。<br>为了预防这个，可以对 url 编码并对用户的输入进行验证。</p>
 <h3 id="DDOS_攻击">DDOS 攻击</h3><p>全名叫做分布式拒绝服务攻击，举个很简单的例子就是像麦当劳里面闲坐的人太多会导致真正想吃东西的客户没有座位<br>坐下来。<br>常见的 DDOS 攻击手段有 TCP SYN 泛洪，TCP ACK 泛洪，DNS 查询泛洪等。</p>
 <h3 id="CSRF">CSRF</h3><p>中文名叫跨站请求伪造，利用 A 网站访问后的信任关系，登录 B 网站，B 网站可以利用这个信任关系，来访问网站。<br>这也就是为什么不建议开启跨域请求首部的原因，限定调用请求的网站有助于安全建立。<br>预防 CSRF 可以检查 token，token 是请求时候生成的一个 token，每个用户有一个特殊的 token，也就是令牌验证。<br>或检查请求头部 source origin == target origin ？ 是否同源。</p>
 <h2 id="附录：">附录：</h2><h3 id="max-age=0_与_no-cache_有什么不同？">max-age=0 与 no-cache 有什么不同？</h3><p>有区别，设置 max-age 浏览器还是会缓存文件的，但是 no-chache 就不会缓存文件，max-age=0 设置之后再次访问<br>浏览器只会发起一个条件 GET 请求，强制向源服务器询问是否过期，如果不过期则会使用本地缓存，但是 no-chache<br>每次都会请求一个全新的文件。</p>
 <h3 id="max-age_与_expires_哪个更有效？">max-age 与 expires 哪个更有效？</h3><p>Expires 在 HTTP 1.0 之前就已经制定了，而 cache-control 的 max-age 是在 HTTP 1.1 之后才制定的，所以想要更<br>有效地制定有效时间光用 max-age 是不行的。Expires 的时间如果客户端与服务端不一致的话，会导致 Expires 配置<br>出错。max-age 是指文档被访问之后的存活时间，而 Expires 指的是文件的最后访问时间，max-age 指的是文档请求时<br>间。</p>
-<h3 id="如何在_HTML_页面使用_HTTP_头部的设置?">如何在 HTML 页面使用 HTTP 头部的设置?</h3><p>方法:使用 meta 标签<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta <span class="variable">http-equiv=</span><span class="string">"Cache-Control"</span> <span class="variable">content=</span><span class="string">"no-cache"</span> /&gt;</span><br><span class="line">&lt;meta <span class="variable">http-equiv=</span><span class="string">"expires"</span> <span class="variable">content=</span><span class="string">"...date"</span> /&gt;</span><br><span class="line">&lt;meta <span class="variable">http-equiv=</span><span class="string">"cache-control"</span> <span class="variable">content=</span><span class="string">"public"</span> /&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="如何在_HTML_页面使用_HTTP_头部的设置?">如何在 HTML 页面使用 HTTP 头部的设置?</h3><p>方法:使用 meta 标签<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta <span class="attribute">http-equiv</span>=<span class="string">"Cache-Control"</span> <span class="attribute">content</span>=<span class="string">"no-cache"</span> /&gt;</span><br><span class="line">&lt;meta <span class="attribute">http-equiv</span>=<span class="string">"expires"</span> <span class="attribute">content</span>=<span class="string">"...date"</span> /&gt;</span><br><span class="line">&lt;meta <span class="attribute">http-equiv</span>=<span class="string">"cache-control"</span> <span class="attribute">content</span>=<span class="string">"public"</span> /&gt;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -532,7 +534,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

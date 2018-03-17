@@ -90,8 +90,9 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于 CORS 的小细节">
 <meta property="og:url" content="http://zhangxiang958.github.io/2017/12/09/关于 CORS 的小细节/index.html">
-<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:site_name" content="Shawn&#39;s blog">
 <meta property="og:description" content="最近对 CORS 进行了一些小整理, 下面是对于一些小细节的总结.">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-12-10T11:50:09.829Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于 CORS 的小细节">
@@ -352,7 +353,7 @@
       
 
       
-        <p>最近对 CORS 进行了一些小整理, 下面是对于一些小细节的总结.<br><a id="more"></a><br>在处理 CORS 的时候, 如果需要带 cookie 给服务端, 那么就需要在 xhr 对象中添加属性:<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="variable">withCredentials =</span> <span class="constant">true</span>;</span><br></pre></td></tr></table></figure></p>
+        <p>最近对 CORS 进行了一些小整理, 下面是对于一些小细节的总结.<br><a id="more"></a><br>在处理 CORS 的时候, 如果需要带 cookie 给服务端, 那么就需要在 xhr 对象中添加属性:<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="attr">withCredentials</span> = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure></p>
 <p>但是服务端的设置是什么呢? 服务端的设置也简单, 就是设置一个响应头部: ‘Access-Control-Allow-Credentials’: ‘true’.<br>但是细节就是, 这样会跨域报错, 原因在于如果有 Access-Control-Allow-Credentials 头部, 那么 Access-Control-Control-Origin 头部就不能是 *, 必须是指定值, 这样才能设置成功.</p>
 <p>说到 POST 请求, 一般来说服务器需要 POST 请求加上 applicaton/x-www-form-urlencoed 头部而不能是 text/plain(除了特殊需求), 不然服务端是拿不到 body 信息的.</p>
 
@@ -486,7 +487,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

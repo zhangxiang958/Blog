@@ -90,18 +90,20 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="细说 window.performance">
 <meta property="og:url" content="http://zhangxiang958.github.io/2017/05/20/细说 window.performance/index.html">
-<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:site_name" content="Shawn&#39;s blog">
 <meta property="og:description" content="“闻之我也野, 视之我也饶, 行之我也明” —- 前段时间感觉自己看的书比较多, 其中关于性能优化方面, 虽然知道一些对于 web 页面的性能优化手段, 像雅虎性能十四条这样的业界金规玉律, 但是对于其中为什么这样做以及什么时候这样做脑海始终有点模糊, 所以写篇博文来让自己理解性能方面的知识.">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/timgingfull.png">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/459304073.jpg">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/1129102037.jpg">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/window.performanceFull.png">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/performanceInfo.png">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/reource.png">
-<meta property="og:updated_time" content="2017-05-20T12:20:59.525Z">
+<meta property="og:updated_time" content="2017-05-20T12:20:59.526Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="细说 window.performance">
 <meta name="twitter:description" content="“闻之我也野, 视之我也饶, 行之我也明” —- 前段时间感觉自己看的书比较多, 其中关于性能优化方面, 虽然知道一些对于 web 页面的性能优化手段, 像雅虎性能十四条这样的业界金规玉律, 但是对于其中为什么这样做以及什么时候这样做脑海始终有点模糊, 所以写篇博文来让自己理解性能方面的知识.">
+<meta name="twitter:image" content="http://ofsur12wi.bkt.clouddn.com/timgingfull.png">
 
 
 
@@ -396,22 +398,22 @@
 <p>之前在面试的时候也有做过类似的一道题,就是计算打开一个页面的时间, 计算时间就可以使用上面这三个 API 进行计算</p>
 <h2 id="计算指标">计算指标</h2><p>其中有两个可以帮助我们检测真实用户环境下的页面加载 Timing 和页面资源加载 Timing : Navigation Timing 和 Resource Timing。<br>这两个API非常有用，可以帮助我们获取页面的Domready时间、onload时间、白屏时间等，以及单个页面资源在从发送请求到获取到rsponse各阶段的性能参数。</p>
 <p><img src="http://ofsur12wi.bkt.clouddn.com/performanceInfo.png" alt=""><br>按照文档上面所说的, 在 window 对象构建出来之前, 该 Navigation timing 与 Resource timing 都不可用.因此,<br>使用这两个API时需要在页面完全加载完成之后才能使用，最简单的办法是在window.onload事件中读取各种数据，因为很多值必须在页面完全加载之后才能得出。</p>
-<h3 id="Navigation_Timing">Navigation Timing</h3><p>Navigation Timing API 能够帮助网站开发者检测真实用户数据（RUM），例如带宽、延迟或主页的整体页面加载时间。用法如下：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> timinhObj</span> = performance.timing;</span><br></pre></td></tr></table></figure></p>
-<p>一般来说，我们需要获取到的页面性能参数包括：DNS查询耗时、TCP链接耗时、request请求耗时、解析dom树耗时、白屏时间、domready时间、onload时间等，而这些参数是通过上面的 performance.timing 各个属性的差值组成的.<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">DNS</span> 查询时间: domainlookupEnd - domainlookupstart</span><br><span class="line">TCP 链接时间: connectEnd - connectStart</span><br><span class="line">请求时间: requestEnd - requestStart</span><br><span class="line">响应时间: responseEnd - responseStart</span><br><span class="line">DOM 解析时间: domloadedEventEnd - navigationStart</span><br><span class="line">白屏时间: responseStart - navigationStart</span><br><span class="line">首屏时间: loadEventEnd - navigationStart</span><br></pre></td></tr></table></figure></p>
+<h3 id="Navigation_Timing">Navigation Timing</h3><p>Navigation Timing API 能够帮助网站开发者检测真实用户数据（RUM），例如带宽、延迟或主页的整体页面加载时间。用法如下：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">var timinhObj</span> = performance.timing;</span><br></pre></td></tr></table></figure></p>
+<p>一般来说，我们需要获取到的页面性能参数包括：DNS查询耗时、TCP链接耗时、request请求耗时、解析dom树耗时、白屏时间、domready时间、onload时间等，而这些参数是通过上面的 performance.timing 各个属性的差值组成的.<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DNS 查询时间: domainlookupEnd - domainlookupstart</span><br><span class="line">TCP 链接时间: connectEnd - connectStart</span><br><span class="line"><span class="section">请求时间: requestEnd - requestStart</span></span><br><span class="line"><span class="section">响应时间: responseEnd - responseStart</span></span><br><span class="line">DOM 解析时间: domloadedEventEnd - navigationStart</span><br><span class="line"><span class="section">白屏时间: responseStart - navigationStart</span></span><br><span class="line"><span class="section">首屏时间: loadEventEnd - navigationStart</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="Resource_Timing_API-1">Resource Timing API</h3><p>如果要获取个别资源（例如JS、图片）的性能指标，就需要使用 Resource Timing.</p>
-<p>浏览器获取网页时，会对网页中每一个静态资源（脚本文件、样式表、图片文件等等）发出一个HTTP请求。 Resource Timing 可以获取到单个静态资源从开始发出请求到获取响应之间各个阶段的Timing。用法如下:<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> resourcesObj</span> = performance.getEntries();</span><br></pre></td></tr></table></figure></p>
+<p>浏览器获取网页时，会对网页中每一个静态资源（脚本文件、样式表、图片文件等等）发出一个HTTP请求。 Resource Timing 可以获取到单个静态资源从开始发出请求到获取响应之间各个阶段的Timing。用法如下:<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">var resourcesObj</span> = performance.getEntries();</span><br></pre></td></tr></table></figure></p>
 <p><img src="http://ofsur12wi.bkt.clouddn.com/reource.png" alt=""></p>
 <h2 id="附录">附录</h2><h3 id="什么是直出">什么是直出</h3><p>直出也就是数据直出, 为什么会有这个概念呢? 其实还是为了优化页面性能, 前后端分离带来了开发便利与效率,但是<br>也带来了一些性能问题, 前后端分离在首屏的时候, 首屏需要的数据仍然需要 ajax 去获取, 这时候需要 TCP 链接等等<br>的延迟,所以对于网络不好的用户等待的时间比较长, 所以有了使用 node 作为中间层作为数据直出加快页面渲染.</p>
-<p>相关文章:<br><a href="http://web.jobbole.com/84753/" target="_blank" rel="external">数据直出</a><br><a href="https://github.com/joeyguo/blog/issues/8" target="_blank" rel="external">Node直出理论与实践总结</a><br><a href="https://feclub.cn/post/content/qudian_koa" target="_blank" rel="external">趣店前端团队基于koajs的前后端分离实践</a><br><a href="http://2014.jsconf.cn/slides/herman-taobaoweb/#/3" target="_blank" rel="external">NodeJS 前后端分离</a></p>
+<p>相关文章:<br><a href="http://web.jobbole.com/84753/" target="_blank" rel="noopener">数据直出</a><br><a href="https://github.com/joeyguo/blog/issues/8" target="_blank" rel="noopener">Node直出理论与实践总结</a><br><a href="https://feclub.cn/post/content/qudian_koa" target="_blank" rel="noopener">趣店前端团队基于koajs的前后端分离实践</a><br><a href="http://2014.jsconf.cn/slides/herman-taobaoweb/#/3" target="_blank" rel="noopener">NodeJS 前后端分离</a></p>
 <h3 id="什么是_CGI">什么是 CGI</h3><p>即 Common Gateway Interface, 通用网关接口,在 web 中通常将为 HTML 提供服务器接口的程序叫做 CGI</p>
 <h2 id="links:">links:</h2><ul>
-<li><a href="https://www.w3.org/TR/navigation-timing/#sec-window.performance-attribute" target="_blank" rel="external">window.performance</a>: window.performance 官方文档</li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigation_timing_API" target="_blank" rel="external">navigation MDN</a>: navigation MDN 文档</li>
-<li><a href="http://web.jobbole.com/84264/" target="_blank" rel="external">使用性能API快速分析web前端性能</a>: 详细讲述了 API 的各个字段的值的含义.</li>
-<li><a href="http://fex.baidu.com/blog/2014/05/build-performance-monitor-in-7-days/" target="_blank" rel="external">FEX 7天打造性能监测系统</a>: 很赞, 建议里面的链接都可以看看</li>
-<li><a href="https://github.com/fredshare/blog/issues/5" target="_blank" rel="external">performance 专题</a> 说的非常详细</li>
-<li><a href="https://www.w3.org/TR/resource-timing/#step-fetch-start" target="_blank" rel="external">W3C Resource Timing Level 1</a></li>
-<li><a href="https://www.w3.org/TR/navigation-timing/#dom-performancetiming-navigationstart" target="_blank" rel="external">W3C Navigation Timing</a></li>
+<li><a href="https://www.w3.org/TR/navigation-timing/#sec-window.performance-attribute" target="_blank" rel="noopener">window.performance</a>: window.performance 官方文档</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigation_timing_API" target="_blank" rel="noopener">navigation MDN</a>: navigation MDN 文档</li>
+<li><a href="http://web.jobbole.com/84264/" target="_blank" rel="noopener">使用性能API快速分析web前端性能</a>: 详细讲述了 API 的各个字段的值的含义.</li>
+<li><a href="http://fex.baidu.com/blog/2014/05/build-performance-monitor-in-7-days/" target="_blank" rel="noopener">FEX 7天打造性能监测系统</a>: 很赞, 建议里面的链接都可以看看</li>
+<li><a href="https://github.com/fredshare/blog/issues/5" target="_blank" rel="noopener">performance 专题</a> 说的非常详细</li>
+<li><a href="https://www.w3.org/TR/resource-timing/#step-fetch-start" target="_blank" rel="noopener">W3C Resource Timing Level 1</a></li>
+<li><a href="https://www.w3.org/TR/navigation-timing/#dom-performancetiming-navigationstart" target="_blank" rel="noopener">W3C Navigation Timing</a></li>
 </ul>
 
       
@@ -553,7 +555,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

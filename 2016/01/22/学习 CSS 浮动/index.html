@@ -86,14 +86,13 @@
 
 
 
-<meta name="description" content="废话不多说，直接切入正题。
-什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta name="description" content="废话不多说，直接切入正题。 什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习 CSS 浮动">
 <meta property="og:url" content="http://zhangxiang958.github.io/2016/01/22/学习 CSS 浮动/index.html">
-<meta property="og:site_name" content="Shawn's blog">
-<meta property="og:description" content="废话不多说，直接切入正题。
-什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="废话不多说，直接切入正题。 什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float.png">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float2.png">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float3.png">
@@ -101,11 +100,11 @@
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float6.png">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float7.png">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float4.png">
-<meta property="og:updated_time" content="2016-01-23T03:59:43.367Z">
+<meta property="og:updated_time" content="2016-01-23T03:59:43.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习 CSS 浮动">
-<meta name="twitter:description" content="废话不多说，直接切入正题。
-什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta name="twitter:description" content="废话不多说，直接切入正题。 什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta name="twitter:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float.png">
 
 
 
@@ -374,12 +373,12 @@
 <h3 id="浮动元素的延伸">浮动元素的延伸</h3><p>如果父级元素与子元素同为浮动元素，如果子元素高度或宽度大于父元素的高度或宽度，<br>那么父元素会自动延伸包住子元素。</p>
 <h2 id="清除浮动">清除浮动</h2><h3 id="什么是清除浮动？">什么是清除浮动？</h3><p>像上面所说的浮动元素的负外边距等的影响导致的浮动元素的重叠现象，虽然不影响内容的展示，<br>但是影响了布局的美观。因此就要清除浮动元素在元素“上”的现象。<br>除此之外，还可以让元素自动包裹。</p>
 <h3 id="为什么要清除浮动？">为什么要清除浮动？</h3><p>在布局的过程中，难免会遇到各种情况。<br>比如，父级元素不需要浮动，但是子元素需要浮动来达到布局需要，<br>但是，一旦这样设置子元素浮动，父元素不浮动，<br>就会发生父级元素的“高度坍塌”现象，因为父元素没有相应的元素“撑”起他的盒子模型。<br>而对父元素设置高度又显然不适合自适应布局和流式布局或浮动布局的思想。这时候，<br>就需要用到清除浮动了。</p>
-<h3 id="清除浮动的方法">清除浮动的方法</h3><p>这里只是浅谈，作为个人学习笔记记录，更多大师级的博文链接在本博文后贴出。<br>清除浮动需要用到 clear 属性。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">clear </span>: left|right|both;  <span class="comment">//常用的三种属性值。</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="清除浮动的方法">清除浮动的方法</h3><p>这里只是浅谈，作为个人学习笔记记录，更多大师级的博文链接在本博文后贴出。<br>清除浮动需要用到 clear 属性。<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">clear</span> : <span class="built_in">left</span>|<span class="type">right</span>|<span class="type">both</span>;  //常用的三种属性值。</span><br></pre></td></tr></table></figure></p>
 <p>从字面意思就可以知道效果，分别从左边，右边，两边清除浮动。<br>需要特别注意的是，清除浮动会有一个清楚区域的出现。这个区域会让元素移到浮动元素的下边界处。<br>如果浮动元素和另外的元素需要间距，不妨增加浮动元素的下边界或增加其他元素的上边界。</p>
-<p>方法一、在需要清除浮动的地方增加一个标签（ br 或 其他标签），清除浮动。<br>利用 clear 或 br 独特的 clear 属性。<br>但是不推荐使用这种方法，布局并没有与结构解耦，新增了不必要的标签。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"float1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">h2</span>&gt;</span>1）添加额外标签<span class="tag">&lt;/<span class="title">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"main left"</span>&gt;</span>main&#123;float:left;&#125;<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"right"</span>&gt;</span>side&#123;float:right;&#125;<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">style</span>=<span class="value">"clear:both;"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">br</span> <span class="attribute">clear</span>=<span class="value">"all"</span>&gt;</span>  //与上一个标签作用相同</span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"footer"</span>&gt;</span>footer<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>方法一、在需要清除浮动的地方增加一个标签（ br 或 其他标签），清除浮动。<br>利用 clear 或 br 独特的 clear 属性。<br>但是不推荐使用这种方法，布局并没有与结构解耦，新增了不必要的标签。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"float1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>1）添加额外标签<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"main left"</span>&gt;</span>main&#123;float:left;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"right"</span>&gt;</span>side&#123;float:right;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"clear:both;"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> <span class="attr">clear</span>=<span class="string">"all"</span>&gt;</span>  //与上一个标签作用相同</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"footer"</span>&gt;</span>footer<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>方法二、父级元素也设置浮动属性。这个可以解决高度坍塌的问题，这也就是浮动带来的一部分 BUG。<br>但是 Jarvis 并不觉得这是解决问题的办法，因为父级元素也设置浮动只适用于极少极少情况，例如<br>自己写 demo 的时候。但是这样会给布局带来混乱的局面。</p>
-<p>方法三、使用伪元素清除浮动。保持了代码的整洁性，消除了增加一些不必要的标签。<br>运用的好可以增加代码的复用率。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.clearfix</span> &#123;</span><br><span class="line">    *<span class="attribute">zoom</span>: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class">.clearfix</span><span class="pseudo">:after</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">" "</span>;</span><br><span class="line">    <span class="attribute">display</span>: block;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">clear</span>: both;</span><br><span class="line">    <span class="attribute">visibility</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>demo 地址：<br><a href="https://github.com/zhangxiang958/Task" target="_blank" rel="external">Jarvis 的 demo 地址</a><br>博文地址：<br><a href="http://www.w3cplus.com/css/clear-float" target="_blank" rel="external">大漠的清除浮动博文 Clear float</a><br><a href="http://www.iyunlu.com/view/css-xhtml/56.html" target="_blank" rel="external">清除 clearfix 改良</a><br><a href="http://www.iyunlu.com/view/css-xhtml/55.html" target="_blank" rel="external">那些年一起清除的浮动</a></p>
+<p>方法三、使用伪元素清除浮动。保持了代码的整洁性，消除了增加一些不必要的标签。<br>运用的好可以增加代码的复用率。<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">    *zoom: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.clearfix</span>:after &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">" "</span>;</span><br><span class="line">    <span class="attribute">display</span>: block;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">clear</span>: both;</span><br><span class="line">    <span class="attribute">visibility</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>demo 地址：<br><a href="https://github.com/zhangxiang958/Task" target="_blank" rel="noopener">Jarvis 的 demo 地址</a><br>博文地址：<br><a href="http://www.w3cplus.com/css/clear-float" target="_blank" rel="noopener">大漠的清除浮动博文 Clear float</a><br><a href="http://www.iyunlu.com/view/css-xhtml/56.html" target="_blank" rel="noopener">清除 clearfix 改良</a><br><a href="http://www.iyunlu.com/view/css-xhtml/55.html" target="_blank" rel="noopener">那些年一起清除的浮动</a></p>
 <hr>
 <p>作者     张翔<br>2016 年 01月 22日    </p>
 
@@ -522,7 +521,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

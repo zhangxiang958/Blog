@@ -90,9 +90,10 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="2016 女生节许愿墙脚手架文档">
 <meta property="og:url" content="http://zhangxiang958.github.io/2016/09/18/2016 女生节许愿墙脚手架文档/index.html">
-<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:site_name" content="Shawn&#39;s blog">
 <meta property="og:description" content="本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终总结会在女生节结束后发布。">
-<meta property="og:updated_time" content="2016-09-18T07:31:01.171Z">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2016-09-18T07:31:01.172Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2016 女生节许愿墙脚手架文档">
 <meta name="twitter:description" content="本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终总结会在女生节结束后发布。">
@@ -354,9 +355,9 @@
       
         <p>本篇博文只是记录了刚刚搭建许愿墙的脚手架和学习 React 的文档，记录下来方便自己能够温故知新，整个项目的最终<br>总结会在女生节结束后发布。<br><a id="more"></a></p>
 <h2 id="项目骨架">项目骨架</h2><p>本项目使用 react + react-router + es6<br>构建工具 gulp + webpack + babel<br>前端 UI 库：FrozenUI </p>
-<h3 id="前端自适应方法">前端自适应方法</h3><p>暂时使用了移动端自适应方法 <a href="https://github.com/amfe/lib-flexible/blob/master/README.md" target="_blank" rel="external">flexible</a> 方案，如果时间允许则使用 flex 布局。<br><a href="https://github.com/amfe/article/issues/17" target="_blank" rel="external">flexible 方案</a></p>
-<h2 id="注意事项">注意事项</h2><h3 id="CSS_编写">CSS 编写</h3><p>因为 react 使用组件化开发，但是 CSS 的痛点在于全局性，那么在 react 的组件式开发中需要使用 BEM 模式，或使用 container 类名来独特定义组件，但是在此项目中使用 CSS-Module 。<br>使用 CSS-Module 来配合 React 进行组件化开发，这里有人可能会问 React 不是提供了 CSS in JS 的方法即使用对象<br>来使用内联样式吗？问题在于对象方法无法表示伪类这样的 CSS 代码，使用起来 CSS 代码就没有复用性了，所以采用<br>CSS-Module。为什么不建议用 jsx 的 inine style ，因为这样是写不了伪元素的，建议使用 css-module 方法。<br>详细的关于 CSS-Module 的资料这里不再多说，详细请看 <a href="http://www.tuicool.com/articles/nYjyEzZ" target="_blank" rel="external">CSS-Module</a>.<br>这里我提一个疑问，使用 React 组件化开发 .css 文件写在哪里进行引用管理呢？<br>在 webpack 中使用 css-loader 就可以了，css 原生不支持 CSS-Module，使用 webpack 就可以模块化了。<br>但是又有个疑问就是使用 css-loader 加载出来的 css 文件是动态地插入到 index.html 中的，那么不是消耗了大量的 http 请求吗？<br>这样的话那还不如自己引入 css 文件然后合并压缩，这样反而性能更好，这样想是错的，因为插入的是 style 标签，而不是 link 标签，并不会消耗 http 请求数量。</p>
-<h3 id="首页加载">首页加载</h3><p>需要懒加载组件，因为许愿墙相对较大，并且我十分在乎初始化速度，react 的懒加载与 vue 的懒加载十分类似，<br>使用 require.ensure ，写进路由里面，需要的时候才进行加载。<br>并且根据我以往开发单页面项目的经验，在入口文件中的图片等资源的 CDN 加速也是很影响首页加载速度的，因此本次<br>项目开发使用七牛 CDN 加载静态资源。<br><a href="https://fakefish.github.io/react-webpack-cookbook/Optimizing-development" target="_blank" rel="external">React 小书—优化开发</a><br><a href="https://fakefish.github.io/react-webpack-cookbook/Lazy-loaded-entry-points.html" target="_blank" rel="external">懒加载入口文件</a></p>
+<h3 id="前端自适应方法">前端自适应方法</h3><p>暂时使用了移动端自适应方法 <a href="https://github.com/amfe/lib-flexible/blob/master/README.md" target="_blank" rel="noopener">flexible</a> 方案，如果时间允许则使用 flex 布局。<br><a href="https://github.com/amfe/article/issues/17" target="_blank" rel="noopener">flexible 方案</a></p>
+<h2 id="注意事项">注意事项</h2><h3 id="CSS_编写">CSS 编写</h3><p>因为 react 使用组件化开发，但是 CSS 的痛点在于全局性，那么在 react 的组件式开发中需要使用 BEM 模式，或使用 container 类名来独特定义组件，但是在此项目中使用 CSS-Module 。<br>使用 CSS-Module 来配合 React 进行组件化开发，这里有人可能会问 React 不是提供了 CSS in JS 的方法即使用对象<br>来使用内联样式吗？问题在于对象方法无法表示伪类这样的 CSS 代码，使用起来 CSS 代码就没有复用性了，所以采用<br>CSS-Module。为什么不建议用 jsx 的 inine style ，因为这样是写不了伪元素的，建议使用 css-module 方法。<br>详细的关于 CSS-Module 的资料这里不再多说，详细请看 <a href="http://www.tuicool.com/articles/nYjyEzZ" target="_blank" rel="noopener">CSS-Module</a>.<br>这里我提一个疑问，使用 React 组件化开发 .css 文件写在哪里进行引用管理呢？<br>在 webpack 中使用 css-loader 就可以了，css 原生不支持 CSS-Module，使用 webpack 就可以模块化了。<br>但是又有个疑问就是使用 css-loader 加载出来的 css 文件是动态地插入到 index.html 中的，那么不是消耗了大量的 http 请求吗？<br>这样的话那还不如自己引入 css 文件然后合并压缩，这样反而性能更好，这样想是错的，因为插入的是 style 标签，而不是 link 标签，并不会消耗 http 请求数量。</p>
+<h3 id="首页加载">首页加载</h3><p>需要懒加载组件，因为许愿墙相对较大，并且我十分在乎初始化速度，react 的懒加载与 vue 的懒加载十分类似，<br>使用 require.ensure ，写进路由里面，需要的时候才进行加载。<br>并且根据我以往开发单页面项目的经验，在入口文件中的图片等资源的 CDN 加速也是很影响首页加载速度的，因此本次<br>项目开发使用七牛 CDN 加载静态资源。<br><a href="https://fakefish.github.io/react-webpack-cookbook/Optimizing-development" target="_blank" rel="noopener">React 小书—优化开发</a><br><a href="https://fakefish.github.io/react-webpack-cookbook/Lazy-loaded-entry-points.html" target="_blank" rel="noopener">懒加载入口文件</a></p>
 <h3 id="组件编写">组件编写</h3><p>本次组件采用 jsx 语法，组件保存在 components 文件夹内，一个组件一个文件名，文件夹内存放 css 文件与 jsx 文件。</p>
 <h3 id="使用_gulp-connect_而不是使用_webpack-dev-server">使用 gulp-connect 而不是使用 webpack-dev-server</h3><p>一般来说使用 gulp-connect 与 webpack-dev-server 都是合适的，但是对于此项目我希望更加自动化，将打包压缩好的代码自动上传到七牛 CDN 中，并且整个项目的流程更加清晰，webpack 当然也能完成项目构建的全部内容，但是就少了对项目整体的把控。</p>
 <h3 id="希望拥有高效的编译">希望拥有高效的编译</h3><p>高效的编译有 3 个方法：</p>
@@ -365,9 +366,9 @@
 <li>使用 gulp-cached 与 gulp-remember 配合，我使用的是 gulp-changed 只获取改变过的文件再编译<br>jsx 怎么避免全局编译，使用 gulp-changed 无法配合 webpack 使用</li>
 <li>在上线的时候才压缩优化</li>
 </ol>
-<h3 id="怎样才能有效地提高_react_的编译速度">怎样才能有效地提高 react 的编译速度</h3><p>使用优化重合并，避免每次都编译打包一次 react 整个库和它的依赖。<br><a href="https://fakefish.github.io/react-webpack-cookbook/Optimizing-rebundling.html" target="_blank" rel="external">优化重合并</a></p>
+<h3 id="怎样才能有效地提高_react_的编译速度">怎样才能有效地提高 react 的编译速度</h3><p>使用优化重合并，避免每次都编译打包一次 react 整个库和它的依赖。<br><a href="https://fakefish.github.io/react-webpack-cookbook/Optimizing-rebundling.html" target="_blank" rel="noopener">优化重合并</a></p>
 <h3 id="Zepto_的坑">Zepto 的坑</h3><p>因为 Zepto 自带的 click 事件是有点击穿透的 bug 存在的，所以应该使用 fastclick 插件来解决。</p>
-<p>参考资料：<br><a href="https://zhuanlan.zhihu.com/p/21312474" target="_blank" rel="external">webpack + gulp 构建完整前端工作流</a><br><a href="https://segmentfault.com/a/1190000004825205" target="_blank" rel="external">react-js开发环境</a><br><a href="https://segmentfault.com/a/1190000005770042#articleHeader0" target="_blank" rel="external">开发工具心得：如何 10 倍提高你的 Webpack 构建效率</a><br>（未完持续）</p>
+<p>参考资料：<br><a href="https://zhuanlan.zhihu.com/p/21312474" target="_blank" rel="noopener">webpack + gulp 构建完整前端工作流</a><br><a href="https://segmentfault.com/a/1190000004825205" target="_blank" rel="noopener">react-js开发环境</a><br><a href="https://segmentfault.com/a/1190000005770042#articleHeader0" target="_blank" rel="noopener">开发工具心得：如何 10 倍提高你的 Webpack 构建效率</a><br>（未完持续）</p>
 
       
     </div>
@@ -508,7 +509,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -90,14 +90,16 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vue 项目总结">
 <meta property="og:url" content="http://zhangxiang958.github.io/2016/09/01/Vue 项目总结/index.html">
-<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:site_name" content="Shawn&#39;s blog">
 <meta property="og:description" content="业务场景本次总结涉及两个移动端的开发，一个是移动端的 HTML5 小游戏类型，一个是微信公众号的展示性页面。两个项目都是轻量级开发，根据设计稿与需求文档评估得出这两个项目都适合做成单页面应用，接下来就是对目前掌握对现有框架或库的了解进行技术选型。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/mid.png">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/network.png">
 <meta property="og:updated_time" content="2016-09-01T12:19:05.859Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vue 项目总结">
 <meta name="twitter:description" content="业务场景本次总结涉及两个移动端的开发，一个是移动端的 HTML5 小游戏类型，一个是微信公众号的展示性页面。两个项目都是轻量级开发，根据设计稿与需求文档评估得出这两个项目都适合做成单页面应用，接下来就是对目前掌握对现有框架或库的了解进行技术选型。">
+<meta name="twitter:image" content="http://7xns9g.com1.z0.glb.clouddn.com/mid.png">
 
 
 
@@ -364,25 +366,25 @@
 <li>目前来说，vue.js 的 API 最为友好，学习曲线相对 angular.js/react 较平滑。</li>
 </ol>
 <h3 id="项目结构">项目结构</h3><p><img src="http://7xns9g.com1.z0.glb.clouddn.com/mid.png" alt=""><br>项目目录如上图,components 文件夹存放公用的组件, images 存放图片,views 文件夹存放页面。<br>app.js 为简单地加载一些模块，app.vue 是入口组件，index.html 为入口文件，router.js 是路由管理文件。<br>lib 中存放的是打包好了之后的 router.js 和 app.js 文件与其他一些 js 文件，如 frozenUI 框架的文件。</p>
-<p>在项目中，使用 vue-router 来进行路由控制，使用 vue-source 进行 ajax 交互。<br>vue-router 用来管理前端路由确实是利器，但是由于是第一次接触，很多属性方法都没来得及熟悉，因此有很多“脏”<br>代码，在使用 vue-router 的时候，有时候需要传递参数，除了使用 props 之外，还可以使用 vue-router 的 data<br>函数（<a href="http://router.vuejs.org/zh-cn/pipeline/hooks.html" target="_blank" rel="external">data 钩子函数</a>）。</p>
-<p>vue-source 的接口交互在跨域问题会出现问题，但是总体来说还算不错。vue-source 会出现 500 错误问题，这是因<br>为 vue-source 中的 $http 并不等价于 jquery 的 ajax ，post 的 data 并不是 from data 形式的，而是 request<br>payload。<br>解决方法请移步：<a href="http://www.open-open.com/lib/view/open1447060624960.html#articleHeader10" target="_blank" rel="external">vue-source 出现 500 错误</a></p>
-<h2 id="项目构建">项目构建</h2><p>项目构建参考了稀土掘金中的一篇博文， <a href="http://gold.xitu.io/entry/55f77eb460b28e6a6f0f4f86" target="_blank" rel="external">vue 的组件式开发模式</a>, 与囧克斯上的一篇介绍 just vue<br>介绍 <a href="http://jiongks.name/blog/just-vue/" target="_blank" rel="external">just vue</a> 脚手架的文章。<br>这样搭建项目好处在于使用 vue-loader 来进行以 .vue 为后缀的组件式开发，并且使用 gulp 来监听/打包的流程，<br>使用 webpack 来对静态资源打包。</p>
+<p>在项目中，使用 vue-router 来进行路由控制，使用 vue-source 进行 ajax 交互。<br>vue-router 用来管理前端路由确实是利器，但是由于是第一次接触，很多属性方法都没来得及熟悉，因此有很多“脏”<br>代码，在使用 vue-router 的时候，有时候需要传递参数，除了使用 props 之外，还可以使用 vue-router 的 data<br>函数（<a href="http://router.vuejs.org/zh-cn/pipeline/hooks.html" target="_blank" rel="noopener">data 钩子函数</a>）。</p>
+<p>vue-source 的接口交互在跨域问题会出现问题，但是总体来说还算不错。vue-source 会出现 500 错误问题，这是因<br>为 vue-source 中的 $http 并不等价于 jquery 的 ajax ，post 的 data 并不是 from data 形式的，而是 request<br>payload。<br>解决方法请移步：<a href="http://www.open-open.com/lib/view/open1447060624960.html#articleHeader10" target="_blank" rel="noopener">vue-source 出现 500 错误</a></p>
+<h2 id="项目构建">项目构建</h2><p>项目构建参考了稀土掘金中的一篇博文， <a href="http://gold.xitu.io/entry/55f77eb460b28e6a6f0f4f86" target="_blank" rel="noopener">vue 的组件式开发模式</a>, 与囧克斯上的一篇介绍 just vue<br>介绍 <a href="http://jiongks.name/blog/just-vue/" target="_blank" rel="noopener">just vue</a> 脚手架的文章。<br>这样搭建项目好处在于使用 vue-loader 来进行以 .vue 为后缀的组件式开发，并且使用 gulp 来监听/打包的流程，<br>使用 webpack 来对静态资源打包。</p>
 <h2 id="技术难点">技术难点</h2><p>基于微信开发，我觉得有几点值得注意。微信开发中有两点需要注意，一是注意看微信开发者文档，二是本地调试。</p>
 <h3 id="微信_js-SDK_接口开发">微信 js-SDK 接口开发</h3><p>在进行录音功能开发的时候，发现并不是全部机型都会支持 wx.onVoiceRecordEnd 这一个接口，那么这时候就需要<br>使用定时器配合微信接口进行开发。<br>另外就是微信的图片上传 uploadImage 不能批量上传，必须等待上一张图片上传完才能上传下一张。</p>
-<h3 id="本地调试的问题">本地调试的问题</h3><p>在调试微信接口的时候，最让人抓狂的就是它不能使用本地服务器进行调试，换言之，不能本地调试，详情请看<br><a href="http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E6.AD.A5.E9.AA.A4.E4.B8.89.EF.BC.9A.E9.80.9A.E8.BF.87config.E6.8E.A5.E5.8F.A3.E6.B3.A8.E5.85.A5.E6.9D.83.E9.99.90.E9.AA.8C.E8.AF.81.E9.85.8D.E7.BD.AE" target="_blank" rel="external">微信常见错误</a>。<br>如果想要本地调试就必须使用另外的办法，关于解决方法在下面的 git 工作流程中有提及。</p>
+<h3 id="本地调试的问题">本地调试的问题</h3><p>在调试微信接口的时候，最让人抓狂的就是它不能使用本地服务器进行调试，换言之，不能本地调试，详情请看<br><a href="http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E6.AD.A5.E9.AA.A4.E4.B8.89.EF.BC.9A.E9.80.9A.E8.BF.87config.E6.8E.A5.E5.8F.A3.E6.B3.A8.E5.85.A5.E6.9D.83.E9.99.90.E9.AA.8C.E8.AF.81.E9.85.8D.E7.BD.AE" target="_blank" rel="noopener">微信常见错误</a>。<br>如果想要本地调试就必须使用另外的办法，关于解决方法在下面的 git 工作流程中有提及。</p>
 <h2 id="不足之处">不足之处</h2><p>由于是自己初次搭建单页面应用（SPA）的项目，并且第一次接触 vue 的开发，因此本次开发中有很多不足之处。</p>
 <h3 id="性能">性能</h3><p>这里的性能分为两点。</p>
 <ol>
 <li><p>webpack 打包性能，影响开发效率。<br>开发过程中，在初期，webpack + gulp 的自动刷新功能还算是比较稳定与流畅快速，但是到了项目中的文件数量增加<br>的时候，打包的文件数量也随之增加，这样拖慢了刷新时间，有时候居然要等待 2 分钟以上才能加载出页面，严重影<br>响了开发效率。关于这部分我自己思考了一下，发现不应该在 gulpfile.js 中监听文件变化然后重新打包，这样下来<br>打包效率当然会减慢，应该将打包 bundle 和监听 watch 两个任务分开，调试的时候执行监听能够立刻看到变化，在<br>要 push 到远程仓库的时候在打包一次即可。</p>
 </li>
-<li><p>页面性能。<br>这里的页面性能其实想说的就是加载速度的问题，撇开 CDN 加速的方法，有没有方法可以直接提高 vue 应用，或者说<br>单页面应用的首次加载速度呢？我自己想到的办法是需要首页显示的页面不需要写在 vue 文件中，避免白屏时间过长<br>，另外就是不只是 vue，像 angular 或 react 等都会有组件惰性加载的方法，用户暂时不需要用到的组件没有必要在<br>页面加载的时候就全部加载进来，这样显得有点没有必要并且浪费，对于 vue 来说，可以使用 vue-router 的惰性加载<br>lazy load。以上<strong>两点</strong>应该能够解决单页面应用的首页加载问题。<br>传送门：[<a href="http://router.vuejs.org/zh-cn/lazy.html" target="_blank" rel="external">动态组件载入</a>]</p>
+<li><p>页面性能。<br>这里的页面性能其实想说的就是加载速度的问题，撇开 CDN 加速的方法，有没有方法可以直接提高 vue 应用，或者说<br>单页面应用的首次加载速度呢？我自己想到的办法是需要首页显示的页面不需要写在 vue 文件中，避免白屏时间过长<br>，另外就是不只是 vue，像 angular 或 react 等都会有组件惰性加载的方法，用户暂时不需要用到的组件没有必要在<br>页面加载的时候就全部加载进来，这样显得有点没有必要并且浪费，对于 vue 来说，可以使用 vue-router 的惰性加载<br>lazy load。以上<strong>两点</strong>应该能够解决单页面应用的首页加载问题。<br>传送门：[<a href="http://router.vuejs.org/zh-cn/lazy.html" target="_blank" rel="noopener">动态组件载入</a>]</p>
 </li>
 </ol>
 <h3 id="加载速度">加载速度</h3><p>网页的显示速度会大大地影响用户体验的，如果一个网页在首次加载的时候很慢，有可能会导致用户关闭网页选择离开。<br>这次开发的产品上线后出现了网页需要加载很长一段时间后才能显示出网页，虽然显示后应用的使用流畅，但是页面的<br>首次加载速度慢却是致命伤。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/network.png" alt=""><br>本次的项目的入口文件只有一个 html 文件与 app.js 文件，其实完全可以放到像七牛这样的 CDN 加速服务上加速，<br>这样可以避免消耗服务器的带宽，又可以利用七牛服务器的 CDN 加速。</p>
 <p>另外有一点就是即使所有文件使用了 CDN 加速，最终还是无法大幅减少首页的白屏时间，这个不是 vue 等工具导致的，<br>而是单页面应用的缺点，首次加载问题，解决问题的方法就在于首页不要使用 vue 来写，然后使用动态组件载入异步<br>加载组件。</p>
 <h3 id="静态文件的缓存">静态文件的缓存</h3><p>因为之前没有完整的项目经验，所以在构建项目的时候对于服务器上的文件缓存考虑不周，导致服务器经常访问旧版本<br>代码，严重拖慢了开发效率。<br>解决方法是在文件名中添加时间戳或 hash 值，然后根据文件名更换引用的文件名。<br>在 gulp 中使用 gulp-rev 与 gulp-rev-collector 这两个插件生成文件后缀 hash 值并替换 html 文件中的引用名。</p>
-<h3 id="git_工作流程">git 工作流程</h3><p>本次基于微信开发，因为在 Ubuntu 系统下，无法用微信提供的开发者工具，因此只能利用其他的方法进行微信 js-SDK<br>的调试了。<br>目前采用的方法是使用 git 服务器，利用 github 的 Webhooks 来进行自动化部署。<br>解决方案：<a href="http://www.piaoyi.org/linux/Gitlab-GitHub-webhook-push-auto-deployment.html" target="_blank" rel="external">利用 git 服务器与 github Webhooks 自动化部署</a>.</p>
-<p>但是尽管如此,我还是觉得有更优的方法来解决微信 js-SDK 的调试问题,因为不可能直接在服务器上写代码,这样完全<br>没有安全性可言,对产品的研发流程不利,并且不可能将每次微小的调试都 commit 并 push 到服务器上,这样会增大了<br>commit 的负担,同时增加了像 coding 这样的代码托管仓库的 git 仓库的大小.<br>万幸的是,有人提出了很好的解决方法,不过是基于 windows 系统下的,不过已经要比之前线上调试的条件好太多了.<br>以下是知乎上的一个问答,值得一看.<br>传送门:<br><a href="https://www.zhihu.com/question/25456655" target="_blank" rel="external">微信开发如何做本地调试？</a><br><a href="https://natapp.cn/" target="_blank" rel="external">微信本地开发利器 NATAPP</a></p>
+<h3 id="git_工作流程">git 工作流程</h3><p>本次基于微信开发，因为在 Ubuntu 系统下，无法用微信提供的开发者工具，因此只能利用其他的方法进行微信 js-SDK<br>的调试了。<br>目前采用的方法是使用 git 服务器，利用 github 的 Webhooks 来进行自动化部署。<br>解决方案：<a href="http://www.piaoyi.org/linux/Gitlab-GitHub-webhook-push-auto-deployment.html" target="_blank" rel="noopener">利用 git 服务器与 github Webhooks 自动化部署</a>.</p>
+<p>但是尽管如此,我还是觉得有更优的方法来解决微信 js-SDK 的调试问题,因为不可能直接在服务器上写代码,这样完全<br>没有安全性可言,对产品的研发流程不利,并且不可能将每次微小的调试都 commit 并 push 到服务器上,这样会增大了<br>commit 的负担,同时增加了像 coding 这样的代码托管仓库的 git 仓库的大小.<br>万幸的是,有人提出了很好的解决方法,不过是基于 windows 系统下的,不过已经要比之前线上调试的条件好太多了.<br>以下是知乎上的一个问答,值得一看.<br>传送门:<br><a href="https://www.zhihu.com/question/25456655" target="_blank" rel="noopener">微信开发如何做本地调试？</a><br><a href="https://natapp.cn/" target="_blank" rel="noopener">微信本地开发利器 NATAPP</a></p>
 
       
     </div>
@@ -523,7 +525,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

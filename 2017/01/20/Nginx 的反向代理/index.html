@@ -90,8 +90,9 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nginx 的反向代理">
 <meta property="og:url" content="http://zhangxiang958.github.io/2017/01/20/Nginx 的反向代理/index.html">
-<meta property="og:site_name" content="Shawn's blog">
+<meta property="og:site_name" content="Shawn&#39;s blog">
 <meta property="og:description" content="在做项目的时候,有时候需要自己部署 Node.JS 在 Linux 服务器上, 但是由于基于 Express 的 Node.JS 监听某个端口,但是一般来说不会监听 80 端口, 因为 80 端口是 HTTP 的默认端口, 在设置站点的时候需要将发送到 80 端口的数据转送到 NodeJS 监听的端口去,这时候就需要设置反向代理了.">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/nginx.png">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/server80.png">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/nginxF.png">
@@ -99,6 +100,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nginx 的反向代理">
 <meta name="twitter:description" content="在做项目的时候,有时候需要自己部署 Node.JS 在 Linux 服务器上, 但是由于基于 Express 的 Node.JS 监听某个端口,但是一般来说不会监听 80 端口, 因为 80 端口是 HTTP 的默认端口, 在设置站点的时候需要将发送到 80 端口的数据转送到 NodeJS 监听的端口去,这时候就需要设置反向代理了.">
+<meta name="twitter:image" content="http://ofsur12wi.bkt.clouddn.com/nginx.png">
 
 
 
@@ -356,19 +358,19 @@
 
       
         <p>在做项目的时候,有时候需要自己部署 <em>Node.JS</em> 在 Linux 服务器上, 但是由于基于 <em>Express</em> 的 <em>Node.JS</em> 监听某个<br>端口,但是一般来说不会监听 80 端口, 因为 80 端口是 HTTP 的默认端口, 在设置站点的时候需要将发送到 80 端口的数<br>据转送到 <em>NodeJS</em> 监听的端口去,这时候就需要设置反向代理了.<br><a id="more"></a></p>
-<h2 id="什么是反向代理">什么是反向代理</h2><p>从结构上说,与正向代理相反的就是反向代理,从功能与原理上,正向代理与反向代理却是不一样的东西.正向代理对服务端屏<br>弊客户端,反向代理对客户端屏蔽服务端.其实正向代理与我们使用的 VPN 原理类似,在国外架设一个服务器可以访问国外的<br>网站,我们只需访问这台服务器,通知这台服务器去访问 Google, Facebook 等网站,然后将结果发送给我们.<br>而反向代理在负载均衡中起到关键的作用, 负责将接收到的请求,转接到相对应的服务器上,其中起到一部分安全,高性能的<br>作用.<br>推荐看看知乎上关于反向代理的比喻. 传送门: <a href="https://www.zhihu.com/question/24723688" target="_blank" rel="external">反向代理</a>.</p>
+<h2 id="什么是反向代理">什么是反向代理</h2><p>从结构上说,与正向代理相反的就是反向代理,从功能与原理上,正向代理与反向代理却是不一样的东西.正向代理对服务端屏<br>弊客户端,反向代理对客户端屏蔽服务端.其实正向代理与我们使用的 VPN 原理类似,在国外架设一个服务器可以访问国外的<br>网站,我们只需访问这台服务器,通知这台服务器去访问 Google, Facebook 等网站,然后将结果发送给我们.<br>而反向代理在负载均衡中起到关键的作用, 负责将接收到的请求,转接到相对应的服务器上,其中起到一部分安全,高性能的<br>作用.<br>推荐看看知乎上关于反向代理的比喻. 传送门: <a href="https://www.zhihu.com/question/24723688" target="_blank" rel="noopener">反向代理</a>.</p>
 <h2 id="如何开启反向代理">如何开启反向代理</h2><p>这里的反向代理的作用是将传到 Nginx 服务器的 HTTP 请求, 转送到相对应端口的我们建立起来的 NodeJS 服务器.</p>
 <ol>
 <li>登录服务器,并以管理员身份运行</li>
 <li>移动到 nginx 文件夹<br><img src="http://ofsur12wi.bkt.clouddn.com/nginx.png" alt=""></li>
 <li>在 site-available 文件夹找到所要设置反向代理的站点的配置文件</li>
 <li><p>在 server 中填入如下字段<br><img src="http://ofsur12wi.bkt.clouddn.com/server80.png" alt=""><br><img src="http://ofsur12wi.bkt.clouddn.com/nginxF.png" alt=""></p>
-<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass http<span class="value">://localhost:<span class="number">8004</span>;</span>  <span class="comment">//NodeJS 服务器监听 8004 端口</span></span><br><span class="line">proxy_http_version 1<span class="class">.1</span>;  <span class="comment">//HTTP 版本为 1.1</span></span><br><span class="line">proxy_set_header Upgrade <span class="variable">$http_upgrade</span>; </span><br><span class="line">proxy_set_header Host <span class="variable">$host</span>; </span><br><span class="line">proxy_cache_bypass <span class="variable">$http_upgrade</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass http:<span class="regexp">//</span>localhost:<span class="number">8004</span>;  <span class="regexp">//</span>NodeJS 服务器监听 <span class="number">8004</span> 端口</span><br><span class="line">proxy_http_version <span class="number">1.1</span>;  <span class="regexp">//</span>HTTP 版本为 <span class="number">1.1</span></span><br><span class="line">proxy_set_header Upgrade <span class="variable">$http_upgrade</span>; </span><br><span class="line">proxy_set_header Host <span class="variable">$host</span>; </span><br><span class="line">proxy_cache_bypass <span class="variable">$http_upgrade</span>;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>重启 Nginx 服务器,访问 easyread.ijarvis.cn 就可以访问到我们的 NodeJS 了</p>
 </li>
 </ol>
-<h2 id="附录">附录</h2><h3 id="配置中的_$http_upgrade_有什么作用?">配置中的 <em>$http_upgrade</em> 有什么作用?</h3><p>使用 HTTP 协议升级到 Upgrade ,支持 Websocket 协议.<br><a href="http://nginx.org/en/docs/http/websocket.html" target="_blank" rel="external">http://nginx.org/en/docs/http/websocket.html</a></p>
+<h2 id="附录">附录</h2><h3 id="配置中的_$http_upgrade_有什么作用?">配置中的 <em>$http_upgrade</em> 有什么作用?</h3><p>使用 HTTP 协议升级到 Upgrade ,支持 Websocket 协议.<br><a href="http://nginx.org/en/docs/http/websocket.html" target="_blank" rel="noopener">http://nginx.org/en/docs/http/websocket.html</a></p>
 
       
     </div>
@@ -509,7 +511,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
