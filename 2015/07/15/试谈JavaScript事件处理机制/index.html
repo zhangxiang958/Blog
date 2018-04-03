@@ -355,18 +355,20 @@
       
         <hr>
 <p>在协同工作室前端组学习，进行暑假培训，期间我将对JavaScript的部分知识进行自我总结与发表个人看法<br><a id="more"></a></p>
-<h2 id="JavaScript的特色">JavaScript的特色</h2><p>Javascript是一门解释型的单线程语言，这是为了避免多线程时可能引起的冲突。浏览器在解释代码时是从上至下逐步进行解释翻译的，但是我们在电脑上CPU不一定是满载的，有可能是闲置的，这就导致了现在多核CPU计算能力的浪费，因此出现了事件处理机制去利用多核CPU的计算能力。</p>
+<h2 id="JavaScript的特色"><a href="#JavaScript的特色" class="headerlink" title="JavaScript的特色"></a>JavaScript的特色</h2><p>Javascript是一门解释型的单线程语言，这是为了避免多线程时可能引起的冲突。浏览器在解释代码时是从上至下逐步进行解释翻译的，但是我们在电脑上CPU不一定是满载的，有可能是闲置的，这就导致了现在多核CPU计算能力的浪费，因此出现了事件处理机制去利用多核CPU的计算能力。</p>
 <hr>
-<h1 id="事件机制">事件机制</h1><h2 id="执行栈">执行栈</h2><p>JavaScript在执行代码的时候，每一个行为（函数）都会进入到一个栈中去等待执行————先进入后执行。<br>执行栈就是主线程，当CPU遇到需要花费时间长的任务（如setTimeout）时，会跳过，直接执行下一个任务。</p>
-<h2 id="回调队列Callback_queue">回调队列Callback queue</h2><p>上面所说CPU遇到花费时间长需要等待的任务也就是所谓的异步任务时，比如DOM/Ajax/setTimeout，此时会将任务放在一个队列中，此队列就叫做回调队列，也是异步处理机制的一部分。当主线程中的任务处理完后，就会调出队列中的任务去完成，先进入队列的就会先被处理。此外，任务队列还会存放一些具有定时器的回调函数。</p>
-<h2 id="运行机制">运行机制</h2><ol>
+<p>#事件机制</p>
+<h2 id="执行栈"><a href="#执行栈" class="headerlink" title="执行栈"></a>执行栈</h2><p>JavaScript在执行代码的时候，每一个行为（函数）都会进入到一个栈中去等待执行————先进入后执行。<br>执行栈就是主线程，当CPU遇到需要花费时间长的任务（如setTimeout）时，会跳过，直接执行下一个任务。</p>
+<p>##回调队列Callback queue<br>上面所说CPU遇到花费时间长需要等待的任务也就是所谓的异步任务时，比如DOM/Ajax/setTimeout，此时会将任务放在一个队列中，此队列就叫做回调队列，也是异步处理机制的一部分。当主线程中的任务处理完后，就会调出队列中的任务去完成，先进入队列的就会先被处理。此外，任务队列还会存放一些具有定时器的回调函数。</p>
+<p>##运行机制</p>
+<ol>
 <li>执行栈（主线程）执行所有的任务，回调队列不执行任务</li>
 <li>当主线程上的任务全部完成后，会一个一个调出任务队列中的任务进入到主线程中去执行</li>
 <li>就是不断重复以上两个步骤</li>
 </ol>
 <p>![事件机制]（<a href="http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）" target="_blank" rel="noopener">http://img5.imgtn.bdimg.com/it/u=2612156863,577858162&amp;fm=21&amp;gp=0.jpg）</a></p>
-<h3 id="回调函数">回调函数</h3><p>所谓回调函数，就是会被主线程挂起来的代码。</p>
-<h2 id="定时器">定时器</h2><p>定时器主要是由setTimeout超时调用和setInterval间歇调用所组成，setTimeout接受两个参数，一个是回调函数，一个是执行的时间。<br>两者的区别是setTimeout是一次调用，而setInterval是不断调用。</p>
+<p>###回调函数<br>所谓回调函数，就是会被主线程挂起来的代码。</p>
+<p>##定时器<br>定时器主要是由setTimeout超时调用和setInterval间歇调用所组成，setTimeout接受两个参数，一个是回调函数，一个是执行的时间。<br>两者的区别是setTimeout是一次调用，而setInterval是不断调用。</p>
 <hr>
 <p>作者     张翔<br>2015 年 07月 15日    </p>
 
@@ -505,7 +507,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -567,7 +569,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript的特色"><span class="nav-number">1.</span> <span class="nav-text">JavaScript的特色</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事件机制"><span class="nav-number"></span> <span class="nav-text">事件机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">1.</span> <span class="nav-text">执行栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回调队列Callback_queue"><span class="nav-number">2.</span> <span class="nav-text">回调队列Callback queue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行机制"><span class="nav-number">3.</span> <span class="nav-text">运行机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回调函数"><span class="nav-number">3.1.</span> <span class="nav-text">回调函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时器"><span class="nav-number">4.</span> <span class="nav-text">定时器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript的特色"><span class="nav-number">1.</span> <span class="nav-text">JavaScript的特色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈"><span class="nav-number">2.</span> <span class="nav-text">执行栈</span></a></li></ol></div>
             
 
           </div>

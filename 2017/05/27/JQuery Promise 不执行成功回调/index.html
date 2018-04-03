@@ -354,9 +354,9 @@
 
       
         <p>最近和后台小哥进行联调, 因为是一个后台页面, 直接使用了 JQuery 里面的 $.ajax 来调接口, 但是发现异步成功回调<br>并不执行.<br><a id="more"></a></p>
-<h2 id="问题原因">问题原因</h2><p>原因在于对于 dataType 的误解. dataType 的意思的接收的数据按照指定的格式进行解析而非传输的数据格式.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">    dataType: <span class="string">'jsonp'</span>,</span><br><span class="line">    url: <span class="string">'/getData'</span></span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'success'</span>);</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'fail'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>##问题原因<br>原因在于对于 dataType 的误解. dataType 的意思的接收的数据按照指定的格式进行解析而非传输的数据格式.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">    dataType: <span class="string">'jsonp'</span>,</span><br><span class="line">    url: <span class="string">'/getData'</span></span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'success'</span>);</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'fail'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <p>因为这是之前的项目, 所以并不清楚到底接口是一个普通的 post/get 请求还是一个 jsonp 格式请求, 所以在 datatype<br>中使用了 jsonp 格式的数据解析, 这样会导致错误, 导致成功回调不会执行, 执行了失败回调, 这是因为接收的数据格式<br>如果是 json, 但是 dataType 指定使用 jsonp 格式进行解析, 这样会解析出错然后就会执行失败回调.</p>
-<h2 id="解决">解决</h2><p>去掉 dataType 属性或者与后台人员充分沟通之后使用相对应的 json/jsonp/xml 格式的值.</p>
+<p>##解决<br>去掉 dataType 属性或者与后台人员充分沟通之后使用相对应的 json/jsonp/xml 格式的值.</p>
 
       
     </div>
@@ -468,17 +468,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -497,7 +488,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -549,22 +540,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题原因"><span class="nav-number">1.</span> <span class="nav-text">问题原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决"><span class="nav-number">2.</span> <span class="nav-text">解决</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

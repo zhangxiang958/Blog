@@ -86,18 +86,18 @@
 
 
 
-<meta name="description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
+<meta name="description" content="##两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
 <meta property="og:type" content="article">
 <meta property="og:title" content="script 标签的 defer 与 async">
 <meta property="og:url" content="http://zhangxiang958.github.io/2016/12/20/script 标签的 defer 与 async/index.html">
 <meta property="og:site_name" content="Shawn&#39;s blog">
-<meta property="og:description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
+<meta property="og:description" content="##两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ofsur12wi.bkt.clouddn.com/1644593160.jpg">
 <meta property="og:updated_time" content="2016-12-20T12:15:46.087Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="script 标签的 defer 与 async">
-<meta name="twitter:description" content="两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
+<meta name="twitter:description" content="##两者共同点defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联脚本起作用.添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?">
 <meta name="twitter:image" content="http://ofsur12wi.bkt.clouddn.com/1644593160.jpg">
 
 
@@ -355,11 +355,11 @@
       
 
       
-        <h2 id="两者共同点">两者共同点</h2><p>defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联<br>脚本起作用.<br>添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?<br><a id="more"></a></p>
-<h2 id="defer_延迟脚本">defer 延迟脚本</h2><p>defer 会在 DOMContentLoad 事件之前执行,虽然规范中表明 defer 的脚本会按顺序,但是实际中同时加了此属性的 script 脚本并不能保证其执行顺序,所以最好只有一个延迟脚本.</p>
-<h3 id="那是不是意味着加了_defer_的脚本可以放在_head_标签那里_?">那是不是意味着加了 defer 的脚本可以放在 head 标签那里 ?</h3><p>从规范上说, 外联脚本加上了 defer 属性之后,会立刻下载,但不会阻塞浏览器加载其他组件,在浏览器的渲染工作完成之后<br>且在 DomContentLoad 事件之前发生. 也就是说放在 head 中加上 defer 属性的 script 脚本与放在文档底部效果相同.<br>但是有些浏览器并不支持 defer 属性,因此对于 defer 脚本放在 body 的闭合标签之前仍是最佳选择.实际上, defer 的脚本不一定会按顺序执行.</p>
-<h2 id="async_异步脚本">async 异步脚本</h2><p>加上 async 属性的 script 标签会立刻下载脚本,但是不影响浏览器继续渲染页面,但是当脚本下载完成之后,脚本会立刻执<br>行,这样有可能导致了浏览器的渲染工作停滞,之所以说停滞是因为渲染工作有可能在下载脚本完成之前就已经结束了.<br>因为 async 的执行时刻不确定性,因此尽量不要将异步脚本放在 head 头部,这样会影响页面加载从而影响用户体验. 换而<br>言之,它的脚本执行时刻一定会在 load 事件之前,但是可能在 DOMContentLoaded 事件之前或之后,<strong>它是为了尽可能快地执行脚本却不想阻碍浏览器的其他工作</strong>例如渲染页面.</p>
-<h2 id="区别">区别</h2><p>下面这张图片很能够说明这两者的关系.<br><img src="http://ofsur12wi.bkt.clouddn.com/1644593160.jpg" alt=""></p>
+        <p>##两者共同点<br>defer 与 async 都是在 HTML 文件中的 script 标签的属性. 两个属性都会通知浏览器立刻下载该脚本, 并且都只对外联<br>脚本起作用.<br>添加了这两个属性的 script 脚本不应该包含 DOM 操作, 因为延迟或异步脚本之后,并不能保证脚本的执行顺序,有可能在 DOMContentLoad 事件之前就已经执行了. 但是他们的区别在哪?<br><a id="more"></a></p>
+<p>##defer 延迟脚本<br>defer 会在 DOMContentLoad 事件之前执行,虽然规范中表明 defer 的脚本会按顺序,但是实际中同时加了此属性的 script 脚本并不能保证其执行顺序,所以最好只有一个延迟脚本.</p>
+<p>###那是不是意味着加了 defer 的脚本可以放在 head 标签那里 ?<br>从规范上说, 外联脚本加上了 defer 属性之后,会立刻下载,但不会阻塞浏览器加载其他组件,在浏览器的渲染工作完成之后<br>且在 DomContentLoad 事件之前发生. 也就是说放在 head 中加上 defer 属性的 script 脚本与放在文档底部效果相同.<br>但是有些浏览器并不支持 defer 属性,因此对于 defer 脚本放在 body 的闭合标签之前仍是最佳选择.实际上, defer 的脚本不一定会按顺序执行.</p>
+<p>##async 异步脚本<br>加上 async 属性的 script 标签会立刻下载脚本,但是不影响浏览器继续渲染页面,但是当脚本下载完成之后,脚本会立刻执<br>行,这样有可能导致了浏览器的渲染工作停滞,之所以说停滞是因为渲染工作有可能在下载脚本完成之前就已经结束了.<br>因为 async 的执行时刻不确定性,因此尽量不要将异步脚本放在 head 头部,这样会影响页面加载从而影响用户体验. 换而<br>言之,它的脚本执行时刻一定会在 load 事件之前,但是可能在 DOMContentLoaded 事件之前或之后,<strong>它是为了尽可能快地执行脚本却不想阻碍浏览器的其他工作</strong>例如渲染页面.</p>
+<p>##区别<br>下面这张图片很能够说明这两者的关系.<br><img src="http://ofsur12wi.bkt.clouddn.com/1644593160.jpg" alt=""></p>
 
       
     </div>
@@ -471,17 +471,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -500,7 +491,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -552,22 +543,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#两者共同点"><span class="nav-number">1.</span> <span class="nav-text">两者共同点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#defer_延迟脚本"><span class="nav-number">2.</span> <span class="nav-text">defer 延迟脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#那是不是意味着加了_defer_的脚本可以放在_head_标签那里_?"><span class="nav-number">2.1.</span> <span class="nav-text">那是不是意味着加了 defer 的脚本可以放在 head 标签那里 ?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async_异步脚本"><span class="nav-number">3.</span> <span class="nav-text">async 异步脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区别"><span class="nav-number">4.</span> <span class="nav-text">区别</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

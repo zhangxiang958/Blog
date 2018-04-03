@@ -361,21 +361,22 @@
 
       
         <p>目前来说,前端的单页面应用十分广泛,但是单页面应用有个先天的缺点是将所有的文件或页面打包在一个文件内,虽然提高<br>了应用的响应速度,但是却大大增加了首页的渲染时间与白屏时间.虽然目前的打包工具 webpack 支持懒加载代码分块,一<br>定程度上减轻了这一症状,但是当业务复杂起来,只包括首页 js 文件也会相当庞大,这时候如果能够采用 Gzip 压缩文件将<br>会显著减少白屏时间.<br><a id="more"></a><br>由于目前 nginx 服务器使用非常广泛,加上本人平时都是使用 nginx 服务器,因此本文使用 nginx 的配置作为示例.</p>
-<h2 id="开启_Gzip">开启 Gzip</h2><h3 id="全局">全局</h3><p>如果想要在全局下开启 gzip,那么只需在<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>nginx<span class="regexp">/nginx.conf</span></span><br></pre></td></tr></table></figure></p>
+<p>##开启 Gzip</p>
+<p>###全局<br>如果想要在全局下开启 gzip,那么只需在<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>nginx<span class="regexp">/nginx.conf</span></span><br></pre></td></tr></table></figure></p>
 <p><img src="http://ofsur12wi.bkt.clouddn.com/gzipSet.png" alt=""><br>这个文件中 <strong>http {…}</strong> 找到 gzip 配置段,去掉前面的 <strong>#</strong> 符号.</p>
-<h3 id="二级域名">二级域名</h3><p>如果想要在二级域名开启 gzip, 那么需要在该二级域名的 nginx 配置文件中,<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>nginx<span class="regexp">/sites-available/</span>second.host</span><br></pre></td></tr></table></figure></p>
+<p>###二级域名<br>如果想要在二级域名开启 gzip, 那么需要在该二级域名的 nginx 配置文件中,<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/etc/</span>nginx<span class="regexp">/sites-available/</span>second.host</span><br></pre></td></tr></table></figure></p>
 <p>文件中的 <strong>server {…}</strong> 中写上 gzip 配置项即可.<br><img src="http://ofsur12wi.bkt.clouddn.com/gzipsetme.png" alt=""></p>
-<h2 id="配置说明">配置说明</h2><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment"># Gzip Setings</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"></span><br><span class="line">gzip <span class="keyword">on</span>;  // 开启 <span class="title">gzip</span></span><br><span class="line">gzip_disable <span class="string">"msie6"</span>;<span class="comment"> //禁用 ie6 的 gzip 选项,由于 ie6 的性能差,启用 gzip 容易导致页面假死</span></span><br><span class="line"></span><br><span class="line">gzip_vary <span class="keyword">on</span>;    //<span class="title">http</span> 头部,意在对于不支持 <span class="title">gzip</span> 压缩的浏览器不进行压缩.</span><br><span class="line">gzip_comp_level <span class="number">6</span>; <span class="comment"> //压缩比, 0 - 9, 越高压缩时间越长, 高压缩比节省带宽消耗 CPU, 视自身的服务器性能与带宽决定. </span></span><br><span class="line">gzip_buffers <span class="number">16</span> <span class="number">8</span>k;<span class="comment"> //设置系统使用多少个单位去缓存 gzip 压缩数据流, 与压缩速度有关, 这里意思是原始数据以 8k 为单位的 16 倍申请内存.</span></span><br><span class="line">gzip_min_length <span class="number">1</span>k;<span class="comment"> //最小需要 gzip 压缩的文件大小, 默认为 0, 建议设置,否则小文件反而压缩后变大.</span></span><br><span class="line">gzip_http_version <span class="number">1.1</span>; <span class="comment"> //只有 http 协议版本为 1.1 , gzip 才会生效</span></span><br><span class="line">gzip_types <span class="keyword">text</span>/plain <span class="keyword">text</span>/css application/json application/x-javascript <span class="keyword">text</span>/xml application/xml application/xml+css <span class="keyword">text</span>/javascript;<span class="comment"> // gzip 作用的文件类型</span></span><br></pre></td></tr></table></figure>
+<p>##配置说明<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment"># Gzip Setings</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"></span><br><span class="line">gzip <span class="keyword">on</span>;  // 开启 <span class="title">gzip</span></span><br><span class="line">gzip_disable <span class="string">"msie6"</span>;<span class="comment"> //禁用 ie6 的 gzip 选项,由于 ie6 的性能差,启用 gzip 容易导致页面假死</span></span><br><span class="line"></span><br><span class="line">gzip_vary <span class="keyword">on</span>;    //<span class="title">http</span> 头部,意在对于不支持 <span class="title">gzip</span> 压缩的浏览器不进行压缩.</span><br><span class="line">gzip_comp_level <span class="number">6</span>; <span class="comment"> //压缩比, 0 - 9, 越高压缩时间越长, 高压缩比节省带宽消耗 CPU, 视自身的服务器性能与带宽决定. </span></span><br><span class="line">gzip_buffers <span class="number">16</span> <span class="number">8</span>k;<span class="comment"> //设置系统使用多少个单位去缓存 gzip 压缩数据流, 与压缩速度有关, 这里意思是原始数据以 8k 为单位的 16 倍申请内存.</span></span><br><span class="line">gzip_min_length <span class="number">1</span>k;<span class="comment"> //最小需要 gzip 压缩的文件大小, 默认为 0, 建议设置,否则小文件反而压缩后变大.</span></span><br><span class="line">gzip_http_version <span class="number">1.1</span>; <span class="comment"> //只有 http 协议版本为 1.1 , gzip 才会生效</span></span><br><span class="line">gzip_types <span class="keyword">text</span>/plain <span class="keyword">text</span>/css application/json application/x-javascript <span class="keyword">text</span>/xml application/xml application/xml+css <span class="keyword">text</span>/javascript;<span class="comment"> // gzip 作用的文件类型</span></span><br></pre></td></tr></table></figure></p>
 <p><strong>*注意</strong>:需要开启 gzip_min_length 1k;<br>当文件大小大于 1k 的时候, gzip 生效</p>
 <p><strong>备注</strong>: vary 响应首部是用于选择文档的, vary: Accpet-Encoding; 意思在于文档的类型取决于 Accpet-Encoding<br>字段.</p>
-<h2 id="测试">测试</h2><p>测试可以使用命令行的形式<br><figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -<span class="literal">I</span> -H <span class="string">"Accept-Encoding: gzip,deflate"</span> <span class="string">"http://me.ijarvis.cn/javascripts/index.js"</span></span><br></pre></td></tr></table></figure></p>
+<p>##测试<br>测试可以使用命令行的形式<br><figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -<span class="literal">I</span> -H <span class="string">"Accept-Encoding: gzip,deflate"</span> <span class="string">"http://me.ijarvis.cn/javascripts/index.js"</span></span><br></pre></td></tr></table></figure></p>
 <p><img src="http://ofsur12wi.bkt.clouddn.com/gzip.png" alt=""><br>可以看到有 Content-Encoding: gzip; 证明已经开启了 gzip</p>
 <p>也可以使用在线测试工具 <a href="https://gtmetrix.com/" target="_blank" rel="noopener">https://gtmetrix.com/</a>, 输入域名即可测试.</p>
-<h2 id="效果">效果</h2><p>index.js 原大小: 1.1 kb<br>index.html 原大小: 1.3 kb<br>style.css 原大小: 6.7 kb<br><img src="http://ofsur12wi.bkt.clouddn.com/gzipRe.png" alt=""></p>
-<h3 id="响应时间">响应时间</h3><p>没有设置 Gzip的时间:<br><img src="http://ofsur12wi.bkt.clouddn.com/notgzipTime.png" alt=""></p>
+<p>##效果<br>index.js 原大小: 1.1 kb<br>index.html 原大小: 1.3 kb<br>style.css 原大小: 6.7 kb<br><img src="http://ofsur12wi.bkt.clouddn.com/gzipRe.png" alt=""></p>
+<p>###响应时间<br>没有设置 Gzip的时间:<br><img src="http://ofsur12wi.bkt.clouddn.com/notgzipTime.png" alt=""></p>
 <p>设置了 Gzip 的时间:<br><img src="http://ofsur12wi.bkt.clouddn.com/gzipTime.png" alt=""></p>
 <p>从响应时间与压缩文件大小两种角度来看, gzip 确实是优化利器.<br>虽然两者在时间上并没有相差太多,但是相信这是测试文件样本过小的原因,如果对于大文件,优化的结果应该是相当好的.</p>
-<h2 id="开销成本">开销成本</h2><p>服务器消耗 CPU 来对文件进行压缩,浏览器等客户端需要解压,节约了带宽.通常是 1k 以上的文件才需要压缩.</p>
+<p>##开销成本<br>服务器消耗 CPU 来对文件进行压缩,浏览器等客户端需要解压,节约了带宽.通常是 1k 以上的文件才需要压缩.</p>
 <p>参考: <a href="https://segmentfault.com/a/1190000006105756" target="_blank" rel="noopener">https://segmentfault.com/a/1190000006105756</a></p>
 
       
@@ -488,17 +489,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -517,7 +509,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -569,22 +561,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开启_Gzip"><span class="nav-number">1.</span> <span class="nav-text">开启 Gzip</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全局"><span class="nav-number">1.1.</span> <span class="nav-text">全局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二级域名"><span class="nav-number">1.2.</span> <span class="nav-text">二级域名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置说明"><span class="nav-number">2.</span> <span class="nav-text">配置说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#效果"><span class="nav-number">4.</span> <span class="nav-text">效果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#响应时间"><span class="nav-number">4.1.</span> <span class="nav-text">响应时间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开销成本"><span class="nav-number">5.</span> <span class="nav-text">开销成本</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

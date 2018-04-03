@@ -361,19 +361,21 @@
 
       
         <p>随着微信小程序的出现,相信会有一大批人会开始接触微信开发,而在微信开发的过程中,其调试是非常繁琐的.下面我将我<br>自身在微信开发方面做一些总结,希望可以抛砖引玉.<br>其实早就应该反思自己的微信开发流程了,但是一直有项目,所以就搁置了.<br><a id="more"></a></p>
-<h2 id="微信调试的难处">微信调试的难处</h2><h3 id="微信接口的使用的粗略说明">微信接口的使用的粗略说明</h3><p>其实前端所说的微信开发,目前来说就是微信的 jssdk 的使用与调试.微信的 jssdk 上手其实并不难, API 都比较友好,<br>关键是微信接口的调试,因为微信自身必须顾及自己服务器等的安全性,因此在使用 jssdk 之前,需要通过验证,拿取一个<br>token,经过 SHA1 加密算法得到一个签名,不过这部分微信已经提供有 Node.js 或 Java 等版本的代码供参考,可以直接<br>用,相信并不困难.<br>后台只需要将得到的签名, 与用于生成签名的公众号的 appid, secret, 时间戳在使用微信接口之前通过验证:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> currentUrl = <span class="built_in">window</span>.location.href.split(<span class="string">"#"</span>)[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">	type: <span class="string">"post"</span>,</span><br><span class="line">	url: <span class="string">"url"</span>,</span><br><span class="line">    dataType: <span class="string">"json"</span>,</span><br><span class="line">	data:&#123;</span><br><span class="line">		<span class="string">"url"</span>: currentUrl</span><br><span class="line">	&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span>(<span class="params">msgs</span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(msgs);</span><br><span class="line">		<span class="keyword">var</span> signPackage = <span class="built_in">JSON</span>.parse(msgs);</span><br><span class="line">		wx.config(&#123;</span><br><span class="line">			debug: <span class="literal">false</span>,</span><br><span class="line">			appId: signPackage.appId,</span><br><span class="line">			timestamp: signPackage.timestamp,</span><br><span class="line">			nonceStr: signPackage.nonceStr,</span><br><span class="line">			signature: signPackage.signature,</span><br><span class="line">			jsApiList: [  <span class="comment">//填写需要使用的 API 名</span></span><br><span class="line">			    <span class="string">'chooseImage'</span>,</span><br><span class="line">				<span class="string">'previewImage'</span>,</span><br><span class="line">				<span class="string">'uploadImage'</span></span><br><span class="line">			]</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>##微信调试的难处</p>
+<p>###微信接口的使用的粗略说明<br>其实前端所说的微信开发,目前来说就是微信的 jssdk 的使用与调试.微信的 jssdk 上手其实并不难, API 都比较友好,<br>关键是微信接口的调试,因为微信自身必须顾及自己服务器等的安全性,因此在使用 jssdk 之前,需要通过验证,拿取一个<br>token,经过 SHA1 加密算法得到一个签名,不过这部分微信已经提供有 Node.js 或 Java 等版本的代码供参考,可以直接<br>用,相信并不困难.<br>后台只需要将得到的签名, 与用于生成签名的公众号的 appid, secret, 时间戳在使用微信接口之前通过验证:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> currentUrl = <span class="built_in">window</span>.location.href.split(<span class="string">"#"</span>)[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">	type: <span class="string">"post"</span>,</span><br><span class="line">	url: <span class="string">"url"</span>,</span><br><span class="line">    dataType: <span class="string">"json"</span>,</span><br><span class="line">	data:&#123;</span><br><span class="line">		<span class="string">"url"</span>: currentUrl</span><br><span class="line">	&#125;,</span><br><span class="line">	success: <span class="function"><span class="keyword">function</span>(<span class="params">msgs</span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(msgs);</span><br><span class="line">		<span class="keyword">var</span> signPackage = <span class="built_in">JSON</span>.parse(msgs);</span><br><span class="line">		wx.config(&#123;</span><br><span class="line">			debug: <span class="literal">false</span>,</span><br><span class="line">			appId: signPackage.appId,</span><br><span class="line">			timestamp: signPackage.timestamp,</span><br><span class="line">			nonceStr: signPackage.nonceStr,</span><br><span class="line">			signature: signPackage.signature,</span><br><span class="line">			jsApiList: [  <span class="comment">//填写需要使用的 API 名</span></span><br><span class="line">			    <span class="string">'chooseImage'</span>,</span><br><span class="line">				<span class="string">'previewImage'</span>,</span><br><span class="line">				<span class="string">'uploadImage'</span></span><br><span class="line">			]</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <p>即可使用.</p>
-<h3 id="难处">难处</h3><p>虽然 wx.ready 函数有选项可以开启调试模式(将 <em>debug</em> 选项改为 <em>true</em>), 可以 alert 出部分报错信息,但是在手机<br>上却不能看到我们自己的报错信息,有时候我们需要知道微信返回的是一个字符串还是一个数组还是一个对象,如果不能通<br>过本地调试,而是需要通过线上调试的话将会造成很大的困扰与不便, 我先前的做法是使用 git 部署并线上调试,在这里<br>和大家说明极其不推荐这种方式,这只能在项目很赶的时候用来解决燃眉之急的.<br>由于调试微信接口不接受 localhost 本地服务器,必须自行准备一个带有域名服务器或者使用内网穿透工具.<br>(使用 <a href="https://ngrok.com/" target="_blank" rel="noopener">https://ngrok.com/</a> 或 国内版 <a href="https://natapp.cn/)；" target="_blank" rel="noopener">https://natapp.cn/)；</a></p>
-<h2 id="为什么要使用内网穿透工具">为什么要使用内网穿透工具</h2><p>微信公众平台都必须在公众管理平台里面配置才能获得调用 jssdk 的权限(即 wx.ready 函数通过).<br><img src="http://ofsur12wi.bkt.clouddn.com/whyNgrok.png" alt=""><br><img src="http://ofsur12wi.bkt.clouddn.com/jssdkURL.png" alt=""><br>里面的 url 填写的是你使用内网穿透工具获得的 url 之后的接口地址.而 token 是后台需要规定用于生成签名的字符串<br>并且这里的 url 只能接收域名(IP 地址也不行),如果我们不想使用线上调试希望本地调试的话,就只能使用内网穿透工具.</p>
-<h3 id="内网穿透">内网穿透</h3><p>我们上网之前都必须通过 DHCP 协议获取一个 IP 地址,但是这个 IP 地址并没有映射一个域名,即 DNS 服务器没有一个<br>CNAME 映射,如果我们需要将本地 IP 映射成一个域名,然后将这个域名使用到我们的微信配置上,那么就需要使用内网穿<br>透工具,内网穿透就是分配一个域名(这里是二级域名),绑定到本地获得的 IP 地址,并且到 DNS 服务器增加一个 CNAME<br>查询.</p>
-<h2 id="调试准备">调试准备</h2><p>我在这里使用 ubuntu 16.04 进行说明.步骤如下:</p>
-<h3 id="下载工具">下载工具</h3><p>从 <a href="https://ngrok.com/download" target="_blank" rel="noopener">https://ngrok.com/download</a> 下载适合自己系统的版本.解压后可以看到一个执行文件.<br><img src="http://ofsur12wi.bkt.clouddn.com/ngrok.png" alt=""></p>
-<h3 id="使用注册后的_authtoken_启动_ngrok">使用注册后的 authtoken 启动 ngrok</h3><p><img src="http://ofsur12wi.bkt.clouddn.com/ngrokDo.png" alt=""></p>
-<h3 id="命令行执行">命令行执行</h3><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ngrok http <span class="keyword">port</span>  //<span class="keyword">port</span> 是自己需要设定的端口号,执行后会得到下面的界面</span><br></pre></td></tr></table></figure>
+<p>###难处<br>虽然 wx.ready 函数有选项可以开启调试模式(将 <em>debug</em> 选项改为 <em>true</em>), 可以 alert 出部分报错信息,但是在手机<br>上却不能看到我们自己的报错信息,有时候我们需要知道微信返回的是一个字符串还是一个数组还是一个对象,如果不能通<br>过本地调试,而是需要通过线上调试的话将会造成很大的困扰与不便, 我先前的做法是使用 git 部署并线上调试,在这里<br>和大家说明极其不推荐这种方式,这只能在项目很赶的时候用来解决燃眉之急的.<br>由于调试微信接口不接受 localhost 本地服务器,必须自行准备一个带有域名服务器或者使用内网穿透工具.<br>(使用 <a href="https://ngrok.com/" target="_blank" rel="noopener">https://ngrok.com/</a> 或 国内版 <a href="https://natapp.cn/)；" target="_blank" rel="noopener">https://natapp.cn/)；</a></p>
+<p>##为什么要使用内网穿透工具<br>微信公众平台都必须在公众管理平台里面配置才能获得调用 jssdk 的权限(即 wx.ready 函数通过).<br><img src="http://ofsur12wi.bkt.clouddn.com/whyNgrok.png" alt=""><br><img src="http://ofsur12wi.bkt.clouddn.com/jssdkURL.png" alt=""><br>里面的 url 填写的是你使用内网穿透工具获得的 url 之后的接口地址.而 token 是后台需要规定用于生成签名的字符串<br>并且这里的 url 只能接收域名(IP 地址也不行),如果我们不想使用线上调试希望本地调试的话,就只能使用内网穿透工具.</p>
+<p>###内网穿透<br>我们上网之前都必须通过 DHCP 协议获取一个 IP 地址,但是这个 IP 地址并没有映射一个域名,即 DNS 服务器没有一个<br>CNAME 映射,如果我们需要将本地 IP 映射成一个域名,然后将这个域名使用到我们的微信配置上,那么就需要使用内网穿<br>透工具,内网穿透就是分配一个域名(这里是二级域名),绑定到本地获得的 IP 地址,并且到 DNS 服务器增加一个 CNAME<br>查询.</p>
+<p>##调试准备<br>我在这里使用 ubuntu 16.04 进行说明.步骤如下:</p>
+<p>###下载工具<br>从 <a href="https://ngrok.com/download" target="_blank" rel="noopener">https://ngrok.com/download</a> 下载适合自己系统的版本.解压后可以看到一个执行文件.<br><img src="http://ofsur12wi.bkt.clouddn.com/ngrok.png" alt=""></p>
+<p>###使用注册后的 authtoken 启动 ngrok<br><img src="http://ofsur12wi.bkt.clouddn.com/ngrokDo.png" alt=""></p>
+<p>###命令行执行<br><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ngrok http <span class="keyword">port</span>  //<span class="keyword">port</span> 是自己需要设定的端口号,执行后会得到下面的界面</span><br></pre></td></tr></table></figure></p>
 <p><img src="http://ofsur12wi.bkt.clouddn.com/localngrok.png" alt=""><br>可以看到, 本地的 127.0.0.1:port 已经可以映射为一个域名地址 <a href="http://3b69fdf1.ngrok.io" target="_blank" rel="noopener">http://3b69fdf1.ngrok.io</a>, 也可以使用 https 版<br>本的 <a href="https://3b69fdf1.ngrok.io" target="_blank" rel="noopener">https://3b69fdf1.ngrok.io</a> .</p>
-<h3 id="查看转接的_HTTP_信息">查看转接的 HTTP 信息</h3><p>访问 localhost:4040 就可以看到映射的网址的 HTTP 访问情况了.<br><img src="http://ofsur12wi.bkt.clouddn.com/ngrok4040.png" alt=""></p>
-<h3 id="最后">最后</h3><p>这样就可以本地调试了,如果需要用手机进行调试,那么只需要使用手机访问获得的域名就可以访问到页面了.</p>
-<h2 id="附录">附录</h2><ul>
+<p>###查看转接的 HTTP 信息<br>访问 localhost:4040 就可以看到映射的网址的 HTTP 访问情况了.<br><img src="http://ofsur12wi.bkt.clouddn.com/ngrok4040.png" alt=""></p>
+<p>###最后<br>这样就可以本地调试了,如果需要用手机进行调试,那么只需要使用手机访问获得的域名就可以访问到页面了.</p>
+<p>##附录</p>
+<ul>
 <li>在上线自己的产品之前一定要确保自己的域名是有公信部备案的,不然在绑定网页域名的时候就会出错,无法绑定.</li>
 <li>ngrok 每次执行分配的域名是随机生成的,所以如果想固定使用一个域名,那么先执行ngrok -authtoken autoken port, authtoken 是注册时得到的 token, port 是想要绑定的端口号.然后执行 ngrok -subdomain testHost port 这样就可以通过 <a href="http://testHost.ngrok.io" target="_blank" rel="noopener">http://testHost.ngrok.io</a> 就可以一直访问到本机的 127.0.0.1:port 了.</li>
 <li><a href="https://ngrok.com/docs" target="_blank" rel="noopener">ngrok 文档</a></li>
@@ -489,17 +491,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -518,7 +511,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -570,22 +563,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微信调试的难处"><span class="nav-number">1.</span> <span class="nav-text">微信调试的难处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#微信接口的使用的粗略说明"><span class="nav-number">1.1.</span> <span class="nav-text">微信接口的使用的粗略说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#难处"><span class="nav-number">1.2.</span> <span class="nav-text">难处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要使用内网穿透工具"><span class="nav-number">2.</span> <span class="nav-text">为什么要使用内网穿透工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内网穿透"><span class="nav-number">2.1.</span> <span class="nav-text">内网穿透</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调试准备"><span class="nav-number">3.</span> <span class="nav-text">调试准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载工具"><span class="nav-number">3.1.</span> <span class="nav-text">下载工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用注册后的_authtoken_启动_ngrok"><span class="nav-number">3.2.</span> <span class="nav-text">使用注册后的 authtoken 启动 ngrok</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行执行"><span class="nav-number">3.3.</span> <span class="nav-text">命令行执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看转接的_HTTP_信息"><span class="nav-number">3.4.</span> <span class="nav-text">查看转接的 HTTP 信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后"><span class="nav-number">3.5.</span> <span class="nav-text">最后</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">4.</span> <span class="nav-text">附录</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

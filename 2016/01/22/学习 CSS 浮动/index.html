@@ -86,12 +86,12 @@
 
 
 
-<meta name="description" content="废话不多说，直接切入正题。 什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta name="description" content="废话不多说，直接切入正题。 ##什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习 CSS 浮动">
 <meta property="og:url" content="http://zhangxiang958.github.io/2016/01/22/学习 CSS 浮动/index.html">
 <meta property="og:site_name" content="Shawn&#39;s blog">
-<meta property="og:description" content="废话不多说，直接切入正题。 什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta property="og:description" content="废话不多说，直接切入正题。 ##什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float.png">
 <meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float2.png">
@@ -103,7 +103,7 @@
 <meta property="og:updated_time" content="2016-01-23T03:59:43.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习 CSS 浮动">
-<meta name="twitter:description" content="废话不多说，直接切入正题。 什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
+<meta name="twitter:description" content="废话不多说，直接切入正题。 ##什么是浮动？浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，因此深入了解float 属性是非常必要的。">
 <meta name="twitter:image" content="http://7xns9g.com1.z0.glb.clouddn.com/float.png">
 
 
@@ -362,18 +362,19 @@
 
       
         <p>废话不多说，直接切入正题。</p>
-<h2 id="什么是浮动？">什么是浮动？</h2><p>浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。<br>看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，<br>因此深入了解float 属性是非常必要的。<br><a id="more"></a></p>
-<h2 id="浮动的规则">浮动的规则</h2><p>浮动元素自成一流，以往文本流的规则在它身上并不适用。</p>
-<h3 id="浮动元素脱离了文本流">浮动元素脱离了文本流</h3><p>“浮动”在文档流之上。它不仅会影响布局，而且会影响内容的排版。<br>非匿名文本会围绕浮动元素显示。如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float.png" alt=""></p>
-<h3 id="浮动元素的外边距不会合并。">浮动元素的外边距不会合并。</h3><p>很多人认为浮动元素脱离了文本流，那么就是在文本流的“上一层”。<br>但是事实却并非如此，假设浮动元素在同一层，那么根据水平格式化，左右外边距应该合并才对<br>但是结果如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float2.png" alt=""><br>可见，两个浮动元素之间有 20 px 的外边距，说明浮动元素的外边距是不会合并的。<br>因此我建议开发人员在使用浮动元素时运用 z-index 来管理，控制浮动元素的表现。</p>
-<h3 id="浮动元素自动拥有块级元素属性">浮动元素自动拥有块级元素属性</h3><p>元素一旦被设置为浮动，会自动生成块级框，表现为块级元素。<br>所以没有必要为浮动元素设置为 display : block; 或 display ： inline-block; 。<br>如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float3.png" alt=""><br>一个行内元素，本来并不接受 width 等属性，但是被设置为浮动后，变成了块级表现形式。</p>
-<h3 id="浮动元素不重叠">浮动元素不重叠</h3><p>浮动元素会跟随在上一个浮动元素之后，下一个浮动元素的左边界不会出现在上一个浮动元素的右边界的左边。<br>这个规则避免了浮动元素的重叠。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float5.png" alt=""><br>宽度不足会自动到下一层级，不会发生重叠。<br>但是凡事有例外，如果遇到元素有设置负外边距，那就是另一回事了。</p>
-<h4 id="如果发生重叠呢？">如果发生重叠呢？</h4><p>如果通过设置属性，比如负外边距等手段，让浮动元素与文本流元素重叠，那么它会以怎样的形式表现呢？<br>如果浮动与行内元素重叠，那么行内元素的背景，行框，内容都会在浮动元素“之上”。如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float6.png" alt=""><br>如果浮动元素与块级元素重叠，那么块级元素的背景，框会在浮动元素“之下”，内容在浮动元素“之上”。<br>如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float7.png" alt=""></p>
-<h3 id="浮动的停止条件">浮动的停止条件</h3><p>浮动元素遇到父级元素的内边界就会停止浮动，不会浮动到更高的地方。<br>举个形象的栗子就是，像气球浮动到天花板就不会再浮动了。<br><em>main 元素 有 padding-left：10px；</em><br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float4.png" alt=""></p>
-<h3 id="浮动元素的延伸">浮动元素的延伸</h3><p>如果父级元素与子元素同为浮动元素，如果子元素高度或宽度大于父元素的高度或宽度，<br>那么父元素会自动延伸包住子元素。</p>
-<h2 id="清除浮动">清除浮动</h2><h3 id="什么是清除浮动？">什么是清除浮动？</h3><p>像上面所说的浮动元素的负外边距等的影响导致的浮动元素的重叠现象，虽然不影响内容的展示，<br>但是影响了布局的美观。因此就要清除浮动元素在元素“上”的现象。<br>除此之外，还可以让元素自动包裹。</p>
-<h3 id="为什么要清除浮动？">为什么要清除浮动？</h3><p>在布局的过程中，难免会遇到各种情况。<br>比如，父级元素不需要浮动，但是子元素需要浮动来达到布局需要，<br>但是，一旦这样设置子元素浮动，父元素不浮动，<br>就会发生父级元素的“高度坍塌”现象，因为父元素没有相应的元素“撑”起他的盒子模型。<br>而对父元素设置高度又显然不适合自适应布局和流式布局或浮动布局的思想。这时候，<br>就需要用到清除浮动了。</p>
-<h3 id="清除浮动的方法">清除浮动的方法</h3><p>这里只是浅谈，作为个人学习笔记记录，更多大师级的博文链接在本博文后贴出。<br>清除浮动需要用到 clear 属性。<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">clear</span> : <span class="built_in">left</span>|<span class="type">right</span>|<span class="type">both</span>;  //常用的三种属性值。</span><br></pre></td></tr></table></figure></p>
+<p>##什么是浮动？<br>浮动是 CSS 中定位所使用的属性。属性值名为 float，有四种取值，其中用得最为广泛的就是 left 和 right。<br>看字面意思就知道，一个是向左浮动，一个是向右浮动。在定位或布局中会大量地使用浮动属性，<br>因此深入了解float 属性是非常必要的。<br><a id="more"></a></p>
+<p>##浮动的规则<br>浮动元素自成一流，以往文本流的规则在它身上并不适用。</p>
+<p>###浮动元素脱离了文本流<br>“浮动”在文档流之上。它不仅会影响布局，而且会影响内容的排版。<br>非匿名文本会围绕浮动元素显示。如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float.png" alt=""></p>
+<p>###浮动元素的外边距不会合并。<br>很多人认为浮动元素脱离了文本流，那么就是在文本流的“上一层”。<br>但是事实却并非如此，假设浮动元素在同一层，那么根据水平格式化，左右外边距应该合并才对<br>但是结果如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float2.png" alt=""><br>可见，两个浮动元素之间有 20 px 的外边距，说明浮动元素的外边距是不会合并的。<br>因此我建议开发人员在使用浮动元素时运用 z-index 来管理，控制浮动元素的表现。</p>
+<p>###浮动元素自动拥有块级元素属性<br>元素一旦被设置为浮动，会自动生成块级框，表现为块级元素。<br>所以没有必要为浮动元素设置为 display : block; 或 display ： inline-block; 。<br>如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float3.png" alt=""><br>一个行内元素，本来并不接受 width 等属性，但是被设置为浮动后，变成了块级表现形式。</p>
+<p>###浮动元素不重叠<br>浮动元素会跟随在上一个浮动元素之后，下一个浮动元素的左边界不会出现在上一个浮动元素的右边界的左边。<br>这个规则避免了浮动元素的重叠。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float5.png" alt=""><br>宽度不足会自动到下一层级，不会发生重叠。<br>但是凡事有例外，如果遇到元素有设置负外边距，那就是另一回事了。</p>
+<p>####如果发生重叠呢？<br>如果通过设置属性，比如负外边距等手段，让浮动元素与文本流元素重叠，那么它会以怎样的形式表现呢？<br>如果浮动与行内元素重叠，那么行内元素的背景，行框，内容都会在浮动元素“之上”。如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float6.png" alt=""><br>如果浮动元素与块级元素重叠，那么块级元素的背景，框会在浮动元素“之下”，内容在浮动元素“之上”。<br>如下图<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float7.png" alt=""></p>
+<p>###浮动的停止条件<br>浮动元素遇到父级元素的内边界就会停止浮动，不会浮动到更高的地方。<br>举个形象的栗子就是，像气球浮动到天花板就不会再浮动了。<br><em>main 元素 有 padding-left：10px；</em><br><img src="http://7xns9g.com1.z0.glb.clouddn.com/float4.png" alt=""></p>
+<p>###浮动元素的延伸<br>如果父级元素与子元素同为浮动元素，如果子元素高度或宽度大于父元素的高度或宽度，<br>那么父元素会自动延伸包住子元素。</p>
+<p>##清除浮动</p>
+<p>###什么是清除浮动？<br>像上面所说的浮动元素的负外边距等的影响导致的浮动元素的重叠现象，虽然不影响内容的展示，<br>但是影响了布局的美观。因此就要清除浮动元素在元素“上”的现象。<br>除此之外，还可以让元素自动包裹。</p>
+<p>###为什么要清除浮动？<br>在布局的过程中，难免会遇到各种情况。<br>比如，父级元素不需要浮动，但是子元素需要浮动来达到布局需要，<br>但是，一旦这样设置子元素浮动，父元素不浮动，<br>就会发生父级元素的“高度坍塌”现象，因为父元素没有相应的元素“撑”起他的盒子模型。<br>而对父元素设置高度又显然不适合自适应布局和流式布局或浮动布局的思想。这时候，<br>就需要用到清除浮动了。</p>
+<p>###清除浮动的方法<br>这里只是浅谈，作为个人学习笔记记录，更多大师级的博文链接在本博文后贴出。<br>清除浮动需要用到 clear 属性。<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">clear</span> : <span class="built_in">left</span>|<span class="type">right</span>|<span class="type">both</span>;  //常用的三种属性值。</span><br></pre></td></tr></table></figure></p>
 <p>从字面意思就可以知道效果，分别从左边，右边，两边清除浮动。<br>需要特别注意的是，清除浮动会有一个清楚区域的出现。这个区域会让元素移到浮动元素的下边界处。<br>如果浮动元素和另外的元素需要间距，不妨增加浮动元素的下边界或增加其他元素的上边界。</p>
 <p>方法一、在需要清除浮动的地方增加一个标签（ br 或 其他标签），清除浮动。<br>利用 clear 或 br 独特的 clear 属性。<br>但是不推荐使用这种方法，布局并没有与结构解耦，新增了不必要的标签。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"float1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>1）添加额外标签<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"main left"</span>&gt;</span>main&#123;float:left;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"right"</span>&gt;</span>side&#123;float:right;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"clear:both;"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> <span class="attr">clear</span>=<span class="string">"all"</span>&gt;</span>  //与上一个标签作用相同</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"footer"</span>&gt;</span>footer<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>方法二、父级元素也设置浮动属性。这个可以解决高度坍塌的问题，这也就是浮动带来的一部分 BUG。<br>但是 Jarvis 并不觉得这是解决问题的办法，因为父级元素也设置浮动只适用于极少极少情况，例如<br>自己写 demo 的时候。但是这样会给布局带来混乱的局面。</p>
@@ -492,17 +493,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -521,7 +513,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-count">64</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -573,22 +565,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是浮动？"><span class="nav-number">1.</span> <span class="nav-text">什么是浮动？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浮动的规则"><span class="nav-number">2.</span> <span class="nav-text">浮动的规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素脱离了文本流"><span class="nav-number">2.1.</span> <span class="nav-text">浮动元素脱离了文本流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素的外边距不会合并。"><span class="nav-number">2.2.</span> <span class="nav-text">浮动元素的外边距不会合并。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素自动拥有块级元素属性"><span class="nav-number">2.3.</span> <span class="nav-text">浮动元素自动拥有块级元素属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素不重叠"><span class="nav-number">2.4.</span> <span class="nav-text">浮动元素不重叠</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如果发生重叠呢？"><span class="nav-number">2.4.1.</span> <span class="nav-text">如果发生重叠呢？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动的停止条件"><span class="nav-number">2.5.</span> <span class="nav-text">浮动的停止条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动元素的延伸"><span class="nav-number">2.6.</span> <span class="nav-text">浮动元素的延伸</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#清除浮动"><span class="nav-number">3.</span> <span class="nav-text">清除浮动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是清除浮动？"><span class="nav-number">3.1.</span> <span class="nav-text">什么是清除浮动？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要清除浮动？"><span class="nav-number">3.2.</span> <span class="nav-text">为什么要清除浮动？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清除浮动的方法"><span class="nav-number">3.3.</span> <span class="nav-text">清除浮动的方法</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
