@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="CSS 布局是 CSS 开发中重要且容易被忽略的知识。它往往担任着网站布局的骨架。以下将会讲述 CSS 布局的知识及其实战，并且详细讲述其原理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS 布局实战">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/02/04/CSS 布局实战/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="CSS 布局是 CSS 开发中重要且容易被忽略的知识。它往往担任着网站布局的骨架。以下将会讲述 CSS 布局的知识及其实战，并且详细讲述其原理。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/shuangfeiyi.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/shuangfeiyicode.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/shuangfeiyicss.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/shengbei.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/shengbeicode.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/shengbeicss.png">
+<meta property="og:updated_time" content="1979-11-29T16:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSS 布局实战">
+<meta name="twitter:description" content="CSS 布局是 CSS 开发中重要且容易被忽略的知识。它往往担任着网站布局的骨架。以下将会讲述 CSS 布局的知识及其实战，并且详细讲述其原理。">
+<meta name="twitter:image" content="http://7xns9g.com1.z0.glb.clouddn.com/shuangfeiyi.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2016/02/04/CSS 布局实战/">
+
+
+
+
+
+  <title>CSS 布局实战 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2016/02/04/CSS 布局实战/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">CSS 布局实战</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-04T15:15:24+08:00">
+                2016-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index">
+                    <span itemprop="name">CSS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>CSS 布局是 CSS 开发中重要且容易被忽略的知识。它往往担任着网站布局的骨架。以下将会讲述 CSS 布局的知识及其实战，并且详细讲述其原理。<br><a id="more"></a></p>
+<p>CSS 布局的知识其实在重构方面非常重要，它有利于开发人员建立起一个弹性且可维护的 CSS 系统，<br>并避免一些无谓的 HTML 标签。其实 CSS 布局做好了，一些莫名其妙的 BUG 也会随之消失，也就代表<br>避免了无谓的 hack。下面切入正题：</p>
+<p>##强大的圣杯与双飞翼布局<br>圣杯布局与双飞翼布局是制作网站布局的利器，无论是三列布局还是两列布局都可以轻易应付。<br>在视觉上，两种布局效果类似，但是在实现方法上有所不同。</p>
+<p>###实现方法<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/shuangfeiyi.png" alt=""><br>这部分是作为内容区域的展示，可以在整个 div 前面加上想要的头部与页脚，构成网站布局。<br>先来介绍较为简单的双飞翼布局：<br>HTML 结构：<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/shuangfeiyicode.png" alt=""><br>CSS 样式：<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/shuangfeiyicss.png" alt=""><br>双飞翼布局运用了浮动，与负 margin 进行定位布局的。<br>代码中的 .main-warp 容器是用于让 main 的内容展示在合适的地方的。所有的主体容器都采取浮动，通过<br>margin-left 赋值为负值让 .sub 和 .extra 展示在合适的地方。<br>两边的容器 .sub 和 .extra 都需要定好宽度，并且 .sub 的 margin-left 为 -100%，意思是让 .sub 的<br>左边框与包含块的左边框重叠。同理，.extra 的 margin-left 设置为容器的宽度，意思为让 .extra 的右<br>边框与包含块的右边框重叠。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/shengbei.png" alt=""><br>HTML 结构：<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/shengbeicode.png" alt=""><br>CSS 样式：<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/shengbeicss.png" alt=""><br>圣杯布局是不添加标签的情况下，最接近完美的布局，它使用浮动，负 margin-left 和 position 进行布局。<br>很多人会有点不解，为什么又使用负 margin-left 又使用定位属性，原因是，这里没有添加额外的容器去展<br>示内容，因此就需要主容器使用 padding 使内容正确展示，但是设置了 padding 后，.sub 和 .extra 的位置<br>又不正确，只能通过 position:relative; 进行位置定位。</p>
+<p>下面提供 Demo 地址供大家阅读参考。<br><a href="https://github.com/zhangxiang958/Task" target="_blank" rel="noopener">Demo 地址</a></p>
+<p>理解并运用圣杯布局与双飞翼布局，可以创作出目前大多数网站布局。</p>
+<p>###实现原理<br>在实现原理上，有几个点是非常重要的。</p>
+<p>####负 margin<br>负 margin 在布局上有着很重要的作用，它的定位功能相比于 position 属性而言更为温和，相比于相对定位，它的特点是放弃元素原来在文档中的位置。<br>负 margin 在理解上，举个栗子：父元素的外边距在 100 px 处，而子元素的 margin-top = -15 px，这时候子元素<br>的外边距就会在 85 px 处。没错，在视觉上，子元素就像是被拉上去了一样。<br>为了帮助理解，还可以引入一个参考线的概念，元素的上与左边框为一类边框，它们以本元素以外的元素<br>作为基准，值为正值时，加大本元素与其他元素的距离，值为负值时，减少本元素与其他元素的距离。而<br>元素的下与右边框为一类边框，他们以本元素为基准，值为正值时，“挤远” 相邻元素，值为负值时，<br>“拉近” 其他元素。</p>
+<p>更详细的解释请移步：<a href="http://www.hicss.net/i-know-you-do-not-know-the-negative-margin/" target="_blank" rel="noopener">我知道你不知道的负Margin</a></p>
+<p>在实战中，负 margin 有很多方面的运用，除了我们已经知道的两栏/三栏布局之外，消除我们平时块级边框<br>重叠的尴尬，使之视觉上只有一个边，或是消除水平列表最后一项的 margin-right 等等。其中我觉得最重要<br>的一点是，负 margin 很多时候可以代替浮动布局或相对定位。</p>
+<p>####BFC<br>BFC, 就是 Block Formatting Context 块级格式上下文。它并不是一个 CSS 属性，它是 CSS规范中<br>的一个重要特性，它的目的就在于让一个元素拥有布局（引用《CSS Mastery》书中原话）。<br>可以理解为 BFC 是一个隔离的盒子，内部元素的属性不会影响外部的表现。它是由开发人员通过某些<br>手段来启用这个特性的。<br>那么可以通过哪些手段呢？ 对于 overflow 属性其值不为 none 的元素，浮动元素，position 属性<br>其值为 absolute 或 fixed 的元素，根元素，display 属性其值为 inline-block, table-cell, table-caption, flex, inline-flex 的元素都会生成 BFC。<br>生成了 BFC 的元素，其外边距不会折叠，其高度会将其浮动的子元素的高度计算在内（即元素对浮动<br>自动清除），垂直方向上在同一个 BFC 中 margin 才会重叠。</p>
+<p>在实战中，BFC 是解决很多问题的有效手段，很多时候我们都会迫使元素拥有布局以修复问题。<br>比如，通过设置 overflow 触发 BFC 生成自适应的两列布局，不过这缺点是 overflow 有可能不<br>显示部分内容。或清除浮动，或是防止内部 margin 重叠等等。</p>
+<p>深入理解请看此博文：<a href="http://www.w3cplus.com/css/understanding-bfc-and-margin-collapse.html" target="_blank" rel="noopener">深入理解BFC和Margin Collapse</a></p>
+<p>##常用且不可忽视的等高多列<br>等高列在网站设计中是常见的要求，但是在实际开发中，等高列却不是那么容易实现。</p>
+<h3 id="Faux-列"><a href="#Faux-列" class="headerlink" title="Faux 列"></a>Faux 列</h3><p>在《CSS Mastery》中有提及，faux 列是一种假等高列，它利用背景图在 y 方向上的重叠，<br>造成等高列的假象。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.warpper</span> &#123;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#fff</span> <span class="built_in">url</span>(images/bg.png) repeat-y <span class="number">25%</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>重点在于背景图片的位置调整，将图片移动到合适的地方再进行重复重叠。缺点在于一旦背景色<br>需要改变则需要重制作背景图，并且列的宽度不能改变。</p>
+<p>###Padding 与 Margin 对冲<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">   <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"warpper"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">h1</span>&gt;</span>andy budd<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">p</span>&gt;</span>....<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"bottom"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">h1</span>&gt;</span>richard rutters<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">p</span>&gt;</span>....<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"bottom"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">h1</span>&gt;</span>jeremy keith<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">p</span>&gt;</span>....<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"bottom"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">      <span class="selector-class">.warpper</span> &#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">	<span class="attribute">float</span>: left;</span><br><span class="line">	<span class="attribute">display</span>: inline;</span><br><span class="line">	<span class="attribute">padding-top</span>: <span class="number">20px</span>;</span><br><span class="line">	<span class="attribute">padding-right</span>: <span class="number">20px</span>;</span><br><span class="line">	<span class="attribute">padding-left</span>: <span class="number">20px</span>;</span><br><span class="line">	<span class="attribute">padding-bottom</span>: <span class="number">520px</span>;</span><br><span class="line">	<span class="attribute">margin-bottom</span>: -<span class="number">500px</span>;</span><br><span class="line">	<span class="attribute">margin-left</span>: <span class="number">20px</span>;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">250px</span>;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#98ac10</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>设置一个足够大的 padding-buttom，与一个足够小的负 margin-bottom 进行对冲，目的是为了让父元素<br>的 overflow：hidden 让各列在最高点被裁剪达到视觉上等高的效果，原理是让垂直格式化上的 padding-<br>bottom 和 margin-bottom 进行抵消。原因是padding 是有颜色或背景的，而用没有颜色或背景的 margin<br>进行遮挡。<br>但是这个方法的缺点是一旦需要边框，底部无法显示，我们可以通过一个 .bottom 标签通过给父元素设置<br>相对定位，而 .bottom 设置绝对定位模拟底部边框。<br>但是在不需要边框的情况下，推荐使用这种方法。</p>
+<p>###容器模拟背景<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">"container"</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">"container-right"</span>&gt;</span><br><span class="line">        &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">"container-content"</span>&gt;</span><br><span class="line">            &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">"container-left"</span>&gt;</span><br><span class="line">                &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">"left"</span>&gt;&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">                &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">"content"</span>&gt;&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">                &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">"right"</span>&gt;&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">            &lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">        &lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">    &lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;/<span class="keyword">div</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container-right</span> &#123;</span><br><span class="line">    <span class="attribute">float</span>: left;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.container-content</span> &#123;</span><br><span class="line">    <span class="attribute">float</span>: left;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">right</span>: <span class="number">40%</span>;  <span class="comment">/*相当于右边列的宽度*/</span></span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.container-right</span> &#123;</span><br><span class="line">    <span class="attribute">float</span>: left;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">right</span>: <span class="number">50%</span>; <span class="comment">/*相当于content列的宽度*/</span></span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.left</span> &#123;</span><br><span class="line">    <span class="attribute">float</span>: left;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">72%</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">30%</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">    <span class="attribute">float</span>: left;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">82%</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">40%</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.right</span> &#123;</span><br><span class="line">    <span class="attribute">float</span>: left;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">92%</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">30%</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方法我并不提倡，因为为了造成等高列效果，加上太多繁杂的容器进行背景模拟，对网页性能<br>造成一定的影响，布局与内容的耦合度较高，不是理想的布局。</p>
+<p><a href="http://www.w3cplus.com/css/creaet-equal-height-columns" target="_blank" rel="noopener">参考文献</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2016/02/04/CSS 布局实战/" title="CSS 布局实战">http://zhangxiang958.github.io/2016/02/04/CSS 布局实战/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/22/学习 CSS 浮动/" rel="next" title="学习 CSS 浮动">
+                <i class="fa fa-chevron-left"></i> 学习 CSS 浮动
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/02/27/JavaScript 学习笔记——数据类型及应用/" rel="prev" title="JavaScript 学习笔记——数据类型及应用">
+                JavaScript 学习笔记——数据类型及应用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Faux-列"><span class="nav-number">1.</span> <span class="nav-text">Faux 列</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

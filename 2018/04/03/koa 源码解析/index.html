@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="koa 框架是基于 Node.js 下一代的 web server 框架, 舍弃了回调写法, 提高了错误处理效率, 而且其不绑定任何中间件, 核心代码只提供优雅轻量的函数库.平时经常使用到 koa 框架, 所以希望通过阅读源码学习其思想, 本文是基于 koa2 的源码进行分析.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="koa 源码解析">
+<meta property="og:url" content="http://zhangxiang958.github.io/2018/04/03/koa 源码解析/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="koa 框架是基于 Node.js 下一代的 web server 框架, 舍弃了回调写法, 提高了错误处理效率, 而且其不绑定任何中间件, 核心代码只提供优雅轻量的函数库.平时经常使用到 koa 框架, 所以希望通过阅读源码学习其思想, 本文是基于 koa2 的源码进行分析.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.ijarvis.cn/applicaton.png">
+<meta property="og:image" content="http://img.ijarvis.cn/reuqest.png">
+<meta property="og:image" content="http://img.ijarvis.cn/koaresponse.png">
+<meta property="og:updated_time" content="2018-12-16T06:11:20.991Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="koa 源码解析">
+<meta name="twitter:description" content="koa 框架是基于 Node.js 下一代的 web server 框架, 舍弃了回调写法, 提高了错误处理效率, 而且其不绑定任何中间件, 核心代码只提供优雅轻量的函数库.平时经常使用到 koa 框架, 所以希望通过阅读源码学习其思想, 本文是基于 koa2 的源码进行分析.">
+<meta name="twitter:image" content="http://img.ijarvis.cn/applicaton.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2018/04/03/koa 源码解析/">
+
+
+
+
+
+  <title>koa 源码解析 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2018/04/03/koa 源码解析/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">koa 源码解析</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-03T02:29:24+08:00">
+                2018-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node-js/" itemprop="url" rel="index">
+                    <span itemprop="name">Node.js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>koa 框架是基于 Node.js 下一代的 web server 框架, 舍弃了回调写法, 提高了错误处理效率, 而且其不绑定任何中间件, 核心代码只提供优雅轻量的函数库.<br>平时经常使用到 koa 框架, 所以希望通过阅读源码学习其思想, 本文是基于 koa2 的源码进行分析.<br><a id="more"></a></p>
+<h2 id="koa-整体架构"><a href="#koa-整体架构" class="headerlink" title="koa 整体架构"></a>koa 整体架构</h2><p>koa 框架的源码结构非常简单, 在 lib 文件夹下, 只有 4 个文件, 分别是 application.js, context.js, request.js, response.js.<br>而 application.js 是 koa 框架的入口文件, context.js 的作用是创建网络请求的上下文对象, request.js 是用于包装 koa 的 request 对象的, response.js<br>则是用于包装 koa 的 response 对象的. 我们这里使用 koa 框架建立一个简单的 node 服务, 以此来逐步了解 koa 内部机理.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> koa();</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> (ctx, next) &#123;</span><br><span class="line">  ctx.body = <span class="string">'Hello World'</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码, 先生成了一个 koa 对象, 然后通过使用 use 函数往 server 中添加中间件函数, 最后使用 listen 函数进行对 3000 端口的监听.</p>
+<h2 id="koa-源码剖析"><a href="#koa-源码剖析" class="headerlink" title="koa 源码剖析"></a>koa 源码剖析</h2><p>由上面的简单代码, 我们会有几个疑问: koa 对象中包含了些什么属性与方法? use 函数对于中间件函数的处理是怎么样的? listen 函数做了什么?<br>因此我们先来看一下 application.js 的源码:</p>
+<h3 id="application-js"><a href="#application-js" class="headerlink" title="application.js"></a>application.js</h3><p>application.js 暴露了一个 Application 类供我们使用, 也即是说, 我们 new 一个 koa 对象实质上就是新建一个 Application 的实例对象. 而 Application 类是继承<br>于 EventEmitter (Node.js events 模块)的, 所以我们在 koa 实例对象上可以使用 on, emit 等方法进行事件监听.</p>
+<h4 id="生成-application-对象"><a href="#生成-application-对象" class="headerlink" title="生成 application 对象"></a>生成 application 对象</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constructor</span>() &#123;</span><br><span class="line">  <span class="keyword">super</span>(); <span class="comment">// 因为继承于 EventEmitter, 这里需要调用 super</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.proxy = <span class="literal">false</span>; <span class="comment">// 代理设置</span></span><br><span class="line">  <span class="keyword">this</span>.middleware = [];</span><br><span class="line">  <span class="keyword">this</span>.subdomainOffset = <span class="number">2</span>; <span class="comment">// 子域名偏移设置</span></span><br><span class="line">  <span class="keyword">this</span>.env = process.env.NODE_ENV || <span class="string">'development'</span>; <span class="comment">// node 环境变量</span></span><br><span class="line">  <span class="keyword">this</span>.context = Object.create(context);</span><br><span class="line">  <span class="keyword">this</span>.request = Object.create(request);</span><br><span class="line">  <span class="keyword">this</span>.response = Object.create(response);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到在 constructor 函数中, 实例对象会初始化几个重要的属性, proxy 属性是代理设置, middleware 属性是中间件数组, 用于存储中间件函数的, subdomainOffset 属性是子域名偏移量<br>设置, env 属性保存 node 的环境变量 NODE_ENV 值, context, requets, response 则是 koa 自身的包装的 context 对象, request 对象, response 对象. 这里特别讲解一下 proxy 属性与<br>subdomainOffset 属性. proxy 属性值是 true 或者 false, 它的作用在于是否获取真正的客户端 ip 地址(详细请看附录的第一点). subdomainOffset 属性会改变获取 subdomain 时返回数组的值,<br>比如 test.page.example.com 域名, 如果设置 subdomainOffset 为 2, 那么返回的数组值为 [“page”, “test”], 如果设置为 3, 那么返回数组值为 [“test”].</p>
+<h4 id="use-与中间件"><a href="#use-与中间件" class="headerlink" title="use 与中间件"></a>use 与中间件</h4><p>use 函数内部仅仅是对 generator 函数利用 koa-convert 库进行转化(将 generator 函数包装成 Promise), 如果不是则不转化, 然后将这个中间件函数 push 进实例对象的 middleware 数组中.<br>所以, 所谓中间件函数的串联其实就是通过数组来逐个执行的, 至于 koa 是怎么利用 koa-compose 建立起核心的中间件机制的, 这里按下不表, 详细请阅读本人的 <a href="http://zhangxiang958.github.io/2018/03/16/%E7%90%86%E8%A7%A3%20Koa%20%E7%9A%84%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%9C%BA%E5%88%B6/">理解 koa 中间件机制</a> 博文.</p>
+<h4 id="listen-原理"><a href="#listen-原理" class="headerlink" title="listen 原理"></a>listen 原理</h4><p>listen 函数的原理其实很简单, 它实际上是一个缩写的函数, 它本质上就是在内部通过 Node 原生的 http 模块建立起一个 http server, 而这个 http server 的回调函数使用的是 koa 中的 callback 函数.<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">listen</span>(...args) &#123;</span><br><span class="line">  debug(<span class="string">'listen'</span>);</span><br><span class="line">  <span class="keyword">const</span> server = http.createServer(<span class="keyword">this</span>.callback());</span><br><span class="line">  <span class="built_in">return</span> server.<span class="built_in">listen</span>(...args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面就来讲解一下核心的 callback 函数.<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">callback() &#123;</span><br><span class="line">  <span class="keyword">const</span> fn = compose(<span class="keyword">this</span>.middleware);  <span class="comment">// 使用 compose 建立中间件机制, 详情请看 http://zhangxiang958.github.io/2018/03/16/%E7%90%86%E8%A7%A3%20Koa%20%E7%9A%84%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%9C%BA%E5%88%B6/</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.listeners(<span class="string">'error'</span>).length) <span class="keyword">this</span>.on(<span class="string">'error'</span>, <span class="keyword">this</span>.onerror);  <span class="comment">// 如果没有对 error 事件进行监听, 那么绑定 error 事件监听处理</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// handleRequest 函数相当于 http.creatServer 的回调函数, 有 req, res 两个参数, 代表原生的 request, response 对象.</span></span><br><span class="line">  <span class="keyword">const</span> handleRequest = (req, res) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> ctx = <span class="keyword">this</span>.createContext(req, res); <span class="comment">// 每次接受一个新的请求就是生成一次全新的 context</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.handleRequest(ctx, fn);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> handleRequest;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">handleRequest(ctx, fnMiddleware) &#123;</span><br><span class="line">  <span class="keyword">const</span> res = ctx.res;</span><br><span class="line">  res.statusCode = <span class="number">404</span>;</span><br><span class="line">  <span class="keyword">const</span> onerror = err =&gt; ctx.onerror(err); <span class="comment">// 错误处理</span></span><br><span class="line">  <span class="keyword">const</span> handleResponse = () =&gt; respond(ctx); <span class="comment">// 响应处理</span></span><br><span class="line">  onFinished(res, onerror); <span class="comment">// 为 res 对象添加错误处理响应, 当 res 响应结束时, 执行 context 中的 onerror 函数(这里需要注意区分 context 与 koa 实例中的 onerror)</span></span><br><span class="line">  <span class="keyword">return</span> fnMiddleware(ctx).then(handleResponse).<span class="keyword">catch</span>(onerror); <span class="comment">// 执行中间件数组所有函数, 并结束时调用 respond 函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于 this.createContext 函数, 它的用于就是生成一个新的 context 对象并建立 koa 中 context, requets, response 属性之间与原生 http 对象的关系的.而 handleRequest 函数只是负责执行<br>中间件所有的函数, 并在中间件函数执行结束的时候调用 respond.<br>对于在 koa 中的 context 对象, request 对象, response 对象与 http 模块原生的 req 与 res 之间的关系我并不打算陈列代码, 下面我以图解的形式来帮助阅读:<br><img src="http://img.ijarvis.cn/applicaton.png" alt=""></p>
+<h4 id="对请求的响应处理-respond"><a href="#对请求的响应处理-respond" class="headerlink" title="对请求的响应处理 respond"></a>对请求的响应处理 respond</h4><p>对于 respond 函数, 其核心就是根据不同类型的数据对 http 的响应头部与响应体 body 做对应的处理.<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title">respond</span>(ctx) &#123;</span><br><span class="line">  // allow bypassing koa</span><br><span class="line">  if (false === ctx.respond) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  const res = ctx.res;</span><br><span class="line">  // writable 是原生的 response 对象的 writeable 属性, 检查是否是可写流</span><br><span class="line">  if (!ctx.writable) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  let body = ctx.body;</span><br><span class="line">  const code = ctx.status;</span><br><span class="line"></span><br><span class="line">  // ignore body</span><br><span class="line">  // 如果响应的 statusCode 是属于 body 为空的类型, 例如 204, 205, 304, 将 body 置为 null</span><br><span class="line">  if (statuses.empty[code]) &#123;</span><br><span class="line">    // strip headers</span><br><span class="line">    ctx.body = null;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">res.end()</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 如果是 HEAD 方法</span><br><span class="line">  <span class="keyword">if</span> (<span class="symbol">'HEAD</span>' == ctx.method) &#123;</span><br><span class="line">    // headersSent 属性 Node 原生的 response 对象上的, 用于检查 http 响应头部是否已经被发送</span><br><span class="line">    // 如果头部未被发送, 那么添加 length 头部</span><br><span class="line">    <span class="keyword">if</span> (!res.headersSent &amp;&amp; isJSON(<span class="keyword">body</span>)) &#123;</span><br><span class="line">      ctx.length = Buffer.byteLength(JSON.stringify(<span class="keyword">body</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res.<span class="keyword">end</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // status <span class="keyword">body</span></span><br><span class="line">  // 如果 <span class="keyword">body</span> 值为空</span><br><span class="line">  <span class="keyword">if</span> (null == <span class="keyword">body</span>) &#123;</span><br><span class="line">    // <span class="keyword">body</span> 值为 context 中的 message 属性或 code</span><br><span class="line">    <span class="keyword">body</span> = ctx.message || String(code);</span><br><span class="line">    // 修改头部的 <span class="keyword">type</span> <span class="type">与 </span>length 属性</span><br><span class="line">    <span class="keyword">if</span> (!res.headersSent) &#123;</span><br><span class="line">      ctx.<span class="keyword">type</span> <span class="type">= </span><span class="symbol">'text</span>';</span><br><span class="line">      ctx.length = Buffer.byteLength(<span class="keyword">body</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res.<span class="keyword">end</span>(<span class="keyword">body</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // responses</span><br><span class="line">  // 对 <span class="keyword">body</span> 为 buffer 类型的进行处理</span><br><span class="line">  <span class="keyword">if</span> (Buffer.isBuffer(<span class="keyword">body</span>)) <span class="keyword">return</span> res.<span class="keyword">end</span>(<span class="keyword">body</span>);</span><br><span class="line">  // 对 <span class="keyword">body</span> 为字符串类型的进行处理</span><br><span class="line">  <span class="keyword">if</span> (<span class="symbol">'string</span>' == typeof <span class="keyword">body</span>) <span class="keyword">return</span> res.<span class="keyword">end</span>(<span class="keyword">body</span>);</span><br><span class="line">  // 对 <span class="keyword">body</span> 为流形式的进行处理</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">body</span> instanceof Stream) <span class="keyword">return</span> <span class="keyword">body</span>.pipe(res);</span><br><span class="line"></span><br><span class="line">  // <span class="keyword">body</span>: json</span><br><span class="line">  // 对 <span class="keyword">body</span> 为 json 格式的数据进行处理, <span class="number">1</span>: 将 <span class="keyword">body</span> 转化为 json 字符串, <span class="number">2</span>: 添加 length 头部信息</span><br><span class="line">  <span class="keyword">body</span> = JSON.stringify(<span class="keyword">body</span>);</span><br><span class="line">  <span class="keyword">if</span> (!res.headersSent) &#123;</span><br><span class="line">    ctx.length = Buffer.byteLength(<span class="keyword">body</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  res.<span class="keyword">end</span>(<span class="keyword">body</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在 respond 函数中, 主要是运用 node http 模块中的响应对象中的 end 方法与 koa context 对象中代理的属性进行最终响应对象的设置.</p>
+<h3 id="request-js"><a href="#request-js" class="headerlink" title="request.js"></a>request.js</h3><p>主要是对原生的 http 模块的 requets 对象进行封装, 其实就是对 request 对象某些属性或方法通过重写 getter/setter 函数进行代理, 请看下面的图进行更好的理解:<br><img src="http://img.ijarvis.cn/reuqest.png" alt="request"></p>
+<h4 id="内容协商"><a href="#内容协商" class="headerlink" title="内容协商"></a>内容协商</h4><p>我们可以看到 request 中有很多 accept 相关的方法, 我们来看看 accept 相关的内容协商的知识:<br>所谓内容协商, 就是客户端向服务端请求文件, 返回符合某些标准的文件, 而除了服务端将所有版本的文件全部返回由<br>客户端来决定使用哪个版本这种比较浪费网络资源的方法之外, 我们还可以使用通过请求/响应头部进行交流并返回合适<br>版本的方法.</p>
+<table>
+<thead>
+<tr>
+<th>请求头字段</th>
+<th style="text-align:center">解释</th>
+<th style="text-align:right">对应响应头</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accept</td>
+<td style="text-align:center">告诉服务端可以接收的类型(text/html, application/json 等)</td>
+<td style="text-align:right">Content-Type</td>
+</tr>
+<tr>
+<td>Accept-charset</td>
+<td style="text-align:center">告诉服务端可以接收的字符集类型(utf8, GBK 等)</td>
+<td style="text-align:right">Content-Type</td>
+</tr>
+<tr>
+<td>Accept-Encoding</td>
+<td style="text-align:center">告诉服务端可以接收的压缩类型(gzip, deflate 等)</td>
+<td style="text-align:right">Content-Encoding</td>
+</tr>
+<tr>
+<td>Accept-Language</td>
+<td style="text-align:center">告诉服务端可以接受的语言类型(zh-CN, en 等)</td>
+<td style="text-align:right">Content-Language</td>
+</tr>
+</tbody>
+</table>
+<p>使用上面的头部字段就可以达到请求合适的文档类型.而对于客户端与服务端之间可能有多个实体, 比如 CDN, 缓存服务<br>器等等, 万一中间实体缓存了错误的文件版本, 那么后果就是客户端有可能无法正确地解析该文件.所以需要 vary 响应<br>头部字段, vary 字段的值类似于这样: vary: user-agent, location. vary 字段是告诉中间实体如何正确判断有效的<br>缓存文件版本, 比如像上面的值, 那就是利用请求的 user-agent, location 两个头部的字段生成的 hash, 如果再有请<br>求过来并且请求的 ua 与 location 头部字段生成的 hash 有缓存, 那么就返回对应的缓存文件.</p>
+<h3 id="response-js"><a href="#response-js" class="headerlink" title="response.js"></a>response.js</h3><p>同样的, response 也是对 http 模块的 response 对象进行封装, 通过对 response 对象的某些属性或方法通过重写 getter/setter 函数进行代理, 请看下面的图帮助理解:<br><img src="http://img.ijarvis.cn/koaresponse.png" alt="response"></p>
+<h4 id="Content-disposition"><a href="#Content-disposition" class="headerlink" title="Content-disposition"></a>Content-disposition</h4><p>在 response 对象的 attachment 方法中, 我们可以看到对 HTTP 头部的 Content-disposition 字段进行了处理, 那么究竟 Content-disposition 字段是做什么用的?<br>Content-disposition 是用于说明这个返回的信息是以什么形式展示的, 例如如果值为 inline, 那么就是以网页的一部分或者整个页面展示, 如果是 attachment 的话, 就是以下载附件的<br>形式展示:<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Content</span>-Disposition: inline; <span class="comment">// 网页一部分或者整个网页展示</span></span><br><span class="line"><span class="attribute">Content</span>-Disposition: attachment; <span class="comment">// 下载网页附件的形式</span></span><br><span class="line"><span class="attribute">Content</span>-Disposition: attachment, filename=<span class="string">"xxx.ext"</span>; <span class="comment">// 还可以使用 filename 来指定文件名</span></span><br></pre></td></tr></table></figure></p>
+<p>当然, 在 Content-Type 为 multipart/form-data 格式中, Content-Disposition 也会发挥作用, 用于定义表单的键名:<br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Content-<span class="keyword">Type</span>: multipart/<span class="keyword">form</span>; boundry=<span class="string">"boundry"</span></span><br><span class="line"></span><br><span class="line">--boundry</span><br><span class="line">Content-Disposition: <span class="keyword">form</span>-<span class="keyword">data</span>; <span class="keyword">name</span>=<span class="string">"field1"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">value</span></span><br><span class="line">--boundry</span><br><span class="line">Content-Disposition: <span class="keyword">form</span>-<span class="keyword">data</span>; <span class="keyword">name</span>=<span class="string">"field2"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">value</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="缓存协商"><a href="#缓存协商" class="headerlink" title="缓存协商"></a>缓存协商</h4><p>在 request 中使用 fresh 字段来判断这个请求需要的内容是否是最新的, 其原理也就是我们熟知的 http 缓存机制, 内部通过 fresh 这个库, 判断请求头部中的 if-modify-since 与<br>if-match-since 对比于响应头部中的 last-Modified 字段与 ETag 字段.当然, 在检查这两个字段之前, 还需要检查一下请求头部的 Cache-Control 头部, 如果 Cache-Control 头部<br>是 no-cache, 那么就代表请求信息必须是最新的, 如果不是 no-cache, 接着就需要判断上面说的两个字段.而 last-modified 与 ETag 的检查有没有优先顺序呢? 答案是有的.<br>koa 中先检查 ETag 有没有过期, 手段是通过检查 if-match-since 字段与 Etag 字段是否相同, 然后会检查 last-modified 有没有过期, 手段是通过检查 if-modify-since 与 last-modified<br>的日期是不是 last-modified 日期时间戳小于 if-modified-since 日期时间戳, 如果是那么说明内容是新鲜的, 如果不是说明内容是旧的.</p>
+<h3 id="context-js"><a href="#context-js" class="headerlink" title="context.js"></a>context.js</h3><p>分析了上面的 request 与 response, context 的分析更为简单了, context 的核心就是通过 delegates 这一个库, 将 request, response 对象上的属性方法代理到 context 对象上.<br>也就是说例如 this.ctx.headersSent 相当于 this.response.headersSent. request 对象与 response 对象的所有方法与属性都能在 ctx 对象上找到. 这里我们来看一下 delegates 库<br>的属性代理函数的片段, 借此理解一下 context 是如何代理 request 与 response 上的属性与方法的:<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">delegate</span>(proto, <span class="string">'response'</span>)</span><br><span class="line">  <span class="selector-class">.getter</span>(<span class="string">'headerSent'</span>);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Delegator.prototype.getter = function(name)&#123;</span><br><span class="line">  // this.proto 指向原型, 这里的 proto 就是上面的 proto, 也就是说 context 对象</span><br><span class="line">  var proto = this.proto;</span><br><span class="line">  // target 是指 'response' 字符串</span><br><span class="line">  var target = this.target;</span><br><span class="line">  // 将 name 加入到 delegator 实例对象的 getters 数组中</span><br><span class="line">  this.getters.push(name);</span><br><span class="line">  // 调用原生的 <span class="strong">__defineGetter__</span> 方法进行 getter 代理, 那么 proto[<span class="string">name</span>] 就相当于 proto[<span class="string">target</span>][<span class="symbol">name</span>]</span><br><span class="line">  // 而 context.response 就相当于 response 对象</span><br><span class="line">  // 由此实现属性代理</span><br><span class="line">  proto.<span class="strong">__defineGetter__</span>(name, function()&#123;</span><br><span class="line"><span class="code">    return this[target][name];</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  return this;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>在 koa 中, 错误处理分为在 application.js 中的 onerror 处理函数与在 context.js 中的 onerror 处理函数.这两者绑定的位置是不一样的, context 的 onerror 函数是绑定在<br>中间函数数组生成的 Promise 的 catch 中与 res 对象的 onFinished 函数的回调的, 这里的意图显而易见, 就是为了处理请求或响应中出现的 error 事件的.<br>而 application.js 中的 onerror 函数是绑定在 koa 实例对象上的, 它监听的是整个对象的 error 事件.</p>
+<h3 id="context-中的错误处理"><a href="#context-中的错误处理" class="headerlink" title="context 中的错误处理"></a>context 中的错误处理</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">onerror(err) &#123;</span><br><span class="line">  <span class="comment">// don't do anything if there is no error.</span></span><br><span class="line">  <span class="comment">// this allows you to pass `this.onerror`</span></span><br><span class="line">  <span class="comment">// to node-style callbacks.</span></span><br><span class="line">  <span class="comment">// 没有错误则忽略, 不执行下面的逻辑</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">null</span> == err) <span class="keyword">return</span>;</span><br><span class="line">  <span class="comment">// 将错误转化为 Error 实例</span></span><br><span class="line">  <span class="keyword">if</span> (!(err instanceof Error)) err = new Error(util.format(<span class="string">'non-error thrown: %j'</span>, err));</span><br><span class="line"></span><br><span class="line">  let headerSent = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.headerSent || !<span class="keyword">this</span>.writable) &#123;</span><br><span class="line">    headerSent = err.headerSent = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// delegate</span></span><br><span class="line">  <span class="comment">// 触发 koa 实例对象的 error 事件, application 上的 onerror 函数会执行</span></span><br><span class="line">  <span class="keyword">this</span>.app.emit(<span class="string">'error'</span>, err, <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// nothing we can do here other</span></span><br><span class="line">  <span class="comment">// than delegate to the app-level</span></span><br><span class="line">  <span class="comment">// handler and log.</span></span><br><span class="line">  <span class="comment">// 如果响应头部已经发送(或者 socket 不可写), 那么退出函数</span></span><br><span class="line">  <span class="keyword">if</span> (headerSent) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获取 http 原生 res 对象</span></span><br><span class="line">  <span class="keyword">const</span> &#123; res &#125; = <span class="keyword">this</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// first unset all headers</span></span><br><span class="line">  <span class="comment">// 根据文档 res.getHeaderNames 函数是 7.7.0 版本后添加的, 这里为了兼容做了一个判断</span></span><br><span class="line">  <span class="comment">// 如果出错那么之前中间件或者其他地方设置的 HTTP 头部就无效了, 应该清空设置</span></span><br><span class="line">  <span class="keyword">if</span> (typeof res.getHeaderNames === <span class="string">'function'</span>) &#123;</span><br><span class="line">    res.getHeaderNames().forEach(name =&gt; res.removeHeader(name));</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    res._headers = &#123;&#125;; <span class="comment">// Node &lt; 7.7</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// then set those specified</span></span><br><span class="line">  <span class="keyword">this</span>.<span class="keyword">set</span>(err.headers);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// force text/plain</span></span><br><span class="line">  <span class="comment">// 出错后响应类型为 text/plain</span></span><br><span class="line">  <span class="keyword">this</span>.type = <span class="string">'text'</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ENOENT support</span></span><br><span class="line">  <span class="comment">// 对 ENOENT 错误进行处理, ENOENT 的错误 message 是文件或者路径不存在, 所以状态码应该是 404</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="string">'ENOENT'</span> == err.code) err.status = <span class="number">404</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// default to 500</span></span><br><span class="line">  <span class="comment">// 默认设置状态码为 500</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="string">'number'</span> != typeof err.status || !statuses[err.status]) err.status = <span class="number">500</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// respond</span></span><br><span class="line">  <span class="keyword">const</span> code = statuses[err.status];</span><br><span class="line">  <span class="keyword">const</span> msg = err.expose ? err.message : code;</span><br><span class="line">  <span class="comment">// 设置响应状态码</span></span><br><span class="line">  <span class="keyword">this</span>.status = err.status;</span><br><span class="line">  <span class="comment">// 设置响应 body 长度</span></span><br><span class="line">  <span class="keyword">this</span>.length = Buffer.byteLength(msg);</span><br><span class="line">  <span class="comment">// 返回 message</span></span><br><span class="line">  <span class="keyword">this</span>.res.end(msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="application-中的错误处理"><a href="#application-中的错误处理" class="headerlink" title="application 中的错误处理"></a>application 中的错误处理</h3><p>application 中的错误处理是对 koa 实例对象中例如函数执行出错等等内部错误进行处理.<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">onerror(<span class="keyword">err</span>) &#123;</span><br><span class="line">  <span class="comment">// 判断 err 是否是 Error 实例</span></span><br><span class="line">  <span class="keyword">assert</span>(<span class="keyword">err</span> instanceof <span class="keyword">Error</span>, `non-<span class="keyword">error</span> thrown: <span class="variable">$&#123;err&#125;</span>`);</span><br><span class="line">  <span class="comment">// 忽略 404 错误</span></span><br><span class="line">  <span class="keyword">if</span> (404 == <span class="keyword">err</span>.status || <span class="keyword">err</span>.expose) <span class="keyword">return</span>;</span><br><span class="line">  <span class="comment">// 如果有静默设置, 则忽略</span></span><br><span class="line">  <span class="keyword">if</span> (this.silent) <span class="keyword">return</span>;</span><br><span class="line">  <span class="comment">// 打印出出错堆栈</span></span><br><span class="line">  <span class="keyword">const</span> msg = <span class="keyword">err</span>.<span class="keyword">stack</span> || <span class="keyword">err</span>.<span class="keyword">toString</span>();</span><br><span class="line">  console.<span class="keyword">error</span>();</span><br><span class="line">  console.<span class="keyword">error</span>(msg.<span class="keyword">replace</span>(/^/gm, '  '));</span><br><span class="line">  console.<span class="keyword">error</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个函数的主要作用就是处理出错函数的堆栈打印, 方便我们进行问题定位.</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="1-koa-中-proxy-属性真正用途是什么"><a href="#1-koa-中-proxy-属性真正用途是什么" class="headerlink" title="1. koa 中 proxy 属性真正用途是什么?"></a>1. koa 中 proxy 属性真正用途是什么?</h3><p>要知道, 我们在实际运用中, 可能会使用很多的代理服务器, 包括我们常见的正向代理与反向代理, 虽然代理的用处很大, 但是无法避免地我们有时需要知晓真正的客户端的请求 ip,<br>而其实实际上, 服务器并不知道真正的客户端请求 ip, 即使你使用 socket.remoteAddrss 属性来查看, 因为这个请求是代理服务器转发给服务器的, 幸好代理服务器例如 nginx 提供了一个<br>HTTP 头部来记录每次代理服务器的源 IP 地址, 也就是 X-Forwarded-For 头部.形式如下:<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">X-Forwarded-For</span>: 192<span class="selector-class">.168</span><span class="selector-class">.210</span><span class="selector-class">.13</span>, 210<span class="selector-class">.112</span><span class="selector-class">.40</span><span class="selector-class">.13</span>, 43<span class="selector-class">.56</span><span class="selector-class">.210</span><span class="selector-class">.10</span></span><br></pre></td></tr></table></figure></p>
+<p>如果一个请求跳转了很多代理服务器, 那么 X-Forwarded-For 头部的 ip 地址就会越多, 第一个就是原始的客户端请求 ip, 第二个就是第一个代理服务器 ip, 以此类推.<br>当然, X-Forwarded-For 并不完全可信, 因为中间的代理服务器可能会”使坏”更改某些 IP. 而 koa 中 proxy 属性的设置就是如果使用 true, 那么就是使用 X-Forwarded-For 头部的第一个<br>ip 地址, 如果使用 false, 则使用 server 中的 socket.remoteAddress 属性值.<br>除了 X-Forwarded-For 之外, proxy 还会影响 X-Forwarded-proto 的使用, 和 X-Forwarded-For 一样, X-Forwarded-proto 记录最开始的请求连接使用的协议类型(HTTP/HTTPS), 因为客户端与<br>服务端之间可能会存在很多层代理服务器, 而代理服务器与服务端之间可能只是使用 HTTP 协议, 并没有使用 HTTPS, 所以 proxy 属性为 true 的话, koa 的 protocol 属性会去取 X-Forwarded-proto 头部<br>的值(koa 中 protocol 属性会先使用 tlsSocket.encrypted 属性来判断是否是 https 协议, 如果是则直接返回 ‘https’).</p>
+<h3 id="2-javascript-中的-运算符"><a href="#2-javascript-中的-运算符" class="headerlink" title="2. javascript 中的 ~ 运算符"></a>2. javascript 中的 ~ 运算符</h3><p>~ 运算符是一元运算符, 它的运算逻辑是如下: 例如计算 ~1<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1. </span>将十进制的 1 转化为二进制的 0001</span><br><span class="line"><span class="bullet">2. </span>先对 0001 按位取反: 1110</span><br><span class="line"><span class="bullet">3. </span>然后我们知道最高位为 1, 所以数字为负数, 然后将除去最高位剩下的三位数字再按位取反得到 001</span><br><span class="line"><span class="bullet">4. </span>然后再向 001 加 1 即 001 + 001 得到 010, 转为十进制为数字 2</span><br><span class="line"><span class="bullet">5. </span>再加上我们之前最高位为 1, 所以最后数字为负数即 -2</span><br><span class="line"><span class="bullet">6. </span>所以 ~1 === -2</span><br></pre></td></tr></table></figure></p>
+<p>用简略的表达式来说明就是 ~ X = -(X + 1).而我们可以看到在 koa 中, length 返回的结果使用了 ~~length 这样的形式, 两次二进制否运算, 这样的目的是为了值得安全输出, 如果 ~ 运算符后面的值<br>是 NaN, null, 空字符串, 空数组, 非数字字符串的话, 返回值为 -1, 而对于小数, ~ 运算符会向下取整.其实对于小数, ~ 运算会选择忽略小数部分, 对于非整数的值会先执行 Number 类型转化.<br>所以两次二进制否运算 ~~, 可以使小数向下取整, 让非整数值输出为 0(~-1 === 0).</p>
+<h3 id="3-Buffer-byteLength-计算长度"><a href="#3-Buffer-byteLength-计算长度" class="headerlink" title="3. Buffer.byteLength 计算长度"></a>3. Buffer.byteLength 计算长度</h3><p>细心阅读源码会发现, 在 koa 中设置响应的 length 头部信息, 并不是使用字符串的 length 属性来设置的, 而是通过 Buffer.byteLength 方法来计算得到的. 为什么要这么做呢?<br>HTTP Content-length 头部的数值其实是字节数而不是字符数, 对于汉字来说, utf-8 编码模式下一个汉字字符需要 3 个字节, 所以不能使用字符串的 length 属性来赋值 Content-Length 头部.</p>
+<h3 id="4-Restful-中的幂等性"><a href="#4-Restful-中的幂等性" class="headerlink" title="4. Restful 中的幂等性"></a>4. Restful 中的幂等性</h3><p>我们可以在 request 对象中找到, 有 idempotent 属性, 它用于判断请求方法 verb 是不是幂等的. 所谓幂等性, 就是无论这个相同的请求请求多少次, 得到的数据结果是一样的. 而在 HTTP 的方法中,<br>GET, HEAD, PUT, DELETE, TRACK, OPTIONS 请求都是幂等的. 对于 POST 与 PATCH 方法则是不幂等的.<br>这里特别讲解一下 PUT 的含义, PUT 的定义是 Replace(create or update), 如果存在那么就替换, 如果不存在那么就新增数据.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2018/04/03/koa 源码解析/" title="koa 源码解析">http://zhangxiang958.github.io/2018/04/03/koa 源码解析/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/16/理解 Koa 的中间件机制/" rel="next" title="理解 Koa 的中间件机制">
+                <i class="fa fa-chevron-left"></i> 理解 Koa 的中间件机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/08/解析 SMTP 协议/" rel="prev" title="解析 SMTP 协议">
+                解析 SMTP 协议 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#koa-整体架构"><span class="nav-number">1.</span> <span class="nav-text">koa 整体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#koa-源码剖析"><span class="nav-number">2.</span> <span class="nav-text">koa 源码剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#application-js"><span class="nav-number">2.1.</span> <span class="nav-text">application.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成-application-对象"><span class="nav-number">2.1.1.</span> <span class="nav-text">生成 application 对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#use-与中间件"><span class="nav-number">2.1.2.</span> <span class="nav-text">use 与中间件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#listen-原理"><span class="nav-number">2.1.3.</span> <span class="nav-text">listen 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对请求的响应处理-respond"><span class="nav-number">2.1.4.</span> <span class="nav-text">对请求的响应处理 respond</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#request-js"><span class="nav-number">2.2.</span> <span class="nav-text">request.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#内容协商"><span class="nav-number">2.2.1.</span> <span class="nav-text">内容协商</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#response-js"><span class="nav-number">2.3.</span> <span class="nav-text">response.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Content-disposition"><span class="nav-number">2.3.1.</span> <span class="nav-text">Content-disposition</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存协商"><span class="nav-number">2.3.2.</span> <span class="nav-text">缓存协商</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-js"><span class="nav-number">2.4.</span> <span class="nav-text">context.js</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误处理"><span class="nav-number">3.</span> <span class="nav-text">错误处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#context-中的错误处理"><span class="nav-number">3.1.</span> <span class="nav-text">context 中的错误处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-中的错误处理"><span class="nav-number">3.2.</span> <span class="nav-text">application 中的错误处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">4.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-koa-中-proxy-属性真正用途是什么"><span class="nav-number">4.1.</span> <span class="nav-text">1. koa 中 proxy 属性真正用途是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-javascript-中的-运算符"><span class="nav-number">4.2.</span> <span class="nav-text">2. javascript 中的 ~ 运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Buffer-byteLength-计算长度"><span class="nav-number">4.3.</span> <span class="nav-text">3. Buffer.byteLength 计算长度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Restful-中的幂等性"><span class="nav-number">4.4.</span> <span class="nav-text">4. Restful 中的幂等性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="“我的源码被猫吃了” – 出于对自己的代码, 功能负责的前提下, 应当为代码(项目)的可靠性可用性进行测试.此为我实习期间的所做的团队分享.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="当我在谈论前端监控时我在谈什么">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/06/09/当我在谈论前端监控时我在谈什么/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="“我的源码被猫吃了” – 出于对自己的代码, 功能负责的前提下, 应当为代码(项目)的可靠性可用性进行测试.此为我实习期间的所做的团队分享.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.ijarvis.cn/timgingfull.png">
+<meta property="og:image" content="http://fex.baidu.com/img/build-performance-monitor-in-7-days/timing.png">
+<meta property="og:image" content="https://pic4.zhimg.com/1d159b48ada0a69c81926897e0fbb1b7_b.jpg">
+<meta property="og:image" content="http://divio.qiniudn.com/FpwSmw5jQV8LdnVhvcbUyH6oCgER">
+<meta property="og:image" content="http://divio.qiniudn.com/FpQCHDStIIbTdG8LiJ3wh9rxaTlU">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2016/11/29/96abbad701ff9b83e4f0674ccdd28e33">
+<meta property="og:updated_time" content="2018-12-16T06:11:12.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="当我在谈论前端监控时我在谈什么">
+<meta name="twitter:description" content="“我的源码被猫吃了” – 出于对自己的代码, 功能负责的前提下, 应当为代码(项目)的可靠性可用性进行测试.此为我实习期间的所做的团队分享.">
+<meta name="twitter:image" content="http://img.ijarvis.cn/timgingfull.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2017/06/09/当我在谈论前端监控时我在谈什么/">
+
+
+
+
+
+  <title>当我在谈论前端监控时我在谈什么 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/06/09/当我在谈论前端监控时我在谈什么/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">当我在谈论前端监控时我在谈什么</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-09T09:12:24+08:00">
+                2017-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web-Develop/" itemprop="url" rel="index">
+                    <span itemprop="name">Web Develop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>“我的源码被猫吃了” – 出于对自己的代码, 功能负责的前提下, 应当为代码(项目)的可靠性可用性进行测试.<br>此为我实习期间的所做的团队分享.<br><a id="more"></a></p>
+<p>##性能监控<br>性能监控是一个成熟的前端开发过程中必不可少的步骤之一。它能够比较准确地让前端工程师知道网页性能的问题所在从而解决问题。</p>
+<p>###为什么我们需要性能监控<br>很多时候我们的页面会在 wifi 或者 4G 等网络条件比较好的情况下进行测试, 这也是为了保证工作效率的手段之一, 但是<br>考虑到目前国内移动端网络情况其实并不是特别乐观的情况下, 我们需要优化我们的网页, 让很多 2/3 G 网络的用户也能<br>体验秒开.<br>如果我们不进行性能的监控, 清晰地了解到网页打开的每个步骤, 一旦产品上线，如果网页打开速度比较慢的话， 就会严重影响<br>用户体验，当情况反映到开发的工程师那里， 往往已经造成了成片的影响了。</p>
+<p>###怎么做性能监控<br>业界已经有很多的 online 工具提供我们使用，例如 WebpageTest， YSlow 等等的这些工具，但是这些工具都有一些缺点让我们<br>无法大范围地使用它， 第一他们往往监控测试的指标比较单一， 例如只是检查页面 DOM 的大小与组件的大小， 第二，当我们在<br>内网测试网页的时候，就无法自如地使用这些 online 工具。因此，搭建性能监控是非常必要的。<br>做法是通过 window.performance 这个 API 去获取打开一个网页消耗的时间分布， 例如 DOM 解析的实践， TCP 建立连接的时间，<br>加载静态资源的数量与耗费时间，TTFB 等等的这些指标。编写客户端脚本，获取这些指标，然后通过 ajax 上传到后台系统中做分析。<br>需要进行统计的指标有：</p>
+<ul>
+<li>loadPage 时间 </li>
+<li>domReady DOM 解析时间</li>
+<li>ttfb 时间</li>
+<li>DNS 查询时间</li>
+<li>TCP 连接握手时间</li>
+</ul>
+<p><img src="http://img.ijarvis.cn/timgingfull.png" alt=""><br><img src="http://fex.baidu.com/img/build-performance-monitor-in-7-days/timing.png" alt=""></p>
+<p>###后台系统数据<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"userAgent"</span>: <span class="string">"Mozilla/5.0 (Linux; U; Android 4.1; en-us; GT-N7100 Build/JRO03C) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"</span>,</span><br><span class="line">	<span class="attr">"currentURL"</span>: <span class="string">"www.example.com/m/"</span>,</span><br><span class="line">	<span class="attr">"timestamp"</span>: <span class="number">140000000</span>,</span><br><span class="line">	<span class="attr">"pid"</span>: <span class="string">"456"</span>,</span><br><span class="line">	<span class="attr">"userId"</span>: <span class="string">"123"</span>,</span><br><span class="line">    <span class="attr">"perfData"</span>: &#123;</span><br><span class="line">		<span class="attr">"sourceInfo"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"www.example.com/test.js"</span>,</span><br><span class="line">                <span class="attr">"type"</span>: <span class="string">"script"</span>,</span><br><span class="line">                <span class="attr">"DNSQuery"</span>: <span class="string">"100ms"</span>,</span><br><span class="line">                <span class="attr">"connectTime"</span>: <span class="string">"300ms"</span>,</span><br><span class="line">                <span class="attr">"loadTime"</span>: <span class="string">"200ms"</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"www.example.com/test.js"</span>,</span><br><span class="line">                <span class="attr">"type"</span>: <span class="string">"script"</span>,</span><br><span class="line">                <span class="attr">"DNSQuery"</span>: <span class="string">"100ms"</span>,</span><br><span class="line">                <span class="attr">"connectTime"</span>: <span class="string">"300ms"</span>,</span><br><span class="line">                <span class="attr">"loadTime"</span>: <span class="string">"200ms"</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"www.example.com/test.js"</span>,</span><br><span class="line">                <span class="attr">"type"</span>: <span class="string">"script"</span>,</span><br><span class="line">                <span class="attr">"DNSQuery"</span>: <span class="string">"100ms"</span>,</span><br><span class="line">                <span class="attr">"connectTime"</span>: <span class="string">"300ms"</span>,</span><br><span class="line">                <span class="attr">"loadTime"</span>: <span class="string">"200ms"</span></span><br><span class="line">            &#125;</span><br><span class="line">		],</span><br><span class="line">        <span class="attr">"loadInfo"</span>: &#123;</span><br><span class="line">            <span class="attr">"DNS Query"</span>: <span class="string">"100ms"</span>,</span><br><span class="line">            <span class="attr">"TCP Connect"</span>: <span class="string">"200ms"</span>,</span><br><span class="line">            <span class="attr">"Request Time"</span>: <span class="string">"12ms"</span>,</span><br><span class="line">            <span class="attr">"WhiteScreen Time"</span>: <span class="string">"1000ms"</span>,</span><br><span class="line">            <span class="attr">"DOM Analysis"</span>: <span class="string">"100ms"</span>,</span><br><span class="line">            <span class="attr">"Load Time"</span>: <span class="string">"1200ms"</span></span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>##异常监控<br>异常监控对于我们的调试也是非常重要的。能够比较迅速地让工程师知道错误的信息，方便复现 Bug，解决问题。</p>
+<p>###项目反思<br>实际情景，在做 ME 移动端官网的时候，发现因为 Zepto 某些兼容性问题在 Samsung 手机浏览器上报错，但是需要真机调试加 fiddler来定位问题。如果我们有异常监控脚本的话，那么就可以在后台系统中获取到这些报错信息，迅速地定位问题。<br><img src="https://pic4.zhimg.com/1d159b48ada0a69c81926897e0fbb1b7_b.jpg" alt=""></p>
+<p>###为什么我们需要异常监控<br>后端服务通常都有服务器日志，异常记录等等的系统，可以帮助开发者快速定位系统的状态，追查 bug，了解异常情况，但是反观前端却没有这样的成熟的监控系统。<br>这样的话，一旦代码出现问题，只能通过测试或者用户反馈，这样的反馈效率就会显得有点慢。</p>
+<p>###监控异常怎么做？<br>一个前端异常监控系统一般需要:</p>
+<ul>
+<li>前端 SDK 需要实现，主要是错误拦截，上报策略，API设计，以及日志接口。</li>
+<li>监控日志可视化管理后台的开发</li>
+<li>压缩后的单行文件如何定位源码错误<br>图</li>
+</ul>
+<p>###怎么监控异常<br><img src="http://divio.qiniudn.com/FpwSmw5jQV8LdnVhvcbUyH6oCgER" alt=""><br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// onerror</span><br><span class="line">window.onerror = function(msg, url, <span class="built_in">row</span>, <span class="built_in">col</span>, <span class="built_in">error</span>) &#123;</span><br><span class="line">    // todo report</span><br><span class="line">    report(&#123;</span><br><span class="line">        msg: msg,</span><br><span class="line">        url: url,</span><br><span class="line">        <span class="built_in">row</span>: <span class="built_in">row</span>,</span><br><span class="line">        <span class="built_in">col</span>: <span class="built_in">col</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>前端 SDK 实现，实现前端主动上报数据到服务端监控日志, 使用 try catch 或者 window.onerror 进行监测，将 Javascript 的错误堆栈收集起来.<br><img src="http://divio.qiniudn.com/FpQCHDStIIbTdG8LiJ3wh9rxaTlU" alt=""></p>
+<p>1、onerror 捕获 JavaScript 异常，对应跨域检测也有方案;<br>2、addEventListener(‘error’, handler, true)来捕获静态资源异常，包括js、img、css等；<br>3、Resource Timing API 和 Performance Timing API来进行性能检测和内存检测;<br>4、扩展XHR原型，检测返回的状态码，如404等，来检测ajax请求失败、错误;<br>5、通过正则匹配等方式去检测DOM结构的合法性，如ID重复、文档类型未声明之类的;<br>6、页面的死链接可以通过Nodejs的第三方模块，如request等，来检测。</p>
+<p>####实现难点<br>上面所说的其实是常规的做法，如果想从异常中定位错误的话，那么就需要显示错误在第几行，但是一般生产环境的代码都是经过 uglify 的，压缩后的源文件无论<br>是什么报错都只会显示在第一行，所以对于我们的异常定位非常不利，因此需要一些特别的手段。<br>一般作为开发者，我们都会拥有网页脚本的源代码，那么这时候只需要将代码压缩后对应的 sourcemap 文件与压缩后的文件上传到后台，那么就可以显示出正确的<br>对应源文件的真实报错信息。<br>配 sourcemap 图</p>
+<p>##HTTP 劫持监控</p>
+<p>###运营商原罪<br>何为 HTTP 劫持？ 由于 HTTP 明文传输的特性，运营商通过一些精心设计的网络包的侵入，将我们原本的网页改造，嵌套在一个 iframe 标签中，<br>从而投放广告等等的信息。</p>
+<p>###监控<br>虽然我们可以通过脚本让网页重定向到我们的真实 url ，但是如果再次重定向又被嵌套了怎么办？ 所以如果我们能够将这些错误的 url 收集起来, 可以一定程度上规避 HTTP 劫持。<br>一般来说，运营商 ISP 的手法就是讲原来的页面嵌入到一个 iframe 中，我们可以监测 window.top 与 window.self 是否相同，如果不同很可能就是被 HTTP 劫持插入广告了。<br>但是也有可能我们的页面本来就需要嵌套 iframe，所以可以通过一个白名单，如果不在这个白名单内的网页就上报。<br><img src="https://user-gold-cdn.xitu.io/2016/11/29/96abbad701ff9b83e4f0674ccdd28e33" alt=""><br>HTTP 劫持一般都会通过 url 后面加上一个查询字符串形如 <code>？hijack=1</code> 这样的形式，所以我们可以将我们的 url 也加上这样类似的后缀来伪装已经被劫持。<br>通过分析劫持 url 后缀，不断加强我们的防护手段。</p>
+<p>##页面监控<br>利用类似于 React 的 DOM diff 算法，将页面的 DOM 结构进行遍历，如果出现大范围大面积的 DOM 结构异常，就会进行报警。这里的页面监控其实属于异常监控的一种，将其分出来是为了将样式，DOM 结构的异常与脚本的异常进行区分。</p>
+<p>###所谓页面监控<br>所谓的页面监控是为了防止页面裸奔的情况出现，一般会有 CSS 样式文件出现 404 NOT Found 的情况。这样就会导致页面样式会有极大程度的改变。</p>
+<p>###节流</p>
+<p>####减少数据上传次数<br>比如设定一些条件，满足条件的才会上报，减轻服务器压力。或者设定一个队列，在一定时间内的报错合并后再提交</p>
+<p>####压缩数据<br>一些数据为 0 的默认不上报，像性能监控那样如果 DNS 查询时间为零，那么在上传的时候将不会上报这个字段。</p>
+<p>###差异化<br>相同原因导致不同浏览器的异常可以合并起来，后台需要将这部分的信息进行合并，消除差异化，避免信息过于冗余。</p>
+<p>##Reference</p>
+<ul>
+<li><a href="https://saijs.github.io/wiki/" target="_blank" rel="noopener">Javascript 异常文档</a></li>
+<li><a href="http://slides.com/loskael/badjs/fullscreen#/2" target="_blank" rel="noopener">BadJS Javascript Error</a></li>
+<li><a href="http://div.io/topic/743" target="_blank" rel="noopener">Div.io Javascript Error</a></li>
+<li><a href="http://www.ctolib.com/topics-115283.html" target="_blank" rel="noopener">Javascript 错误堆栈处理</a></li>
+<li><a href="https://juejin.im/entry/57b3cd362e958a0056228410" target="_blank" rel="noopener">HTTP 劫持</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2017/06/09/当我在谈论前端监控时我在谈什么/" title="当我在谈论前端监控时我在谈什么">http://zhangxiang958.github.io/2017/06/09/当我在谈论前端监控时我在谈什么/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/27/JQuery Promise 不执行成功回调/" rel="next" title="JQuery Promise 不执行成功回调">
+                <i class="fa fa-chevron-left"></i> JQuery Promise 不执行成功回调
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/13/ES6 小结/" rel="prev" title="ES6 小结">
+                ES6 小结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

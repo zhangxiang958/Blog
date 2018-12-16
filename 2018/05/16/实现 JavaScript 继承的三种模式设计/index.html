@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在这篇文章里面, 我们将会讨论三种不同的方式来实现 JavaScript 中的对象继承. 你将会看到我们使用其他语言例如 Java 中的通过让一个类继承一个可被多个子类继承的超类来继承其属性与方法的方式来实现继承.也即是说, 在 Java 中, 继承是通过让一个类继承于其他的类, 然后创建这个类的实例对象来实现的, 但是在 JavaScript 中, 并没有类的概念, 继承是通过原型继承即让一个对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现 JavaScript 继承的三种模式设计">
+<meta property="og:url" content="http://zhangxiang958.github.io/2018/05/16/实现 JavaScript 继承的三种模式设计/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="在这篇文章里面, 我们将会讨论三种不同的方式来实现 JavaScript 中的对象继承. 你将会看到我们使用其他语言例如 Java 中的通过让一个类继承一个可被多个子类继承的超类来继承其属性与方法的方式来实现继承.也即是说, 在 Java 中, 继承是通过让一个类继承于其他的类, 然后创建这个类的实例对象来实现的, 但是在 JavaScript 中, 并没有类的概念, 继承是通过原型继承即让一个对">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://davidshariff.com/blog/images/classical_inheritance.png">
+<meta property="og:updated_time" content="1979-11-29T16:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实现 JavaScript 继承的三种模式设计">
+<meta name="twitter:description" content="在这篇文章里面, 我们将会讨论三种不同的方式来实现 JavaScript 中的对象继承. 你将会看到我们使用其他语言例如 Java 中的通过让一个类继承一个可被多个子类继承的超类来继承其属性与方法的方式来实现继承.也即是说, 在 Java 中, 继承是通过让一个类继承于其他的类, 然后创建这个类的实例对象来实现的, 但是在 JavaScript 中, 并没有类的概念, 继承是通过原型继承即让一个对">
+<meta name="twitter:image" content="http://davidshariff.com/blog/images/classical_inheritance.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2018/05/16/实现 JavaScript 继承的三种模式设计/">
+
+
+
+
+
+  <title>实现 JavaScript 继承的三种模式设计 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2018/05/16/实现 JavaScript 继承的三种模式设计/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">实现 JavaScript 继承的三种模式设计</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T20:44:24+08:00">
+                2018-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在这篇文章里面, 我们将会讨论三种不同的方式来实现 JavaScript 中的对象继承. 你将会看到我们使用其他语言例如 Java 中的通过让一个类继承一个可被多个子类继承的超类来继承其属性与方法的方式来实现继承.<br>也即是说, 在 Java 中, 继承是通过让一个类继承于其他的类, 然后创建这个类的实例对象来实现的, 但是在 JavaScript 中, 并没有类的概念, 继承是通过原型继承即让一个对象直接继承于另一个对象来实现的.</p>
+<p><em>注:本文为译文, 翻自: <a href="http://davidshariff.com/blog/javascript-inheritance-patterns/" target="_blank" rel="noopener">http://davidshariff.com/blog/javascript-inheritance-patterns/</a></em><br><a id="more"></a></p>
+<h2 id="伪类继承"><a href="#伪类继承" class="headerlink" title="伪类继承"></a>伪类继承</h2><p>伪类继承模式的目的是在 JavaScript 中通过模仿 Java 或者类 C 背景的语言的继承方式实现继承的模式. 换言之, 我们需要在伪类继承模式中实现类的概念, 让实例对象能够继承于一个类的属性与方法.<br>所谓伪类模式就是通过 constructor 构造器函数与 new 操作符将另一个 constructor 构造器的原型对象与本身的原型对象实现连接从而实现继承.<br>我们需要以下两个步骤来实现这个模式:</p>
+<ol>
+<li>创建一个构造器函数</li>
+<li>修改子类的原型对象指向父类的原型对象从而实现继承<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 修改 childObj 的原型对象指向为 parentObj 的原型对象</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">var</span> extendObj = <span class="function"><span class="keyword">function</span><span class="params">(childObj, parentObj)</span> </span>&#123;</span><br><span class="line">    childObj.prototype = parentObj.prototype;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// human 基类</span></span><br><span class="line"><span class="keyword">var</span> Human = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line"><span class="comment">// 继承属性或者方法</span></span><br><span class="line">Human.prototype = &#123;</span><br><span class="line">    name: <span class="string">''</span>,</span><br><span class="line">    gender: <span class="string">''</span>,</span><br><span class="line">    planetOfBirth: <span class="string">'Earth'</span>,</span><br><span class="line">    sayGender: <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name + <span class="string">' says my gender is '</span> + <span class="keyword">this</span>.gender);</span><br><span class="line">    &#125;,</span><br><span class="line">    sayPlanet: <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name + <span class="string">' was born on '</span> + <span class="keyword">this</span>.planetOfBirth);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// male 类</span></span><br><span class="line"><span class="keyword">var</span> Male = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.gender = <span class="string">'Male'</span>;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">'David'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 继承 human 类</span></span><br><span class="line">extendObj(Male, Human);</span><br><span class="line"></span><br><span class="line"><span class="comment">// female 类</span></span><br><span class="line"><span class="keyword">var</span> Female = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.gender = <span class="string">'Female'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 继承 human 类</span></span><br><span class="line">extendObj(Female, Human);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建实例对象</span></span><br><span class="line"><span class="keyword">var</span> david = <span class="keyword">new</span> Male(<span class="string">'David'</span>);</span><br><span class="line"><span class="keyword">var</span> jane = <span class="keyword">new</span> Female(<span class="string">'Jane'</span>);</span><br><span class="line"></span><br><span class="line">david.sayGender(); <span class="comment">// David says my gender is Male</span></span><br><span class="line">jane.sayGender(); <span class="comment">// Jane says my gender is Female</span></span><br><span class="line"></span><br><span class="line">Male.prototype.planetOfBirth = <span class="string">'Mars'</span>;</span><br><span class="line">david.sayPlanet(); <span class="comment">// David was born on Mars</span></span><br><span class="line">jane.sayPlanet(); <span class="comment">// Jane was born on Mars</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>和预期一样, 我们通过伪类继承模式实现了对象的继承, 然而, 我们可以看到, 这个模式存在着一些问题. 我们来看一下上面的示例代码中的最后一行的打印结果, <em>“ Jane was born on Mars “</em>, 我们的本意其实是想让结果为 <em>“ Jane was born on Earth “</em>,导致这个现象的原因就是我们修改 Male.prototype 对象的 planetOfBirth 属性为 <em>“Mars”</em>, 而 Famle 的原型对象与 Male 的原型对象通过上面实例代码实现的继承已经变为了同一个对象.</p>
+<p>直接修改 Male 与 Human 原型对象的关系的问题就在于如果有很多子类继承于 Human, 万一其中有一个子类的原型对象上的属性或者方法被修改, 那么会影响到 Human 这个类还有继承于 Human 的所有子类. 原则上, 在实现继承中修改一个子类原型对象的属性不应该影响到其他继承于同一个父类的兄弟子类. 导致这个原因是因为在 JavaScript 中对象是引用传递而不是值传递, 这意味着 Human 的全部子类只要在其中一个子类的原型对象上做修改, 其他子类的原型对象都会受到影响.</p>
+<p><em>childObj.prototype = parentObj.prototype</em> 确实能够简单地实现继承, 但是, 如果你想要避免上面所说的问题, 你需要<br>修改 extendObj 函数来避免将 childObj 的原型对象直接与 parentObj 的原型对象直接连接, 而是通过一个中间对象来进行连接. 对上面的实例代码来说, 我们会创建一个空对像作为中间对象, 然后使用它来继承 Human 类的所有属性.</p>
+<p>如果按照这种方式, 我们在每次调用 extendObj 函数来实现类的继承的时候, 都会创建一个新的空对像作为中间对象并让这个对象继承父类原型对象的所有属性, 而现在在一个子类原型对象的修改却不会影响其他继承于同一个父类对象的子类原型对象, 这样就可以解决对象的引用传递问题.</p>
+<p>为了让你更加清晰, 下面这幅图展示了 extendObj 函数修改原型对象指向的逻辑:<br><img src="http://davidshariff.com/blog/images/classical_inheritance.png" alt=""></p>
+<p>现在, 如果你依照上面的步骤对 extendObj 函数进行修改之后再运行代码就会发现结果打印已变为 <em>“ Jane was born on Earth “</em>:<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 创建一个新的构造器函数, 设置新的构造器函数的原型对象指向为 parentObj 的原型对象.</span></span><br><span class="line"><span class="comment"> * 然后设置 childObj 的原型对象指向为由刚刚创建的构造器函数创建出的实例对象.</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">var</span> extendObj = <span class="function"><span class="keyword">function</span><span class="params">(childObj, parentObj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> tmpObj = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    tmpObj.prototype = parentObj.prototype;</span><br><span class="line">    childObj.prototype = <span class="keyword">new</span> tmpObj();</span><br><span class="line">    childObj.prototype.constructor = childObj;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// human 基类</span></span><br><span class="line"><span class="keyword">var</span> Human = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line"><span class="comment">// 需要继承的属性与方法</span></span><br><span class="line">Human.prototype = &#123;</span><br><span class="line">    name: <span class="string">''</span>,</span><br><span class="line">    gender: <span class="string">''</span>,</span><br><span class="line">    planetOfBirth: <span class="string">'Earth'</span>,</span><br><span class="line">    sayGender: <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name + <span class="string">' says my gender is '</span> + <span class="keyword">this</span>.gender);</span><br><span class="line">    &#125;,</span><br><span class="line">    sayPlanet: <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name + <span class="string">' was born on '</span> + <span class="keyword">this</span>.planetOfBirth);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// male 类</span></span><br><span class="line"><span class="keyword">var</span> Male = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.gender = <span class="string">'Male'</span>;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">'David'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 继承自 Human</span></span><br><span class="line">extendObj(Male, Human);</span><br><span class="line"></span><br><span class="line"><span class="comment">// female 类</span></span><br><span class="line"><span class="keyword">var</span> Female = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.gender = <span class="string">'Female'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 继承自 Human</span></span><br><span class="line">extendObj(Female, Human);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建新的实例对象</span></span><br><span class="line"><span class="keyword">var</span> david = <span class="keyword">new</span> Male(<span class="string">'David'</span>);</span><br><span class="line"><span class="keyword">var</span> jane = <span class="keyword">new</span> Female(<span class="string">'Jane'</span>);</span><br><span class="line"></span><br><span class="line">david.sayGender(); <span class="comment">// David says my gender is Male</span></span><br><span class="line">jane.sayGender(); <span class="comment">// Jane says my gender is Female</span></span><br><span class="line"></span><br><span class="line">Male.prototype.planetOfBirth = <span class="string">'Mars'</span>;</span><br><span class="line">david.sayPlanet(); <span class="comment">// David was born on Mars</span></span><br><span class="line">jane.sayPlanet(); <span class="comment">// Jane was born on Earth</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="函数式继承"><a href="#函数式继承" class="headerlink" title="函数式继承"></a>函数式继承</h2><p>这个模式是由 Douglas Crockford 发明的, 这个模式允许一个对象继承于另一个对象, 并在这基础上对子实例对象进行属性增强. 在这个模式中, 先创建一个父类的实例对象, 然后通过修改这个实例对象上的属性来实现子类的属性增强, 最后将这个修改后的属性增强后的实例对象返回.<br>下面的代码与伪类模式的示例代码是同一场景, 但是是用函数式继承来写的:<br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> human = <span class="keyword">function</span>(name) &#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="literal">that</span> = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="literal">that</span>.name = name || <span class="string">''</span>;</span><br><span class="line">    <span class="literal">that</span>.gender = <span class="string">''</span>;</span><br><span class="line">    <span class="literal">that</span>.planetOfBirth = <span class="string">'Earth'</span>;</span><br><span class="line">    <span class="literal">that</span>.sayGender = <span class="keyword">function</span> () &#123;</span><br><span class="line">        alert(<span class="literal">that</span>.name + <span class="string">' says my gender is '</span> + <span class="literal">that</span>.gender);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="literal">that</span>.sayPlanet = <span class="keyword">function</span> () &#123;</span><br><span class="line">        alert(<span class="literal">that</span>.name + <span class="string">' was born on '</span> + <span class="literal">that</span>.planetOfBirth);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">that</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> male = <span class="keyword">function</span> (name) &#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="literal">that</span> = human(name);</span><br><span class="line">    <span class="literal">that</span>.gender = <span class="string">'Male'</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">that</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> female = <span class="keyword">function</span> (name) &#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="literal">that</span> = human(name);</span><br><span class="line">    <span class="literal">that</span>.gender = <span class="string">'Female'</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">that</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> david = male(<span class="string">'David'</span>);</span><br><span class="line"><span class="keyword">var</span> jane = female(<span class="string">'Jane'</span>);</span><br><span class="line"></span><br><span class="line">david.sayGender(); <span class="regexp">// David says my gender is Male</span></span><br><span class="line"><span class="regexp">jane.sayGender(); //</span> Jane says my gender <span class="keyword">is</span> Female</span><br><span class="line"></span><br><span class="line">david.planetOfBirth = <span class="string">'Mars'</span>;</span><br><span class="line">david.sayPlanet(); <span class="regexp">// David was born on Mars</span></span><br><span class="line"><span class="regexp">jane.sayPlanet(); //</span> Jane was born <span class="literal">on</span> Earth</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到, 在这个模式里面, 我们不需要操作原型链, 构造函数与 new 关键字来创建实例对象, 而是通过每次调用继承函数生成一个新的父类实例对象然后对这个对象修改属性值或添加属性值来达到继承与实现子类的目的.</p>
+<p>然而, 我们可以发现这样是有性能缺陷的, 每次我们需要实现继承的时候, 我们都需要创建一个新的父类实例对象以使用父类上的所有属性与方法, 那么即使是属于同一个子类, 每个实例对象之间都是独立的, 属性与方法没有实现复用, 这就导致 JavaScript 引擎在每次调用的时候都需要分配了新的内存空间来记录实例对象的所有数据, 因为实例对象的属性没有复用, 这样会导致性能问题.</p>
+<p>当然, 这个模式也有好处, 就是由于使用函数来实现继承, 我们可以通过闭包来轻易地实现私有或公有属性与方法.我们来看一下下面关于两个子类 motorbike, boat 与父类 venicle 继承关系的示例代码:<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vehicle = <span class="function"><span class="keyword">function</span><span class="params">(attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _privateObj = &#123;</span><br><span class="line">        hasEngine: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    that = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    that.name = attrs.name || <span class="literal">null</span>;</span><br><span class="line">    that.engineSize = attrs.engineSize || <span class="literal">null</span>;</span><br><span class="line">    that.hasEngine = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        alert(<span class="string">'This '</span> + that.name + <span class="string">' has an engine: '</span> + _privateObj.hasEngine);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> that;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> motorbike = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// private</span></span><br><span class="line">    <span class="keyword">var</span> _privateObj = &#123;</span><br><span class="line">        numWheels: <span class="number">2</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// inherit</span></span><br><span class="line">    that = vehicle(&#123;</span><br><span class="line">        name: <span class="string">'Motorbike'</span>,</span><br><span class="line">        engineSize: <span class="string">'Small'</span></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// public</span></span><br><span class="line">    that.totalNumWheels = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        alert(<span class="string">'This Motobike has '</span> + _privateObj.numWheels + <span class="string">' wheels'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    that.increaseWheels = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        _privateObj.numWheels++;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> that;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> boat = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// inherit</span></span><br><span class="line">    that = vehicle(&#123;</span><br><span class="line">        name: <span class="string">'Boat'</span>,</span><br><span class="line">        engineSize: <span class="string">'Large'</span></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> that;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">myBoat = boat();</span><br><span class="line">myBoat.hasEngine(); <span class="comment">// This Boat has an engine: true</span></span><br><span class="line">alert(myBoat.engineSize); <span class="comment">// Large</span></span><br><span class="line"></span><br><span class="line">myMotorbike = motorbike();</span><br><span class="line">myMotorbike.hasEngine(); <span class="comment">// This Motorbike has an engine: true</span></span><br><span class="line">myMotorbike.increaseWheels();</span><br><span class="line">myMotorbike.totalNumWheels(); <span class="comment">// This Motorbike has 3 wheels</span></span><br><span class="line">alert(myMotorbike.engineSize); <span class="comment">// Small</span></span><br><span class="line"></span><br><span class="line">myMotorbike2 = motorbike();</span><br><span class="line">myMotorbike2.totalNumWheels(); <span class="comment">// This Motorbike has 2 wheels</span></span><br><span class="line"></span><br><span class="line">myMotorbike._privateObj.numWheels = <span class="number">0</span>; <span class="comment">// undefined</span></span><br><span class="line">myBoat.totalNumWheels(); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到以上代码很容易地就能实现封装私有与公有属性与方法, _privateObj 对象不能在实例对象外部被修改, 它只能通过类的公有方法例如 increaseWheel() 这样的函数来修改值.同样地, _privateObj 对象的数据也不能在外部被读取, 只能通过类的公有的方法像 totalNumWheels 函数来读取对应的值.</p>
+<h2 id="原型继承"><a href="#原型继承" class="headerlink" title="原型继承"></a>原型继承</h2><p>当然你也可以直接使用 JavaScript 中的原型继承方法来实现继承, 其实这样的方法才是最符合 JavaScript 语言的设计.在 ECMAScript 5 规范中, 你可以像下面这样轻易地实现继承:<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> male = <span class="built_in">Object</span>.create(human);</span><br></pre></td></tr></table></figure></p>
+<p>但是, 浏览器对这个方法的支持率并不理想, 如果浏览器还不支持这个方法, 我们只能自己写一个 create 方法来实现继承了:<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">function</span> () &#123;</span><br><span class="line">    'use strict'<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    /***************************************************************</span><br><span class="line">     * Helper functions for older browsers</span><br><span class="line">     ***************************************************************/</span><br><span class="line">    if (!Object.hasOwnProperty('create')) &#123;</span><br><span class="line">        Object.create = function (<span class="name">parentObj</span>) &#123;</span><br><span class="line">            function tmpObj() &#123;&#125;</span><br><span class="line">            tmpObj.prototype = parentObj<span class="comment">;</span></span><br><span class="line">            return new tmpObj()<span class="comment">;</span></span><br><span class="line">        &#125;<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    if (!Object.hasOwnProperty('defineProperties')) &#123;</span><br><span class="line">        Object.defineProperties = function (<span class="name">obj</span>, props) &#123;</span><br><span class="line">            for (<span class="name">var</span> prop in props) &#123;</span><br><span class="line">                Object.defineProperty(<span class="name">obj</span>, prop, props[prop])<span class="comment">;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    /*************************************************************/</span><br><span class="line"></span><br><span class="line">    var human = &#123;</span><br><span class="line">        name: '',</span><br><span class="line">        gender: '',</span><br><span class="line">        planetOfBirth: 'Earth',</span><br><span class="line">        sayGender: function () &#123;</span><br><span class="line">            alert(<span class="name">this</span>.name + ' says my gender is ' + this.gender)<span class="comment">;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        sayPlanet: function () &#123;</span><br><span class="line">            alert(<span class="name">this</span>.name + ' was born on ' + this.planetOfBirth)<span class="comment">;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    var male = Object.create(<span class="name">human</span>, &#123;</span><br><span class="line">        gender: &#123;value: 'Male'&#125;</span><br><span class="line">    &#125;)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    var female = Object.create(<span class="name">human</span>, &#123;</span><br><span class="line">        gender: &#123;value: 'Female'&#125;</span><br><span class="line">    &#125;)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    var david = Object.create(<span class="name">male</span>, &#123;</span><br><span class="line">        name: &#123;value: 'David'&#125;,</span><br><span class="line">        planetOfBirth: &#123;value: 'Mars'&#125;</span><br><span class="line">    &#125;)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    var jane = Object.create(<span class="name">female</span>, &#123;</span><br><span class="line">        name: &#123;value: 'Jane'&#125;</span><br><span class="line">    &#125;)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    david.sayGender()<span class="comment">; // David says my gender is Male</span></span><br><span class="line">    david.sayPlanet()<span class="comment">; // David was born on Mars</span></span><br><span class="line"></span><br><span class="line">    jane.sayGender()<span class="comment">; // Jane says my gender is Female</span></span><br><span class="line">    jane.sayPlanet()<span class="comment">; // Jane was born on Earth</span></span><br><span class="line">&#125;)()<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>我们已经讨论了三种在 JavaScript 中实现继承的方式.大多数人都会选择使用原型继承, 但是我们可以看到伪类继承与函数式继承也有其用武之地.<br>不管你选择哪种方式都应该取决于你的实际情况, 还是那句话, “没有银弹”, 所以你只需要根据你的实际情况作出最合适的方案选择就可以.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2018/05/16/实现 JavaScript 继承的三种模式设计/" title="实现 JavaScript 继承的三种模式设计">http://zhangxiang958.github.io/2018/05/16/实现 JavaScript 继承的三种模式设计/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/08/解析 SMTP 协议/" rel="next" title="解析 SMTP 协议">
+                <i class="fa fa-chevron-left"></i> 解析 SMTP 协议
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/03/全面理解 koa-router/" rel="prev" title="全面理解 koa-router">
+                全面理解 koa-router <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#伪类继承"><span class="nav-number">1.</span> <span class="nav-text">伪类继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数式继承"><span class="nav-number">2.</span> <span class="nav-text">函数式继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型继承"><span class="nav-number">3.</span> <span class="nav-text">原型继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

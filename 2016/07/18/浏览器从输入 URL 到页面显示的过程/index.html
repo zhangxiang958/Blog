@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="看完 《计算机网络》，对从应用层到物理层有了一个全面的了解，下面我结合自己在前端方面的理解，在浏览器的角度浅薄阐释从输入 URL 到页面显示的过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器从输入 URL 到页面显示的过程">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/07/18/浏览器从输入 URL 到页面显示的过程/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="看完 《计算机网络》，对从应用层到物理层有了一个全面的了解，下面我结合自己在前端方面的理解，在浏览器的角度浅薄阐释从输入 URL 到页面显示的过程。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/DNS.jpg">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/1340365235_4267.jpg">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/request.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/response.png">
+<meta property="og:image" content="http://7xns9g.com1.z0.glb.clouddn.com/address.png">
+<meta property="og:updated_time" content="1979-11-29T16:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浏览器从输入 URL 到页面显示的过程">
+<meta name="twitter:description" content="看完 《计算机网络》，对从应用层到物理层有了一个全面的了解，下面我结合自己在前端方面的理解，在浏览器的角度浅薄阐释从输入 URL 到页面显示的过程。">
+<meta name="twitter:image" content="http://7xns9g.com1.z0.glb.clouddn.com/DNS.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2016/07/18/浏览器从输入 URL 到页面显示的过程/">
+
+
+
+
+
+  <title>浏览器从输入 URL 到页面显示的过程 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2016/07/18/浏览器从输入 URL 到页面显示的过程/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">浏览器从输入 URL 到页面显示的过程</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-18T00:00:24+08:00">
+                2016-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机网络/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机网络</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>看完 《计算机网络》，对从应用层到物理层有了一个全面的了解，下面我结合自己在前端方面的理解，在<br>浏览器的角度浅薄阐释从输入 URL 到页面显示的过程。<br><a id="more"></a></p>
+<p>##输入 URL</p>
+<p>###解析域名<br>我们平时所用的 URL 大多是类似 <em><a href="http://www.github.com" target="_blank" rel="noopener">www.github.com</a></em> 这样的形式的，但是实际上这并不是我们实际访问的<br>地址，这样的名字是为了方便我们记忆和使用的域名，毕竟 IP 地址这种 32 位 16 进制的地址很难记，<br>所以我们会将域名与 IP 地址一一对应起来，这样的服务就叫做域名解析服务，即 DNS ，提供这样的服务<br>的服务器叫做 DNS 服务器。我们的主机中记录了 DNS 服务器的地址(见附录)，当我们键入地址按下回车，<br>我们的主机就会发送一个 DNS 查询报文给 DNS 服务器，通过 UDP 协议，最终封装在链路层的包中。</p>
+<p>###获取目的 IP<br>报文通过路由器中的转发表(转发表通过 BGP 和 RIP 等路由协议配置)，发送到 DNS 服务器，DNS 服务器<br>接收到后，在数据库中查找域名对应的 IP 地址，数据库中的数据是源于权威 DNS 服务器。DNS 服务器是<br>一个分布式服务器，DNS 的查找方式如图。DNS 发还一个含有目的 IP 地址的报文给源主机。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/DNS.jpg" alt=""></p>
+<p>主机从 IP 报文中抽取 IP 地址，此时我们已经知道了目的 IP 地址了。</p>
+<p>##HTTP Web 服务器<br>有了目的 IP 地址，那么我们可以建立 TCP 连接，连接 Web 服务器了。操作系统生成一个 TCP 套接字，<br>通过这个 TCP 套接字向目的服务器发送请求。在连接之前，需要通过 TCP 的三次握手。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/1340365235_4267.jpg" alt=""><br>[图片来自网络]</p>
+<p>首先，操作系统会发送一个 TCP SYN 报文，发送到目的服务器，这样目的服务器也会建立一个 TCP 套接<br>字，并发还一个 TCP 报文给我们的主机，两端的 TCP 套接字就算是连接了起来。</p>
+<p>###发送/接收请求<br>我们主机的浏览器会生成一个 HTTP GET 请求，这个请求发送到目的服务器，目的服务器的接收套接字就<br>会将请求报文送到对应的端口去。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/request.png" alt=""><br>connection 是表示 http 的一个常来长连接字段。<br>host 表示主机域名。<br>user-agent 表示用户代理。</p>
+<p>###响应请求<br>服务器解析了 HTTP GET 请求之后，就会生成一个响应报文，并将请求的 HTML 页面放进响应体中。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/response.png" alt="" title="response"><br>其中 content-type 字段表示了接收的文件是 html 格式的文件。</p>
+<p>##页面渲染<br>上面的 response 头部已经将接受到的东西表示的很清楚了，我们所要的 HTML 页面就在响应体中。但是，<br>在我们看到页面之前，浏览器还会做一个很重要的工作——渲染。</p>
+<p>###解析</p>
+<p>####解析 DOM<br>解析 DOM 是渲染页面的第一步，HTML 中的元素会被解析成树状的结构，被称为 DOM 树。</p>
+<p>####解析 CSS<br>解析 CSS 是第二步，浏览器会解析 CSS，形成一个 CSS 规则树。CSS 的解析是需要比对 DOM 树的，其中<br>有很复杂的性能问题，这里按下不表，有兴趣的读者可以查看我之前的博文。</p>
+<p>####规则树<br>第三步就是将上面解析出来的 DOM 树与 CSS 树结合在一起，形成一个规则树(上下文树)。这里这个树不<br>一定就等于 DOM 树加上 CSS 规则树，因为有些 display 为 none 的节点就不会在这个树里面，因为不会<br>被渲染出来。</p>
+<p>###repaint 与 reflow<br>这里渲染会分为四步：计算 CSS 样式，构建规则树，进行布局定位(position,z-index等等)，启动渲染。<br>这里值得注意的就是 repaint 与 reflow，这两者的区别在于 repaint 是在元素的背景颜色或文字颜色等<br>与元素尺寸无关的属性变化的时候发生的，而 reflow 是在元素的尺寸发生变化的时候发生的。两者相比，<br>reflow 的性能要求较高，因此这就是为什么我们之前强调减少 reflow 。</p>
+<p>####关于渲染的小小彩蛋<br>浏览器是聪明的，它不会一次改变属性就马上 reflow，而是积攒一批变化后一次 reflow。但是我们某些<br>行为会引起强制 reflow，比如 offsetWidth,offsetHeight, offsetTop, offsetLeft,client/scrollWidth<br>等和 getComputedStyle ,都会引起强制 reflow。</p>
+<p><a href="http://taligarsiel.com/Projects/howbrowserswork1.htm" target="_blank" rel="noopener">关于页面渲染的一篇神文</a></p>
+<p>##附录：我们是怎么连接到网络的？<br>不管你用的是什么网络（校园网或是 ADSL ），都会有一个 ISP（网络提供商），他们负责分配一个可用的<br>IP 地址给你的主机。<br>当我们连接网络的时候，我们的主机设备就会发送一个广播包，这个广播包是操作系统生成的 DHCP 报文。这个报文包装在 UDP 协议报中，广播给与交换机连接的所有设备，其中就会包括 DHCP 服务器。<br>当报文发送到 DHCP 服务器，DHCP 服务器分配一个 IP 地址，根据接收的报文的源 MAC 地址，发送回一个包含有有效 IP 地址，DNS 服务器地址，默认网关地址，子网块的 ACK 报文。<br>这个报文通过 UDP 协议，包裹在 IP 数据报里面，再被嵌入以太网帧中，发还给源主机。<br>我们的主机接收到数据包之后，抽取里面的 DHCP ACK 报文，记录下 IP 地址等信息，这样我们的主机就完<br>成了网络组件的初始化。即表示我们的主机拥有了一个 IP 地址，这样就可以连接到网络了。<br><img src="http://7xns9g.com1.z0.glb.clouddn.com/address.png" alt="address"></p>
+<p><strong>注：</strong><br><strong>IP 地址</strong>：用来标识网络上的主机的地址，32位，使用 16 进制表示，一般使用点分十进制来表示使用。<br><strong>MAC 地址</strong>：每个主机或路由器的端口都不一样，是制造商给每台主机区分开来的物理地址。<br><strong>默认网关</strong>：主机直接连接的那个路由器的 IP 地址，主机记录默认网关，然后通过 ARP 协议知道路由器连接<br>主机的那个端口的 MAC 地址。<br><strong>DHCP 协议</strong>：用来动态分配 IP 地址的协议，属于网络层。<br><strong>DHCP 服务器</strong>：使用 CIDR 分配地址，CIDR 块是通过路由聚合集合的 IP 地址块。<br><strong>路由聚合</strong>：指将 IP 地址的前面相同的几位聚合起来，路由器通过这个来减少路由表的规模。<br><strong>ARP 协议</strong>：用于将 IP 地址转换为 MAC 地址的协议，类似于在链路层中的 “DNS 服务”。<br><strong>套接字</strong>：指双向连接数据交换的一端，称为 socket，可以形象地看作是一个房子的门。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2016/07/18/浏览器从输入 URL 到页面显示的过程/" title="浏览器从输入 URL 到页面显示的过程">http://zhangxiang958.github.io/2016/07/18/浏览器从输入 URL 到页面显示的过程/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/31/移动开发总结/" rel="next" title="移动开发总结">
+                <i class="fa fa-chevron-left"></i> 移动开发总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/14/你们无法逃避的谈心/" rel="prev" title="你们无法逃避的谈心">
+                你们无法逃避的谈心 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

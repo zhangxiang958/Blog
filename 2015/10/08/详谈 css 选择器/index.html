@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本博文是学习 CSS 权威指南 读书笔记，主要讲述 CSS 的重难点及已混点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详谈 CSS 选择器">
+<meta property="og:url" content="http://zhangxiang958.github.io/2015/10/08/详谈 css 选择器/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="本博文是学习 CSS 权威指南 读书笔记，主要讲述 CSS 的重难点及已混点。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-09T16:26:59.044Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="详谈 CSS 选择器">
+<meta name="twitter:description" content="本博文是学习 CSS 权威指南 读书笔记，主要讲述 CSS 的重难点及已混点。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2015/10/08/详谈 css 选择器/">
+
+
+
+
+
+  <title>详谈 CSS 选择器 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2015/10/08/详谈 css 选择器/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">详谈 CSS 选择器</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-08T17:25:24+08:00">
+                2015-10-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index">
+                    <span itemprop="name">CSS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>本博文是学习 CSS 权威指南 读书笔记，主要讲述 CSS 的重难点及已混点。<br> <a id="more"></a></p>
+<p>##浅谈 <em>CSS</em> 历史与标签选择器，通配选择器<br>多年前，网页设计与网页制作方面曾经是一片混乱，由于用户对视觉效果的要求日渐增强，HTML 出现了很多规定样式的标签，例如 <em><font></font></em><br>标签，不仅降低了工作效率，并且增加了结构的复杂性。于是在千禧年前后 CSS 面世，层叠样式表为样式/排版方面提高了不少工作效率。<br>那么，CSS 是怎么对 HTML 文档起作用的呢？ 起先，在标签内用 style 属性，如下设置属性。<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;p style = <span class="string">"width: 100px; height = 50px; "</span>&gt;This <span class="keyword">is</span> Jarvis<span class="comment">'s blog<span class="doctag">&lt;/p&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>通常的做法是将样式都放入一个 style 标签中。<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="params">&lt;style&gt;</span><span class="comment">//style标签一般加在 HTML 文档的 &lt;head&gt; 部分中。</span></span><br><span class="line"> <span class="class">p </span>&#123;</span><br><span class="line"><span class="symbol">   width:</span> <span class="number">100</span>px;</span><br><span class="line"><span class="symbol">   height:</span> <span class="number">50</span>px;<span class="comment">//句末最好加上分号，这是一个好的编程习惯，避免出现解析错误。</span></span><br><span class="line"> &#125;</span><br><span class="line"><span class="params">&lt;/style&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在这里出现在 style 标签中的 p 就是我们所说的标签选择器。这一规则解释为 “ HTML中所有的 p 标签  ”。<br>标签选择器的范围很广，像上面的规则，如果没有别的规则，则会用于文档全部的 p 标签上。<br>在使用电脑的时候我们在搜索一些文件的时候会用一个 “*” 的符号表示所有。而在 CSS 文件中同样有这样的存在。<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* &#123;<span class="attribute">color</span>: black;&#125;<span class="comment">//表示所有的元素文字颜色都为黑色。</span></span><br></pre></td></tr></table></figure></p>
+<p>这样的选择器我们称之为通配选择器。</p>
+<p>##css 分组与属性选择器</p>
+<p>###分组<br>在写 css 样式的时候，应当分组，不应当一个一个地写，这样不便于提高效率。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">不建议的写法：</span><br><span class="line"> <span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>: red;&#125;</span><br><span class="line"> <span class="selector-tag">h3</span> &#123;<span class="attribute">color</span>: red;&#125;</span><br><span class="line"> <span class="selector-tag">p</span>  &#123;<span class="attribute">color</span>: red;&#125;</span><br><span class="line">建议的写法：</span><br><span class="line"><span class="selector-tag">h1</span>, <span class="selector-tag">h3</span>, <span class="selector-tag">p</span> &#123;<span class="attribute">color</span>: red;&#125;<span class="comment">//如果 p 元素有和 h1，h3 元素不同的样式可以加多一条规则即可,如下。</span></span><br><span class="line"><span class="selector-tag">p</span> &#123;<span class="attribute">font-size</span>: <span class="number">14px</span>;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###属性选择器<br>说到属性选择器，我们该如何使用它呢？它适合用在批量文件中选择自己想要的文件。<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span><span class="selector-attr">[alt="something"]</span> &#123;<span class="comment">//它可以在一批的图像文件中，选择出 alt 属性为 something 的图像。</span></span><br><span class="line">    <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然，接下来说的类选择器与 <em>ID</em> 选择器都可以用属性选择器来实现。<br><em>如果用属性选择器来选择类选择器的元素，是一个完全串匹配</em></p>
+<p>##类选择器与 <em>ID</em> 选择器<br>像上面的将样式放进 style 标签中不符合模块化编程的思想，因此，现我们的做法是将 CSS 文件独立，在 HTML 文档中用 link 标签来链接一个 CSS 外部文件。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link <span class="attribute">rel</span>=<span class="string">"stylesheet"</span> <span class="attribute">href</span>=<span class="string">"css/style.css"</span>&gt;//链接一个样式表，路径为 <span class="string">"css/style.css"</span>.</span><br></pre></td></tr></table></figure></p>
+<p>那么外部样式表是怎么作用到 HTML 文件中的呢？ 我们可以用标签选择器来选择元素，应用样式，也可以用精准度更高的类选择器与 ID 选择器。在使用类选择器的时候，应当在标签内加上一个 class 属性。在使用 ID 选择器的时候，应当在标签内加上 id 属性。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span> = <span class="string">"para"</span>&gt;</span>This is Jarvis's Blog<span class="tag">&lt;/<span class="name">p</span>&gt;</span>//在 HTML 文档中的写法</span><br><span class="line"><span class="tag">&lt;<span class="name">h3</span> <span class="attr">id</span>=<span class="string">"head"</span>&gt;</span> css <span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">用法<span class="number">1</span>：</span><br><span class="line"> <span class="selector-class">.para</span> &#123;<span class="comment">//这是在 css 文件中的写法，class 在 css 文件中用 "." 来表示。</span></span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="selector-id">#head</span> &#123;<span class="comment">// id 在 css 文件中用 "#" 来表示。</span></span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line"> &#125;</span><br><span class="line">用法<span class="number">2</span>：</span><br><span class="line"> <span class="selector-tag">p</span><span class="selector-class">.para</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> h3<span class="selector-id">#head</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>用法 1 中规则的解释为 “所有 class 名为 para 的元素”,和 “所有 id 名为 head 的元素”，而用法 2 中规则的解释为 “所有 class 名为 para 的 p 元素”，和“所有 id 名为 head 的 h3 元素”，这里请读者注意。<br>并且，类选择器可以多用，中间用空格隔开，但是 id 选择器不可以多用。举个栗子：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;p <span class="keyword">class</span>=<span class="string">"para main"</span>&gt;这里是主要的内容段落&lt;/p&gt;<span class="comment">//类名中间用空格隔开，一个元素可以使用多个类，但只有一个 id 。</span></span><br></pre></td></tr></table></figure></p>
+<p>###使用类选择器还是 <em>ID</em> 选择器？<br>很多人在刚接触 CSS 的时候，觉得 class 类选择器与 ID 选择器在应用样式的方面没有什么区别，都可以比较精准地将样式运用到具体的元素上去，导致 class 与 ID 选择器的混用与 ID 选择器的滥用。但是实际上，类选择器，顾名思义，就是类似的元素通用的样式选择，是一类的元素。而 ID 选择器是表示一个元素特有的名字，表示该元素在页面内的独有性。一般地，如果认为以后还会有类似的元素，我们都会用 class 来为元素加上样式，而在我们非常确定该元素在页面内只出现一次才会使用 ID 。这样也为编写脚本的时候能够精准地抓取到元素，而不必规定一长串的名字。</p>
+<p>###属性选择器与 <em>ID</em> 选择器的区别<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span><span class="selector-attr">[id="para"]</span> &#123;<span class="attribute">color</span>: black;&#125;</span><br><span class="line"><span class="selector-tag">p</span><span class="selector-id">#para</span> &#123;<span class="attribute">color</span>: red;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>很多人认为这里没有区别，认为都会作用在同一个 p 标签上，但是事实上不全对，它们的确作用在同一个 p 标签上，但段落的文字颜色最终是红色 red ，为什么呢？这里会牵扯到 CSS 选择器的特殊性问题，下面会讲到，这里暂时先记住 ID 选择器要比属性选择特殊性要高，因此文字颜色是红色。</p>
+<p>##后代选择器<br>浏览器在解析 HTML 和 CSS 文档中的时候，将 HTML 中的节点解析为 DOM tree 节点树，将 CSS 解析为样式结构树，将两者结合为 render tree。这样来，元素之间就有了父子关系，每一个元素要么是另一个元素的父元素，要么是另一个元素的子元素，或两者皆有。理解了这个，就可以理解后代选择器与子类选择器了。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//后代选择器</span></span><br><span class="line">规则一：</span><br><span class="line"><span class="selector-tag">h1</span> <span class="selector-tag">em</span> &#123;<span class="comment">//当然这里的层叠关系可以更复杂，不限于两个选择器，如： ul li ol em &#123; &#125;</span></span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//子类选择器</span></span><br><span class="line">规则二：</span><br><span class="line">h1&gt;<span class="selector-tag">em</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个规则一解释为 “所有作为 h1 的子元素里面的 em 元素”。这一规则将会把 h1 子元素下的所有 em 元素找出来，无论层叠关系多么复杂。<br>规则二则解释为 “作为 h1 的子元素的所有 em 元素 ”，这样一来，就只会选择到 h1 元素下子元素中的第一个 em 元素，而第二、第三个及后继不受影响。</p>
+<p>###选择相邻兄弟<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//相邻兄弟选择器</span></span><br><span class="line">规则三：</span><br><span class="line"><span class="selector-tag">ul</span> + <span class="selector-tag">ol</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: gray;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>规则三解释为 “ 选择紧接在 ul 后面出现的所有 ol 元素，且 ul 与 ol 要有相同的父元素”。既然是兄弟选择器，那么顾名思义，这个选择器只能选择兄弟元素中的第二个元素（即是上述选择器中的 ol )。但是书写顺序要按照 HTML 源顺序来书写，就是说 ol + ul 选择不到 ul + ol 想要选择的元素。如果是 li + li 这样的选择器，则第一个 li 则不受影响。</p>
+<p>##伪类与伪元素</p>
+<p>###伪类<br>伪类有很多关键字，<em>link, visited, hover, active, first-child, lang</em> , 在书写关键字的时候前面都必须加上 “ : “ 。所谓伪类，就是一种幻象类，平时就像不存在，但是到了某种特定的情况就会出现。举个生活中的栗子，笔者比较喜欢篮球，我们不知道篮球比赛在什么时候会打进一些好球，但是打进好球的时候我们都会欢呼尖叫。<br>而伪类我们看得最多体现的时候，是在 a 标签上面的使用。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//静态伪类</span></span><br><span class="line"> <span class="selector-tag">a</span>:link &#123;<span class="attribute">color</span>: bule;&#125;<span class="comment">//超链接</span></span><br><span class="line"> </span><br><span class="line"> <span class="selector-tag">a</span>:visited &#123;<span class="attribute">color</span>: gray;&#125;<span class="comment">//已访问的链接</span></span><br><span class="line"><span class="comment">//动态伪类</span></span><br><span class="line"> <span class="selector-tag">a</span>:hover &#123;<span class="attribute">color</span>: red;&#125;<span class="comment">//当鼠标悬停在链接上</span></span><br><span class="line"> </span><br><span class="line"> <span class="selector-tag">input</span>:focus &#123;<span class="attribute">color</span>: Violet;&#125;<span class="comment">//当焦点在 input 标签上</span></span><br><span class="line"> </span><br><span class="line"> <span class="selector-tag">a</span>:active &#123;<span class="attribute">color</span>: yellow;&#125;<span class="comment">//正在访问的链接</span></span><br><span class="line"><span class="comment">//另外一些伪类</span></span><br><span class="line"> <span class="selector-tag">p</span>:first-child &#123;<span class="attribute">font-size</span>: <span class="number">14px</span>;&#125;<span class="comment">//选择第一个子元素</span></span><br><span class="line"><span class="comment">//一些运用</span></span><br><span class="line"> <span class="selector-tag">a</span>:lang(fr):hover &#123;<span class="attribute">color</span>: green;&#125;<span class="comment">//选择语言为法文的链接采取样式</span></span><br></pre></td></tr></table></figure></p>
+<p>书写的建议是 : link -&gt; visited -&gt; hover -&gt; active 。<br>这里要注意的是 first-child 这一个伪类。看下面的栗子：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>This is a Blog<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span> CSS <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span> HTML <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>The end<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果有一个伪类写成<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span><span class="selector-pseudo">:first-child</span> &#123;<span class="attribute">font-weight</span>: bold;&#125; </span><br><span class="line"><span class="selector-tag">li</span><span class="selector-pseudo">:first-child</span> &#123;<span class="attribute">text-transform</span>: uppercase; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样的话，常见的错误就会认为这些规则会对 p 标签和 li 标签下的第一个子元素起作用。实际上这些规则解读是： 作为某元素（在这里是 div ）的第一个子元素的所有 p 元素/作为某元素（在 HTML 中当然是 ul 或 ol）的第一个子元素的所有 li 元素，这样，只会对上述栗子中的第一个 p 标签起作用（文字变粗），列表的第一项 li 起作用（文字大写）。</p>
+<p>###伪元素<br>与伪类相似，伪元素在书写关键字的时候，前面也要加上 “ : “。关键字有 <em>first-letter，first-line，before，after</em>。伪元素可以插入假想的元素。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span>:first-letter &#123;<span class="attribute">font-size</span>: <span class="number">15px</span>;&#125;<span class="comment">//对段落的首字母大写。</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">p</span>:first-line &#123;<span class="attribute">text-transform</span>: uppercase;&#125;<span class="comment">//对段落的第一行文字产生倾斜效果。</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">p</span>:before &#123;<span class="attribute">content</span>: <span class="string">"&#125;&#125;"</span>;&#125;<span class="comment">//在段落前面插入内容 &#125;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">p</span>:after &#123;<span class="attribute">content</span>: <span class="string">" the end."</span>;&#125;<span class="comment">//在段落后面插入内容 the end.</span></span><br></pre></td></tr></table></figure></p>
+<p>不过 first-letter，first-line 只能对块级元素或标记起作用，对超链接等行内元素没有作用。并且伪元素主体是选择器最后一个元素。</p>
+<p>##选择器优先级</p>
+<p>###特殊性<br>在 CSS 里面，分为几个特殊性等级，分别用不同的数字来标记：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. ID 选择器为 <span class="number">0</span>，<span class="number">1</span>，<span class="number">0</span>，<span class="number">0</span></span><br><span class="line"><span class="number">2</span>. 类选择器，属性选择，伪类为 <span class="number">0</span>，<span class="number">0</span>，<span class="number">1</span>，<span class="number">0</span></span><br><span class="line"><span class="number">3</span>. 元素（即标签），伪元素为 <span class="number">0</span>，<span class="number">0</span>，<span class="number">0</span>，<span class="number">1</span></span><br><span class="line">而结合符，通配选择器的优先级为 <span class="number">0</span>，<span class="number">0</span>，<span class="number">0</span>，<span class="number">0</span>，对值没有贡献</span><br><span class="line"></span><br><span class="line">栗子：</span><br><span class="line"><span class="selector-tag">p</span> <span class="selector-tag">em</span> &#123;<span class="attribute">color</span>: red;&#125; <span class="comment">// 特殊性为 0，0，0，2</span></span><br><span class="line"><span class="selector-id">#para</span> &#123;<span class="attribute">color</span>: black; &#125;<span class="comment">//特殊性为 0，1，0，0</span></span><br><span class="line">p<span class="selector-id">#para</span> &#123;<span class="attribute">color</span>: black;&#125;<span class="comment">//特殊性为 0，1，0，1</span></span><br><span class="line"><span class="selector-class">.Jarvis</span> &#123;<span class="attribute">color</span>: yellow;&#125;<span class="comment">//特殊性为 0，0，1，0</span></span><br><span class="line"><span class="selector-tag">div</span><span class="selector-class">.Jarvis</span> &#123;<span class="attribute">color</span>: gray;&#125;<span class="comment">//特殊性为 0，0，1，1</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的数字标记，按照从左到右的排序，值的大小递减，也就是说，0，1，0，0 要比 0，0，1，0 要大。<br>而像上面所说的，通配选择器的特殊性为 0，0，0，0 ，很多人认为这里没有值得注意的，恰恰相反，这里要注意的是通配选择器的特殊性要比无特殊性的值要高，比如继承的值，就是无特殊性的。<br>细心的读者会发现，这里的数字标记最高位都为 0 ，当它为 1 的时候呢？没错，当 HTML 文档中有内联样式的时候，特殊性为 1，0，0，0 。。但是大家不要把这里的数字标记与十进制的 100 和 10 混淆，那是不同的，下面会有例子说明。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">每一对选择器都是选择同一个元素</span><br><span class="line"><span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>: black;&#125; <span class="comment">/* 0，0，0，1 */</span></span><br><span class="line"><span class="selector-tag">body</span> <span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>: bule;&#125;<span class="comment">/* 0，0，0，2 （winner）*/</span></span><br><span class="line"></span><br><span class="line"><span class="selector-id">#para</span> &#123;<span class="attribute">color</span>: black; &#125;<span class="comment">/* 0，1，0，0 */</span></span><br><span class="line">p<span class="selector-id">#para</span> &#123;<span class="attribute">color</span>: black;&#125;<span class="comment">/* 0，1，0，1 (winner) */</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">html</span> &gt; <span class="selector-tag">body</span> <span class="selector-tag">table</span> <span class="selector-tag">tr</span>[id=<span class="string">"totals"</span>] <span class="selector-tag">td</span> <span class="selector-tag">ul</span> &gt; <span class="selector-tag">li</span> &#123;<span class="attribute">color</span>: maroon;&#125;<span class="comment">/* 0，0，1，7 */</span></span><br><span class="line">li<span class="selector-id">#answer</span> &#123;<span class="attribute">color</span>: navy;&#125;<span class="comment">/* 0，1，0，1 （winner）*/</span></span><br></pre></td></tr></table></figure></p>
+<p>大家明白这里的数字与十进制是不同了吗？如果还是不理解，请看下面的栗子：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">//都是选择第十个 div 里面的内容</span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.ten</span> &#123;</span></span><br><span class="line"><span class="undefined">        color: red;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">    body div div div div div div div div div div &#123;</span></span><br><span class="line"><span class="undefined">        color: yellow;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        1</span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">            2</span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                3</span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                    4</span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                        5</span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                            6</span><br><span class="line">                            <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                                7</span><br><span class="line">                                <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                                    8</span><br><span class="line">                                    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                                        9</span><br><span class="line">                                        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"ten"</span>&gt;</span></span><br><span class="line">                                            10</span><br><span class="line">                                        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;/<span class="name">div</span>&gt;</span>  </span><br><span class="line">                        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这里的第二个规则的特殊性是 0，0，0，11，而第一个规则的特殊性是 0，0，1，0，如果看作是十进制的话，字体颜色将是黄色，但是实际上，字体颜色是红色，那就代表高一位的数字大于低位的数字，无论低位数字多大。</p>
+<p>###重要声明<br>重要声明采取 !important 来声明，放在一个声明分号之前。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;<span class="attribute">color</span>: red <span class="meta">!important</span> ;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>前面的栗子中都是非重要声明，重要声明没有特殊性，但在重要声明与非重要声明冲突的时候，重要声明总是胜出。非重要声明是以特殊性解决冲突的。</p>
+<p>###继承<br>前面我们说父子关系的时候，曾经理解过 HTML 文档的树状结构，这里同样，继承也是建立在这个理解之上的。<br>所谓继承，也就是样式继承，就是说样式在父元素中设置，如果子元素没有设置相应的样式的话，将会从父元素上继承相对应的值，直到子元素下再无子元素为止。<br>一般来说，继承是向下继承，不会向上继承，不过有一个例外 body 的背景样式可以传到 HTML 元素上。<br>继承的值没有特殊性，通配选择器的值要优先于继承值，因为通配选择器的优先级为 0，0，0，0 。<br>继承不会继承框模型的值（外边距，内边距，border，背景），因为假设父元素设置了左边距 30px ，如果子元素都会有一个左边距 30px，就会增添创作人员不必要的麻烦，必须一个个消除边距。</p>
+<p>###层叠</p>
+<p>终于，我们要说到层叠了，层叠样式表怎么能不讲层叠？ 在规则起冲突的时候，到底是哪一个规则比较优先呢？<br>有几个规则：<br>1.按照权重和来源排序<br>所谓权重，也就是前面说讲的重要性声明的问题。来源包括创作人员与读者，创作人员优于读者。但读者重要声明拥有最高等级。</p>
+<p>2.按照特殊性排序<br>这里前面已经讲了，高特殊性优于低特殊性。</p>
+<p>3.按照顺序排序<br>举个例子：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>: red;&#125;</span><br><span class="line"><span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>: green;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>标题 1 的文字颜色不可能又红又绿，以上这两条规则，将会是第二条规则优先，因为从上至下，第二条规则的样式将会覆盖第一条规则的样式。这也是为什么建议链接伪类按照  link -&gt; visited -&gt; hover -&gt; active  的顺序来写。如果你写成这样<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//伪类加到同一个属性上（如下），不同属性不起冲突</span></span><br><span class="line"><span class="meta">:active &#123;color:</span> red;&#125;</span><br><span class="line"><span class="meta">:hover &#123;color:</span> bule;&#125;</span><br><span class="line"><span class="meta">:link &#123;color:</span> black;&#125;</span><br><span class="line"><span class="meta">:visited &#123;color:</span> gray;&#125;</span><br><span class="line"><span class="comment">//这样 active 和 hover 的样式将不会呈现。因为所有链接都处于两种状态：链接和已被链接，覆盖了 hover 和 active 样式</span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>作者     张翔<br>2015 年 10月 08日    </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2015/10/08/详谈 css 选择器/" title="详谈 CSS 选择器">http://zhangxiang958.github.io/2015/10/08/详谈 css 选择器/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/22/JavaScript DOM 基础/" rel="next" title="JavaScript DOM 基础">
+                <i class="fa fa-chevron-left"></i> JavaScript DOM 基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/25/详谈 CSS 文字属性/" rel="prev" title="详谈 CSS 文本属性">
+                详谈 CSS 文本属性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

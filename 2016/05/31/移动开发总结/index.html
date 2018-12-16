@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="参与了几个移动端的 web 开发，在团队合作中与在开发中，踩了一些移动开发的坑，希望这篇博文可以让移动开发人员在开发 web 时有所启发，同时组内师弟师妹在做项目时避免类似的坑。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="移动开发总结">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/05/31/移动开发总结/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="参与了几个移动端的 web 开发，在团队合作中与在开发中，踩了一些移动开发的坑，希望这篇博文可以让移动开发人员在开发 web 时有所启发，同时组内师弟师妹在做项目时避免类似的坑。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://f2e.souche.com/assets/postImg/flexiable/feel.png">
+<meta property="og:updated_time" content="2018-11-09T16:24:31.704Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="移动开发总结">
+<meta name="twitter:description" content="参与了几个移动端的 web 开发，在团队合作中与在开发中，踩了一些移动开发的坑，希望这篇博文可以让移动开发人员在开发 web 时有所启发，同时组内师弟师妹在做项目时避免类似的坑。">
+<meta name="twitter:image" content="http://f2e.souche.com/assets/postImg/flexiable/feel.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2016/05/31/移动开发总结/">
+
+
+
+
+
+  <title>移动开发总结 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2016/05/31/移动开发总结/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">移动开发总结</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-31T21:36:24+08:00">
+                2016-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/移动开发/" itemprop="url" rel="index">
+                    <span itemprop="name">移动开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>参与了几个移动端的 web 开发，在团队合作中与在开发中，踩了一些移动开发的坑，希望这篇博文可以让移动开发人员<br>在开发 web 时有所启发，同时组内师弟师妹在做项目时避免类似的坑。<br><a id="more"></a></p>
+<p>##切图<br>问过在网易实习的师兄师姐，在页面重构时候一般需要自己切图与开发一手完成，但是怎样才能快速地切出自己想要的<br>图呢？这里推荐一个插件 <a href="http://www.cutterman.cn/v2/parker" target="_blank" rel="noopener">CutterMan</a> 。可以帮助你快速切图，并切好两倍三倍图。</p>
+<p>##我对像素的一些理解<br>其实像素分为两种，一种是 CSS 像素，它是 WEB 开发人员抽象出来的一种概念，另外一种是设备像素，它是设备的物理<br>像素，只有当 dpr（设备像素/css 像素）等于 1 的时候，两者才相等。那么到底为什么图片在高清屏幕上会模糊呢？<br>原因在于在高清屏幕上，物理像素更多，一个 CSS 像素有多个物理像素来表示，而一个 CSS 像素用一个物理像素表示<br>才会高清，现在多个物理像素，计算机只好就近取色来填充 “多余” 的物理像素，导致相片模糊。<br>下图是同样是 1px 在不同的屏幕下的表示。<br><img src="http://f2e.souche.com/assets/postImg/flexiable/feel.png" alt=""><br>[图片来自 <strong><a href="http://caibaojian.com/" target="_blank" rel="noopener">http://caibaojian.com/</a></strong>.]</p>
+<p>##Viewport<br>viewport 是由苹果开发出来的，目的就是为了适配移动端页面。这是因为苹果开发出 retina 屏幕，屏幕大小不变而像<br>素增加一倍，与过去的网页不能平稳过度，因为原来 960 px 的网页导航栏为 60%，解析出来就是 576 px，但是遇到了<br>320 px 的手机屏幕，解析成了162 px，但是字体设置又用了 px，那么字体就无法友好显示了，所以开发出 viewport，<br>分为两个 visual viewport 和 layout viewport。<br>layout viewport 是由浏览器厂商规定的，一般是 980 px，现在有了layout viewport，页面在手机上就像在 980 px 的屏幕上显示一样，手机可以通过滚动条来看网页，但是如果我们需要网页去除滚动条满屏显示（320 px），那么因为 layout viewport 是 980 px，这样的网页因为缩放，看起来非常小，所以才有了后来的 width=device-width 这个值。</p>
+<p>##自适应<br>自适应是移动开发最注意的点之一，为了良好的用户体验，下面的三种方法都有各自的使用场景。一般来说自适应需要<br>关注三个点：字体、高宽统一、图像。</p>
+<p>###高度一定，宽度自适应<br>这个方法其实体验很好，自动填充空白。但是有几个点需要注意，这是一个适应窄宽度的布局，但是在屏幕变宽的时候，<br>却需要比较大的图像才会不至于拉伸模糊，这一点比较矛盾。像手机新浪采用的方法就是高度固定，宽度使用百分比的<br>自适应布局方案。<a href="http://sina.cn/" target="_blank" rel="noopener">手机新浪</a>就是采用了这种方法。</p>
+<p>###固定宽度，viewport 缩放<br>这个可以完全按照设计稿，使用 px，em，PC 端即可完成大部分测试，手机端考虑对齐问题。在实践上，设计稿，页面<br>宽度， viewport 值采用同一宽度值，但是一般来说，这个并不是最优解决方案，因为一般来说移动端都需要适应大屏<br>手机与小屏手机。</p>
+<p>###利用rem布局<br>使用 rem 是让那些页面中需要弹性变化的元素进行布局。根据自身的项目经验，rem 确实方便快速。<br><a href="http://info.3g.qq.com/g/s?aid=index&amp;g_ut=3&amp;g_f=1283" target="_blank" rel="noopener">手机腾讯网</a>就是采用了这种方式，对于需要弹性变化的元素都采用 rem 进行布局。<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">var</span> dpr, <span class="built_in">rem</span>, <span class="built_in">scale</span>;</span><br><span class="line"><span class="built_in">var</span> doc = document;</span><br><span class="line"><span class="built_in">var</span> docEl = doc.documentElement;</span><br><span class="line"><span class="built_in">var</span> meta = doc.querySelector('meta[name=<span class="string">"viewport"</span>]');</span><br><span class="line"></span><br><span class="line">dpr = window.devicePixelRatio || <span class="number">1</span>;</span><br><span class="line"><span class="built_in">rem</span> = docEl.clientWidth * dpr /<span class="number">10</span>;</span><br><span class="line"><span class="built_in">scale</span> = <span class="number">1</span> /dpr;     //<span class="built_in">scale</span> 与 dpr 的关系的倒数</span><br><span class="line"></span><br><span class="line">//设置 viewport，根据 <span class="built_in">scale</span> 进行缩放，达到高清</span><br><span class="line">meta.setAttribute('<span class="built_in">content</span>', '<span class="built_in">width</span>=' + dpr * docEl.clientWidth + ',inital-<span class="built_in">scale</span>='+ <span class="built_in">scale</span> + ',maximum-<span class="built_in">scale</span>=' + <span class="built_in">scale</span> + ', minimum-<span class="built_in">scale</span>=' + <span class="built_in">scale</span> + ',user-scalable=no');</span><br><span class="line"></span><br><span class="line">//设置 data-dpr 属性，留做设置字体用</span><br><span class="line">docEl.setArribute('data-dpr', dpr);</span><br><span class="line">//设置根元素的字体大小</span><br><span class="line">docEl.<span class="built_in">style</span> = '<span class="built_in">font</span>-size='+ <span class="built_in">rem</span> + 'px';</span><br></pre></td></tr></table></figure></p>
+<p>但是缺点是设计稿中的 px 与开发中的 rem 的换算比较困难，这里我在项目中使用的是 cssrem 这个插件，可以帮助<br>换算他们的值。<br>最后，其实代码中的 scale 是用于解决 border：1px 问题的，因为 2 倍稿中的 1px 相当于 1倍稿中的 0.5 px，<br>我们为了解决这个问题，可以使用 js 动态设置 scale 来达到目的，如果你不想使用 js ，那么可以使用 CSS hack。<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">transform</span>: scaleX(<span class="number">0.5</span>); <span class="comment">//画出 2 倍稿中的 1px，即 1 倍稿中的 0.5 px。</span></span><br></pre></td></tr></table></figure></p>
+<p>有人会有疑问，如果设置了 scale ，那么字体大小页面布局不也就变化了吗？是的没错，所以上面的 rem 布局可以解决<br>这个问题，因为如果布局使用的是 px 做单位，的确会有影响，但是使用 rem 就不会，布局只会与根元素的 font-size<br>有关，同时字体使用 css media 与根元素的 data-dpr 来设置，就没有问题了。</p>
+<p>###总结<br>在移动端开发，总的来说还是要按照设计稿的要求采取不同的解决方案。下面的这个 <em>meta</em> 标签是移动开发必备，<br>不管你有没有理解 <em>ppi，dpr</em> 等知识，它可以让你忽略设备的干扰，直接开发。<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta <span class="attr">name="viewport"</span> <span class="attr">content="width=device-width,user-scalable=no,</span> <span class="attr">initial-scale=1.0,</span> <span class="attr">maximum-scale=1.0,</span> <span class="attr">minimum-scale=1.0"&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>以上说的三种方法都是在 viewport 的基础上，为了页面的元素的宽度适应屏幕而做出的方案。</p>
+<p>##图片<br>因为位图有可能会被拉伸（PPI的问题），所以我们得使用高清图。问题是需要多高清？一般有两种做法：</p>
+<ol>
+<li>准备 1/2/3 倍图。</li>
+<li>放弃 1 屏机，全部使用 2 倍图。<br>两个方法来说，第一个方法比较繁琐，第二个方法的流量优化，滚动加载手段就会显得比较重要。<br>##字体<br>如果是使用 REM 布局，那么字体就应该使用 px 等单位。因为点阵字体一般是 14 或 16 这样的数字，但是如果使用<br>rem 单位，就会有可能会出现 13/15 这样怪异的尺寸，不利于字体渲染。但是遇到像标题这样需要大字号的可以使用<br>rem。在腾讯首页是几乎全部字体都使用了 rem 单位。<br>比较好的做法是根据 dpr 来设置字体:<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[data-dpr=1]</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">16px</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-attr">[data-dpr=2]</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">32px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>##附录：值得注意的点<br>1.显示时候的地址栏的隐藏。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">window</span>.scrollTo(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">&#125;,<span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<p>2.打开软键盘：<br><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input <span class="class"><span class="keyword">type</span></span>=<span class="string">"tel"</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<p>3.click事件有 300ms 的延迟，运用 <em>fastclick</em> ，还可以防止穿透。<br>4.在使用动画的时候，尽量使用 <em>transform： translate3d()</em> 可以开启硬件加速。<br>5.<em>weinre</em> 调试大法：移动端的调试困惑了我好久。<br>很多人推荐使用 <em>weinre</em>，我自己配合 <strong><em>UC</em> 二维码</strong> 浏览器插件使用。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span> -g weinre</span><br><span class="line">weinre <span class="comment">--boundHost -all- --httpPort 8081</span></span><br><span class="line"></span><br><span class="line">打开 localhost:<span class="number">8081</span></span><br><span class="line"></span><br><span class="line">edpm <span class="keyword">start</span></span><br></pre></td></tr></table></figure></p>
+<p>项目：<br><a href="https://github.com/zhangxiang958/Tour4U" target="_blank" rel="noopener">Tour4U</a><br><a href="https://github.com/zhangxiang958/zx2016" target="_blank" rel="noopener">2016 协同招新网页</a></p>
+<p>参考资料：<br><a href="http://www.w3ctech.com/topic/979" target="_blank" rel="noopener">移动适配</a><br><a href="http://www.infoq.com/cn/articles/development-of-the-mobile-web-deep-concept" target="_blank" rel="noopener">移动开发</a><br><a href="http://sentsin.com/web/54.html" target="_blank" rel="noopener">移动开发的20个要点</a></p>
+<p>传送门：<br><a href="https://github.com/jtyjty99999/mobileTech" target="_blank" rel="noopener">移动开发资源集合</a><br><a href="http://www.css88.com/archives/5480" target="_blank" rel="noopener">移动前端不得不了解的html5 head 头标签</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2016/05/31/移动开发总结/" title="移动开发总结">http://zhangxiang958.github.io/2016/05/31/移动开发总结/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/18/JavaScript 核心学习——继承/" rel="next" title="JavaScript 核心学习——继承">
+                <i class="fa fa-chevron-left"></i> JavaScript 核心学习——继承
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/18/浏览器从输入 URL 到页面显示的过程/" rel="prev" title="浏览器从输入 URL 到页面显示的过程">
+                浏览器从输入 URL 到页面显示的过程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

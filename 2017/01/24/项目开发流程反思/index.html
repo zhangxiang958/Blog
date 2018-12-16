@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这篇博文是总结我这么长时间在工作室开发项目的流程的反思,从开发构建到部署项目,希望能够通过总结发现更高效的开发流程.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目开发流程反思">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/01/24/项目开发流程反思/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="这篇博文是总结我这么长时间在工作室开发项目的流程的反思,从开发构建到部署项目,希望能够通过总结发现更高效的开发流程.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.ijarvis.cn/qiniuSet.png">
+<meta property="og:image" content="http://img.ijarvis.cn/buildMD5.png">
+<meta property="og:updated_time" content="2018-12-16T06:11:12.186Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="项目开发流程反思">
+<meta name="twitter:description" content="这篇博文是总结我这么长时间在工作室开发项目的流程的反思,从开发构建到部署项目,希望能够通过总结发现更高效的开发流程.">
+<meta name="twitter:image" content="http://img.ijarvis.cn/qiniuSet.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2017/01/24/项目开发流程反思/">
+
+
+
+
+
+  <title>项目开发流程反思 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/01/24/项目开发流程反思/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">项目开发流程反思</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-24T20:15:24+08:00">
+                2017-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web-Develop/" itemprop="url" rel="index">
+                    <span itemprop="name">Web Develop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇博文是总结我这么长时间在工作室开发项目的流程的反思,从开发构建到部署项目,希望能够通过总结发现更高效<br>的开发流程.<br><a id="more"></a></p>
+<p>##前端使用 <em>mock</em> 与后端独立<br>这部分为了避免此博文篇幅过长,所以总结在我的另外一篇博文上–<a href="http://zhangxiang958.github.io/2017/01/23/%E5%89%8D%E7%AB%AF%E4%BD%BF%E7%94%A8%20Mock%20%E4%B8%8E%E5%90%8E%E7%AB%AF%E7%8B%AC%E7%AB%8B/">前端使用 <em>mock</em> 与后端独立</a>.</p>
+<p>##Git 使用<br>Git 的使用主要分为它的使用流程与分支管理,可以看看阮一峰老师的博文.</p>
+<p><a href="http://www.ruanyifeng.com/blog/2015/08/git-use-process.html" target="_blank" rel="noopener">Git 使用流程</a><br><a href="http://www.ruanyifeng.com/blog/2012/07/git.html" target="_blank" rel="noopener">Git 分支管理策略</a></p>
+<p>##设计规范<br>工作室在开发项目的时候发现, 设计师与程序员的沟通比较少,在本次开发许愿墙项目的时候凸显地尤为明显, 出现很多<br>取色与要求不统一,像素大小混乱,导致后期沟通成本增大,实在不应该.<br>在师兄的引导下,我觉得工作室在开发项目的时候可以借鉴一下<a href="https://segmentfault.com/a/1190000007698308" target="_blank" rel="noopener">设计规范</a>.<br>所谓设计规范,即是设计师与前端工程师共同商讨调整,得到的一个符合模块化开发的开发指导文档.注意我上面说的是<br>借鉴(尽信书不如无书),对于工作室自身的情况,个人感觉工作室此时期的项目 UI 要求会相差比较大,不适合建立一个<br>详细的设计规范,但是可以建立一个简洁的文档,从而规范编码人员的 UI 代码的一致性.<br>其实设计规范对于工作室来说,启发更大的是对于设计师与前端开发人员的合作流程.</p>
+<p>###合作流程<br>相信网上有很多关于前端开发与后台开发的合作沟通交流的方案或建议,但是极少谈及设计师与前端开发的合作流程.<br>一直以来开发项目都是设计师将设计稿完全设计出来,前端人员拿到设计稿之后思考布局或实现方案.从前几年来说这样的<br>开发流程也许并没有问题,但是随着组件化模块化的技术的完整与风靡,我觉得设计师与前端开发人员的合作流程也应该有<br>所改变而顺应潮流.<br>设计师在设计出最终的设计稿之前,肯定会有第一版,第二版等众多版本,虽然说会有很多因素导致设计稿的变动,这里其实<br>只需最终版的稍前几个版本就可以了,这时候与前端开发人员进行商讨,而商讨的关注点不在 UI 的美观,而是设计稿的模<br>块化体现,在前期就充分考虑好一些常用通用模块, 尽早处理一些特殊模块.<br>一句话即 <strong><em>应在设计稿体现模块,而不是到前端来看模块是否与视觉稿能否配得上</em></strong>.</p>
+<p>##前端部署<br>经过许愿墙项目以及自己的思考,总结出来觉得应该将应用服务器与静态服务器分开, 这样可以为静态文件添加 HTTP<br>头部启动浏览器缓存,加快渲染速度.<br>问题来了: 如果使用七牛这样的 CDN, 怎么启动浏览器缓存,或者说怎么添加头部?<br><img src="http://img.ijarvis.cn/qiniuSet.png" alt=""><br>在七牛的空间管理页面中空间设置可以使用 cache-control 头部的 maxAge 值来控制客户端缓存.</p>
+<p>###启用浏览器缓存前<br>在你启用浏览器缓存之前一定要知道,如果你的静态文件需要更新的情况下,如何强制浏览器放弃本地缓存而自动更新<br>获取最新的静态文件呢?<br>使用浏览器缓存是依赖在 <strong><em>HTTP response header</em></strong> 的, 依赖 <strong><em>Expires</em></strong> 与 <strong><em>Cache-Control</em></strong> 头部.<br>借鉴百度首页,我采取的方案是 HTML 页面不使用浏览器缓存,而其他如 CSS, JS 等静态资源使用本地缓存加 CDN 加速.<br>而对于及时更新已改动的静态资源我使用 MD5 命名为静态资源命名<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">gulpfile.js 部分代码</span><br><span class="line"><span class="comment">// MD5戳</span></span><br><span class="line"><span class="keyword">var</span> rev = <span class="built_in">require</span>(<span class="string">'gulp-rev'</span>);</span><br><span class="line"><span class="keyword">var</span> revCollector = <span class="built_in">require</span>(<span class="string">'gulp-rev-collector'</span>);</span><br><span class="line"><span class="keyword">var</span> runSequence = <span class="built_in">require</span>(<span class="string">'run-sequence'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//自动更换 HTML 中的引用文件名</span></span><br><span class="line">gulp.task(<span class="string">'publish-html'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.src([<span class="string">'./build/rev/**/*.json'</span>, sourcePath + <span class="string">'/index.html'</span>])</span><br><span class="line">    .pipe(revCollector(&#123;</span><br><span class="line">      dirReplacements: &#123;</span><br><span class="line">        <span class="string">'build/'</span>: <span class="string">''</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;))</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'./dist/'</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>效果截图:<br><img src="http://img.ijarvis.cn/buildMD5.png" alt=""></p>
+<p><em>rev</em> 文件夹中的 <em>rev-manifest.json</em> 文件:<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"app.css"</span>: <span class="string">"app-0ea6dc6c.css"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"app.js"</span>: <span class="string">"app-3a5a3e63.js"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是根据浏览器的行为不同, 浏览器的缓存可能会失效.<br><em>注: <a href="https://segmentfault.com/q/1010000007478227/a-1020000007478558" target="_blank" rel="noopener">cache-control设置css强制缓存失效</a>.</em></p>
+<p>###好的部署要求</p>
+<ol>
+<li>配置超长时间的本地缓存 —— 节省带宽，提高性能</li>
+<li>采用内容摘要作为缓存更新依据 —— 精确的缓存控制</li>
+<li>静态资源CDN部署 —— 优化网络请求</li>
+<li>更资源发布路径实现非覆盖式发布 —— 平滑升级<br>以上几点是一个好的部署方案所要具备的.<br>(摘自知乎)<br>所谓非覆盖式部署,就是静态资源全量部署,页面资源灰度部署.</li>
+</ol>
+<p>###构建工具<br>有一些强大的构建工具比如 fit3, 它大而全, 是一个很好的构建工具,但是我还是喜欢用 gulp 这样的工具, 比较灵活.<br>一句话–<strong><em>“前端没有银弹”</em></strong>.</p>
+<p>推荐资料:</p>
+<ul>
+<li><a href="https://github.com/okoala/vue-fis3" target="_blank" rel="noopener">fis3 in VueJS</a></li>
+<li><a href="https://github.com/fouber/blog" target="_blank" rel="noopener">前端工程 blog</a></li>
+<li><a href="https://www.zhihu.com/question/20790576" target="_blank" rel="noopener">知乎精彩回答</a></li>
+<li><a href="https://www.mnot.net/cache_docs/" target="_blank" rel="noopener">Cache 缓存详解</a></li>
+</ul>
+<p>###开发与测试的一些小建议<br>建议作为一个前端开发人员, 也应该配备一个自己的测试域名和测试服务器.推荐腾讯云.</p>
+<p>##附录</p>
+<p>###单页面应用打包 CSS<br>在使用 <em>Vue</em> 的时候,使用 <em>.vue</em> 单文件形式开发的时候,建议使用下面这个插件:<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">var ExtractTextPlugin</span> = require(<span class="string">'extract-text-webpack-plugin'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>将 <em>.vue</em> 文件中的 <em>style</em> 独立打包成一个 <em>css</em> 文件,这样可以有效减少打包的 <em>JS</em> 文件大小.</p>
+<p>###雪碧图<br>对于雪碧图的合并我并不建议使用 gulp 这样的工具进行合并, 因为雪碧图的重点不在于它的合并,而在于合并后的像素<br>定位问题,而 gulp 只提供了合并,而没有提供图片的具体像素位置点.<br>因此我推荐使用 <a href="http://csssprites.com/" target="_blank" rel="noopener">http://csssprites.com/</a> 这个工具网站,支持多文件合并,并提供合并后的图片的像素位置.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2017/01/24/项目开发流程反思/" title="项目开发流程反思">http://zhangxiang958.github.io/2017/01/24/项目开发流程反思/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/23/前端使用 Mock 与后端独立/" rel="next" title="前端使用 Mock 与后端独立">
+                <i class="fa fa-chevron-left"></i> 前端使用 Mock 与后端独立
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/31/Ajax/" rel="prev" title="Ajax">
+                Ajax <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

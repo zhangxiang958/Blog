@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="流概念是学习 Node 绕不过去的概念之一，它的底层代码也非常复杂，它能够优化对于文件或者数据处理的内存优化与流程优化，本文主要是讲述了对于 Stream 的实现与使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解 Node.js Stream 模块">
+<meta property="og:url" content="http://zhangxiang958.github.io/2018/09/01/理解 Node.js Stream 模块/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="流概念是学习 Node 绕不过去的概念之一，它的底层代码也非常复杂，它能够优化对于文件或者数据处理的内存优化与流程优化，本文主要是讲述了对于 Stream 的实现与使用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.ijarvis.cn/80ae17f460184316a4603698e2e489a9_de5c1028c479b5af00521ff2f5323c27.jpg">
+<meta property="og:image" content="http://img.ijarvis.cn/8195b426831849428762799bbc7347e2_4190f79d57907a8cfd4cefbd43162f2d.jpg">
+<meta property="og:updated_time" content="2018-12-16T06:11:12.187Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解 Node.js Stream 模块">
+<meta name="twitter:description" content="流概念是学习 Node 绕不过去的概念之一，它的底层代码也非常复杂，它能够优化对于文件或者数据处理的内存优化与流程优化，本文主要是讲述了对于 Stream 的实现与使用。">
+<meta name="twitter:image" content="http://img.ijarvis.cn/80ae17f460184316a4603698e2e489a9_de5c1028c479b5af00521ff2f5323c27.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2018/09/01/理解 Node.js Stream 模块/">
+
+
+
+
+
+  <title>理解 Node.js Stream 模块 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2018/09/01/理解 Node.js Stream 模块/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">理解 Node.js Stream 模块</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-01T15:18:24+08:00">
+                2018-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Node-js/" itemprop="url" rel="index">
+                    <span itemprop="name">Node.js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>流概念是学习 Node 绕不过去的概念之一，它的底层代码也非常复杂，它能够优化对于文件或者数据处理的内存优化与流程优化，本文主要是讲述了对于 Stream 的实现与使用。<br><a id="more"></a></p>
+<h2 id="静态服务器的搭建"><a href="#静态服务器的搭建" class="headerlink" title="静态服务器的搭建"></a>静态服务器的搭建</h2><p>很多时候，我们需要搭建静态文件服务器或者向客户端传输静态文件，一般来说会有以下两种：这里例子中静态服务器会向服务端发送一个 400 MB 的文件(big.txt)。</p>
+<h3 id="使用-fs-readFile-搭建静态服务器"><a href="#使用-fs-readFile-搭建静态服务器" class="headerlink" title="使用 fs.readFile 搭建静态服务器"></a>使用 fs.readFile 搭建静态服务器</h3><p>这里我们会直接使用 fs 模块的 readFile 函数来传递文件：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="params">(req, res)</span> =&gt;</span> &#123;</span><br><span class="line">    fs.readFile(<span class="string">'./big.txt'</span>, <span class="function"><span class="params">(err, file)</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">            res.end(err);</span><br><span class="line">        &#125;</span><br><span class="line">        res.end(file);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;).listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure></p>
+<p>以上代码就可以建立起一个简单的静态文件服务器，但是它会存在一些问题，因为 fs 读取文件是属于将文件全部内容都读取以 Buffer 格式存放在内存中，如果是小文件可能还能应对，但是如果是面对大文件，可能就比较吃力了，而且一旦并发量上来了，服务器就很可能会奔溃，所以为了服务器的稳定性与高性能，我们往往会使用 Stream 来建立服务器。</p>
+<h3 id="使用-Stream"><a href="#使用-Stream" class="headerlink" title="使用 Stream"></a>使用 Stream</h3><p>在 Node.js 中，像 TCP socket 等等这些都是基于 Stream 的，这为我们使用 Stream 建立服务器提供了便利。我们如果使用 Stream 来重写上面的静态文件服务器：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> fileStream = fs.createReadStream(<span class="string">'./big.txt'</span>);</span><br><span class="line">    fileStream.pipe(res);</span><br><span class="line">&#125;).listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，即使是很大的文件，服务器的内存占用还是相对比较稳定的，而且消耗也比较小。这是建立在 Stream 是使用生产者消费者的概念，当数据被读取消费的时候才会继续生产，而不是先一并读取再给下一步使用。</p>
+<h2 id="Stream-的四种类型"><a href="#Stream-的四种类型" class="headerlink" title="Stream 的四种类型"></a>Stream 的四种类型</h2><p>在 Stream 中，有四种类型</p>
+<ol>
+<li>可读流 Readable</li>
+<li>可写流 Writable</li>
+<li>双工读写流 Duplex</li>
+<li>转化流 Transform</li>
+</ol>
+<p>可读流与可写流应该很好理解，在 fs 模块中就可以通过 createReadStream 或者 createWriteStream 来创建这两者。<br>而对于 <strong>Duplex</strong> 流来说，它的特点在于既可读又可写，但是写入的数据与读取的数据之间是没有关联的，也就是说通过这个流写入的数据并不能通过该流本身的读取数据的方法拿到，典型的例子就是 <strong>TCP Socket</strong>, 它作为端的读写数据的关键，但是读与写的数据之间没有关联。<br>而对于 <strong>Tranform</strong> 流来说，它就像是特殊的 Duplex 流，它将将读与写联合在一起，写入的数据经过转化之后可以变为读取数据的源头，直接被下游使用，典型的例子就是 <strong>zlib.createGzip</strong> 可以为上游数据进行压缩然后下游得到的是压缩后的数据。</p>
+<h2 id="可读流的模式与状态"><a href="#可读流的模式与状态" class="headerlink" title="可读流的模式与状态"></a>可读流的模式与状态</h2><h3 id="Stream-可读流的两种模式"><a href="#Stream-可读流的两种模式" class="headerlink" title="Stream 可读流的两种模式"></a>Stream 可读流的两种模式</h3><p>如果将 stream 类比成管道的话，那么管道就会有流动与停止的区别，stream 也是。flowing 模式代表流动模式，数据会自动读取并且会塞入到 data 事件的回调函数中进行消费。而 paused 模式是暂停流模式，如果需要读取数据需要手动调用 read 函数，并且是在可读流触发了 readable 事件之后表示流可读之后才能调用 read 函数进行数据读取。</p>
+<h4 id="流动模式"><a href="#流动模式" class="headerlink" title="流动模式"></a>流动模式</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> readStream = fs.createReadStream(<span class="string">'./small.txt'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//判断是否处于流动模式</span></span><br><span class="line"><span class="built_in">console</span>.log(readStream._readableState.flowing);  <span class="comment">// null</span></span><br><span class="line"></span><br><span class="line">readStream.on(<span class="string">'data'</span>, <span class="function">(<span class="params">chunk</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(chunk.toString());  <span class="comment">// 这里因为内容是英文，如果是中文内容需要设置编码模式</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(readStream._readableState.flowing); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，在设置了 data 事件回调之后，可读流的内部状态变量 flowing 变为了 true，说明当前流处于流动模式。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> readStream = fs.createReadStream(<span class="string">'./small.txt'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(readStream._readableState.flowing); <span class="comment">//判断是否处于流动模式, null</span></span><br><span class="line"></span><br><span class="line">readStream.pipe(process.stdout);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(readStream._readableState.flowing); <span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
+<p>这段代码结果与上面类似，内部状态变为了 true，说明 pipe 方法也可以让可读流变为流动模式。</p>
+<h4 id="暂停模式"><a href="#暂停模式" class="headerlink" title="暂停模式"></a>暂停模式</h4><figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">const fs = require(<span class="string">'fs'</span>);</span><br><span class="line">const readStream = fs.createReadStream(<span class="string">'./small.txt'</span>);</span><br><span class="line"></span><br><span class="line">console.<span class="built_in">log</span>(readStream.<span class="variable">_readableState</span>.flowing);  <span class="comment">// null</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 once 来绑定监听者回调，一方面避免 readable 事件的多次触发？一方面避免内存泄漏</span></span><br><span class="line">readStream.once(<span class="string">'readable'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">while</span>(chunk = readStream.read())&#123;</span><br><span class="line">        readStream.pause();</span><br><span class="line">        console.<span class="built_in">log</span>(readStream.<span class="variable">_readableState</span>.flowing); <span class="comment">// false</span></span><br><span class="line">        console.<span class="built_in">log</span>(chunk.<span class="built_in">toString</span>());</span><br><span class="line">        readStream.resume();</span><br><span class="line">        console.<span class="built_in">log</span>(readStream.<span class="variable">_readableState</span>.flowing); <span class="comment">// true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">console.<span class="built_in">log</span>(readStream.<span class="variable">_readableState</span>.flowing); <span class="comment">// null</span></span><br></pre></td></tr></table></figure>
+<p> 我们可以看到可读流的初始状态是 null, 如果没有设置 pipe 方法或者添加 data 事件的监听回调, 那么就一直都是 null, 但是如果我们使流的 pause 方法强制让流暂停读取数据, 那么内部状态值就变成 false, 如果调用 resume 方法又会让流变成流动模式.</p>
+<h4 id="两种模式的相互转换"><a href="#两种模式的相互转换" class="headerlink" title="两种模式的相互转换"></a>两种模式的相互转换</h4><p>提及这两种模式，我们会先提及这两个模式是如何相互转换的：首先来讲流动模式怎么转化到暂停模式，我们可以借助 pause 方法或者将 data 事件的监听回调全部移除或调用 unpipe 方法消除 pipe 函数的影响就可以将流转化为暂停模式.<br>对于暂停模式转化到流模式的话, 需要为流添加了 data 事件的监听者或者调用了 pipe 方法，那么流就会变为流动状态.<br>其实根据上面的例子我们就可以看出, 流的初始状态是 null, 如果内部状态需要转变为 true, 或者说转化为流动模式,那么可以通过添加 data 事件回调, 调用 pipe, 调用 resume 方法等.而内部状态转变为 false 或者说转变为暂停模式, 可以通过移除 data 事件回调, 调用 unpipe 方法, 调用 pause 方法等.其实 stream 的两种形态就是流的两种使用方法.<br>或许会有人担心我们在创建了流之后才为流添加 data 事件回调, 会不会有一部分数据丢失? 实际上并不会, 流初始状态是 null, 所以不会立刻读取数据.</p>
+<p><em>注意 unpipe 函数调用如果没有传入参数,那么就会将所有之前 pipe 的流断开</em></p>
+<h3 id="Stream-可读流的三种状态"><a href="#Stream-可读流的三种状态" class="headerlink" title="Stream 可读流的三种状态"></a>Stream 可读流的三种状态</h3><p>对于可读流, 内部存储了一个变量来记录当前流是否处于流动模式, 其值分别是 null, false, true:<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">readStream</span><span class="selector-class">._readableState</span><span class="selector-class">.flowing</span></span><br></pre></td></tr></table></figure></p>
+<p>对于它的值的变化在上面的两种流模式的转化已经提及了, 这里就不再累述.</p>
+<h2 id="实现流"><a href="#实现流" class="headerlink" title="实现流"></a>实现流</h2><p>当我们谈及流的时候, 一方面是它的使用, 另一方面就是它的实现, 因为某些场景下我们需要为功能创建独特的流.</p>
+<h3 id="Readable-流的实现"><a href="#Readable-流的实现" class="headerlink" title="Readable 流的实现"></a>Readable 流的实现</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">const stream = require(<span class="symbol">'strea</span>m');</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyReadable</span> <span class="keyword">extends</span> <span class="title">stream</span>.<span class="title">Readable</span> </span>&#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        <span class="keyword">super</span>(options);</span><br><span class="line">        <span class="keyword">this</span>.count = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    _read(size) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.count === <span class="number">9</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.push(<span class="literal">null</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.push(<span class="keyword">this</span>.count.toString(), <span class="symbol">'utf</span>8');</span><br><span class="line">            <span class="keyword">this</span>.count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>上面的代码会创建出一个独特的可读流, 打印出数字 0-8. 如何读取数据在上面使用的章节已经讲过了，可以通过 data 事件或者监听 readable 后调用 read 函数进行数据读取。<br>注意，read 函数与实现类的时候的 _read 函数是不一样的，_read 是子类的私有方法，而 read 方法是给数据的消费者调用进而拿到数据的。<br>在 _read 方法内部是必须调用 push 方法将数据压入到可读流的缓冲区里面供下游读取数据的，而 _read 函数中的 size 参数是可以忽略的，它代表的就是读取数据块的大小。<br>可读流的两个事件需要注意，一个 data 事件用于当有数据压入流的缓冲区的时候会触发回调函数接受数据，一个是 end 事件是在可读流接受到 EOF 信号即数据结束时触发。</p>
+<h3 id="Writable-流的实现"><a href="#Writable-流的实现" class="headerlink" title="Writable 流的实现"></a>Writable 流的实现</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">const stream = require(<span class="symbol">'strea</span>m');</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyWritable</span> <span class="keyword">extends</span> <span class="title">stream</span>.<span class="title">Writable</span> </span>&#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        <span class="keyword">super</span>(options);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _write(buf, enc, next) &#123;</span><br><span class="line">        console.log(buf.toString());</span><br><span class="line">        process.nextTick(next);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与可读流的实现类似，实现可写流的时候需要实现一个内部方法 _write, 这个方法会在子类实例对象调用 write 的时候被调用，它接受三个参数，第一个参数就是写入的数据 buf， 第二个参数就是数据的编码模式 enc，第三个参数是一个函数，如果 _write 在函数中调用了这个 next 参数说明传入的数据已经做了处理，写入到底层了，可以继续写入数据了，而这个方法可以通过同步调用，也可以通过异步来调用。<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> writeStream = <span class="keyword">new</span> MyWritabler();</span><br><span class="line"></span><br><span class="line">writeStream.<span class="built_in">write</span>(<span class="string">'a'</span>);</span><br><span class="line">writeStream.<span class="built_in">write</span>(<span class="string">'b'</span>);</span><br><span class="line">writeStream.<span class="built_in">end</span>();</span><br></pre></td></tr></table></figure></p>
+<p>注意 write 是给调用者使用了，用于传入需要写入的数据，最后需要调用 end 方法表示已无数据传入。<br>对于可写流来说，有两个事件是需要注意的，一个是 drain 事件，一个是 finish 事件。finish 事件是在可写流的写入操作全部完成的时候触发，与可读流的 end 事件类似。而 drain 事件是在缓冲区被清空时，表示写入操作是允许的时候触发。</p>
+<h3 id="Duplex-流的实现"><a href="#Duplex-流的实现" class="headerlink" title="Duplex 流的实现"></a>Duplex 流的实现</h3><p>对于 Duplex 流来说，可以说它相当于可读流与可写流的一个 hub， 将两者进行结合，但是写入的数据与读取的数据没有任何的联系，典型的例子就是 net.Socket。<br>因此，实现一个 Duplex 流就是同时实现一个 writable 流与 reabable 流：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">const stream = require(<span class="symbol">'strea</span>m');</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDuplex</span> <span class="keyword">extends</span> <span class="title">stream</span>.<span class="title">Duplex</span> </span>&#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        <span class="keyword">super</span>(options);</span><br><span class="line">        <span class="keyword">this</span>.data = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    _read(size) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.data.length) &#123;</span><br><span class="line">            <span class="keyword">this</span>.push(<span class="literal">null</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.push(<span class="keyword">this</span>.data.pop());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    _write(buf, enc, next) &#123;</span><br><span class="line">        console.log(buf.toString());</span><br><span class="line">        process.nextTick(next);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，实现的 Duplex 流既有 _read 方法，也有 _write 方法，所以即可读又可写。</p>
+<h3 id="transform-流的实现"><a href="#transform-流的实现" class="headerlink" title="transform 流的实现"></a>transform 流的实现</h3><p>transform 流可以看做是一个特殊的 Duplex 流, transform 流的读取数据端与写入数据端是连通的，写入的数据经过处理之后会自动变为下游读取的数据, 典型的例子就是 zlib.createGzip 构造数据压缩流. 在实现一个 trangform 流的时候, 我们并不需要实现 _read 和 _write 方法, 而只需要实现特殊的 _transform 方法:<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">const stream = require(<span class="symbol">'strea</span>m');</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyTransform</span> <span class="keyword">extends</span> <span class="title">stream</span>.<span class="title">Transform</span> </span>&#123;</span><br><span class="line">    constructor(options) &#123;</span><br><span class="line">        <span class="keyword">super</span>(options);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    _transform (buf, enc, next) &#123;</span><br><span class="line">        console.log(buf.toString());</span><br><span class="line">        <span class="keyword">this</span>.push(buf);</span><br><span class="line">        process.nextTick(next);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    _flush(next) &#123;</span><br><span class="line">        <span class="keyword">this</span>.push(<span class="literal">null</span>);</span><br><span class="line">        process.nextTick(next);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>像上面的例子, 实现一个 transform 流只需要实现内部的 _transform 方法就可以, 代码中并没有对数据做任何的操作,只是简单地将数据使用 push 方法推入到缓冲区当中, 这里和可读流 readable 是类似的, 然后异步地启动 next 方法告诉上游数据已经写入到底层, 可以继续写入数据, 这里和 write 可写流是类似的. 而 _flush 函数更像是一个结束函数, 用于将剩余的数据一并推入到内部缓冲区内.</p>
+<h2 id="ObjectMode"><a href="#ObjectMode" class="headerlink" title="ObjectMode"></a>ObjectMode</h2><p>对于流来说, 它不仅仅可以处理 Buffer, String 这样的数据类型, 还能处理复杂的对象类型, 而我们只需要在使用的时候传入一个 ObjectMode 的参数就可以开启处理对象类型数据的模式. 而在 Javascript 中, 几乎所有的数据都源自对象, 因此, 有了 ObjectMode 流就可以处理几乎所有的数据.<br>所谓 ObjectMode 的意思就是允许流是一个对象，而非字节. 而对于可读流与可写流来说，这个参数的含义是不同的：<br>对于可读流来说，它的意思是下游从可读流中读到的数据是对象类型，对于可写流来说，从上游写入的数据可以是对象类型。<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">const stream = require(<span class="string">'stream'</span>);</span><br><span class="line"></span><br><span class="line">let <span class="keyword">source</span> = [<span class="string">'1'</span>, <span class="string">'2'</span>, &#123; a: <span class="string">'test'</span>, b: <span class="string">'stream'</span> &#125;];</span><br><span class="line">const <span class="keyword">read</span> = <span class="keyword">new</span> stream.Readable(&#123; </span><br><span class="line">    objectMode: <span class="keyword">true</span>,</span><br><span class="line">    <span class="keyword">read</span>: function(<span class="keyword">size</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">source</span>.length) &#123;</span><br><span class="line">            <span class="keyword">this</span>.<span class="keyword">push</span>(<span class="keyword">source</span>.<span class="keyword">pop</span>());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.<span class="keyword">push</span>(<span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">read</span>.on(<span class="string">'data'</span>, (buf) =&gt; &#123;</span><br><span class="line">    console.log(buf);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 上面的数据会原样输出，而不再是 Buffer &lt;&gt; 这样的形式</span></span><br></pre></td></tr></table></figure></p>
+<p>注意，上面的输出代码不能使用 read.pipe(process.stdout) 进行输出，因为 process.stdout 是一个可写流，而这个可写流并没有进行 objectMode 配置，是不可以接受对象类型的数据的，由此也可以看出对于可写流的 objectMode 配置是使流能够接受对象类型的值<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接使用上面的 read 流</span></span><br><span class="line">const <span class="keyword">write</span> = <span class="keyword">new</span> stream.Writable(&#123;</span><br><span class="line">    objectMode: <span class="keyword">true</span>,</span><br><span class="line">    <span class="keyword">write</span>: (buf, enc, <span class="keyword">next</span>) =&gt; &#123;</span><br><span class="line">        console.log(buf);</span><br><span class="line">        process.nextTick(<span class="keyword">next</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">read</span>.pipe(<span class="keyword">write</span>);</span><br></pre></td></tr></table></figure></p>
+<p>在可读流与可写流来说，ObjectMode 都是默认对本流行为起作用的，但是作为包含可读流与可写流两种模式的 Duplex 流来说，其实可以单独对 objectMode 进行配置:<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">const</span> <span class="string">duplex</span> <span class="string">=</span> <span class="string">new</span> <span class="string">stream.Duplex(&#123;</span></span><br><span class="line"><span class="attr">    readableObjectMode:</span> <span class="literal">true</span><span class="string">,</span></span><br><span class="line"><span class="attr">    writableObjectMode:</span> <span class="literal">true</span></span><br><span class="line"><span class="string">&#125;);</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="背压机制与-hightWaterMark"><a href="#背压机制与-hightWaterMark" class="headerlink" title="背压机制与 hightWaterMark"></a>背压机制与 hightWaterMark</h2><p>所谓背压机制就是防止出现上下游两端处理数据速度差异较大导致大量数据堆积在内存中导致进程崩溃的情况出现的机制。在上面的例子中，我们都没有使用背压机制，问题在于如果文件大小过大，底层的 socket 来不及读或写，那么就会出现大量的数据积压在内存中。<br>而背压机制的实现在 stream 中主要是依靠事件与 highWaterMark。highWaterMark 从字面意思是指高水位，而 stream 的流概念可以看作是一个现实的例子：流的两端是两个蓄水池，中间使用一根管子来将两端的水进行传输，那根管子就是 node 进程中的流，hightWaterMark 就是用来限制这个管子最多可以存储多少水量而不至于传输量过大导致水管破裂(进程崩溃).<br>而在平时使用的时候，highWaterMark 的默认值是 16kb， 也就是说一个流在传输数据过程中，如果瞬间数据量或者由于处理速度不当累积数据超过 16kb，那么流就会暂停流的生产端的动作，直到消费端将缓存区的数据消费完才会继续生产数据。<br>在流中有一些变量存储了当前的流的重要数据，看下面的例子：<br><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const stream = require('stream');</span><br><span class="line">const read = stream.Readable(&#123; highWaterMark: '<span class="number">1</span>mb' &#125;);</span><br><span class="line">const <span class="keyword">state</span> = read._readableState;</span><br><span class="line">const buffer = <span class="keyword">state</span>.buffer; // 一个 Buffer 数组，充当缓冲区</span><br><span class="line">const length = <span class="keyword">state</span>.length; // 注意 length 不表示 buffer 的长度，而是指 buffer 中所有数据的字节数，类似 Buffer.byteLength</span><br></pre></td></tr></table></figure></p>
+<p>那么，问题在于我们怎么知道缓存区的数据超过了 16kb 或者说消费端处理数据速度过慢需要暂停生产数据呢？<br>我们主要是依靠 stream 的内部的方法来判断的: 如果可写流的 write 方法或者可读流的 push 方法返回值为 false 的时候，说明内部的缓存的字节数大于的设定的 hightWaterMark, 此时我们应该暂停流的读取或写入操作。<br>一个可写流的背压简单例子：<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Read = fs.createReadStream(<span class="string">'./filePath'</span>);</span><br><span class="line"><span class="keyword">const</span> Write = fs.createWriteStream(<span class="string">'./dest'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> readData = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> buf;</span><br><span class="line">    <span class="keyword">while</span>(buf = Read.read()) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">continue</span> = Write.write(buf);</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">continue</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Write.once(<span class="string">'drain'</span>, readData);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Read.on(<span class="string">'readable'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    readData();   </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h2 id="多路复用与多路分解"><a href="#多路复用与多路分解" class="headerlink" title="多路复用与多路分解"></a>多路复用与多路分解</h2><p>多路复用与多路分解在很多领域都会有相似的概念，但是在 node Stream 中，我们的用意在于将多个 stream 的数据通过一个 stream 传送到另一端并且由另一端进行数据的分解。这个部分最重要的在于定好协议,比如说在一个 buffer 数据中前 1 位说明是哪个 stream 的数据，然后前 N 位数据说明数据的长度，然后最好接上数据块，这样将数据就可以通过一个 stream 中传送然后在另外一端重新进行分配。</p>
+<h2 id="Stream-In-Action"><a href="#Stream-In-Action" class="headerlink" title="Stream In Action"></a>Stream In Action</h2><p>在实际的场景中，我们可能需要对某几个可读流都做同一个操作，就比如将多个文件合并到一个文件里面，那么我们会建立多个可读流，这个时候我们可能就需要合并可读流:<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> stream = <span class="built_in">require</span>(<span class="string">'stream'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> handleStream = <span class="function">(<span class="params">read, dest</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        read.on(<span class="string">'end'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            resolve();</span><br><span class="line">        &#125;);</span><br><span class="line">        read.on(<span class="string">'error'</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">            reject(err);</span><br><span class="line">        &#125;);</span><br><span class="line">        read.pipe(dest, &#123; end: <span class="literal">false</span> &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">concat</span> (<span class="params">streams, dest, callback</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!(dest <span class="keyword">instanceof</span> stream.Writable)) dest = fs.WriteStream(dest);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> s of streams) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!(s <span class="keyword">instanceof</span> stream.Readable)) s = fs.createReadStream(s);</span><br><span class="line">        <span class="keyword">await</span> handleStream(s, dest);</span><br><span class="line">    &#125;</span><br><span class="line">    callback();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试代码如下:<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.time(<span class="string">'streamConcat'</span>);</span><br><span class="line">concat([<span class="string">'./logs/a.log'</span>, <span class="string">'./logs/b.log'</span>], <span class="string">'./logs/dest.log'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">     <span class="built_in">console</span>.log(<span class="string">'all file concat!'</span>);</span><br><span class="line">     <span class="built_in">console</span>.timeEnd(<span class="string">'streamConcat'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>这样可以看到目标文件已经将两个文件合并了，而且内容是按照顺序的。<br>但是有些时候我们对于文件内容不在乎内容的顺序，只是希望单纯地将内容合并起来，那么我们可以发挥并行的优势:<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> stream = <span class="built_in">require</span>(<span class="string">'stream'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> parallel = <span class="function">(<span class="params">...streams</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(streams[<span class="number">0</span>])) streams = streams[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> streamInstance = <span class="keyword">new</span> stream.Stream();</span><br><span class="line">    streamInstance.writable = stream.readable = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> streamCount = streams.length;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bindEvent</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> already = <span class="literal">false</span>;</span><br><span class="line">            item.on(event, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (already) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                already = <span class="literal">true</span>;</span><br><span class="line">                count++;</span><br><span class="line">                <span class="keyword">if</span> (count &gt;= streamCount) &#123;</span><br><span class="line">                    streamInstance.emit(event);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> bindEndEvent = bindEvent(<span class="string">'end'</span>);</span><br><span class="line">    <span class="keyword">let</span> bindFinishEvent = bindEvent(<span class="string">'finish'</span>);</span><br><span class="line"></span><br><span class="line">    streams.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">        item.pipe(streamInstance, &#123; end: <span class="literal">false</span> &#125;);</span><br><span class="line">        bindEndEvent(item);</span><br><span class="line">        bindFinishEvent(item);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    streamInstance.write = <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        streamInstance.emit(<span class="string">'data'</span>, data);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    streamInstance.destory = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        items.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">            item.destory &amp;&amp; item.destory();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> streamInstance;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码可以看到我们将多个流合并，并且将他们的数据异步并行地合并到目的流中，如果本地跑下面这段测试脚本:<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> read1 = fs.createReadStream(<span class="string">'./bigA.file'</span>);</span><br><span class="line"><span class="keyword">const</span> read2 = fs.createReadStream(<span class="string">'./bigB.file'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> write = fs.createWriteStream(<span class="string">'./testParallel'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">'streamParallel'</span>);</span><br><span class="line">parallel(read1, read2).pipe(write).on(<span class="string">'finish'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'end'</span>);</span><br><span class="line">    <span class="built_in">console</span>.timeEnd(<span class="string">'streamParallel'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>并且使用本地的 diff 工具来查看就会发现与 concat 出来的文件不一样，parallel 流的文件内容是不按顺序的，而且在合并速度上也有差异，parallel 的速度会快于 concat:<br><img src="http://img.ijarvis.cn/80ae17f460184316a4603698e2e489a9_de5c1028c479b5af00521ff2f5323c27.jpg" alt=""></p>
+<p><img src="http://img.ijarvis.cn/8195b426831849428762799bbc7347e2_4190f79d57907a8cfd4cefbd43162f2d.jpg" alt=""><br>如果你担心合并流的数量过多会导致一些问题，你还可以建立一个限制的并行流，比如将上面的 parallel 代码改为如下:<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> stream = <span class="built_in">require</span>(<span class="string">'stream'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> parallel = <span class="function">(<span class="params">concurrency, ...streams</span>) =&gt;</span> &#123;</span><br><span class="line">    ... <span class="comment">//头部代码如 parallel 代码</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> streamCount = streams.length;</span><br><span class="line">    <span class="keyword">let</span> running = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bindEvent</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> already = <span class="literal">false</span>;</span><br><span class="line">            item.on(event, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (already) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                already = <span class="literal">true</span>;</span><br><span class="line">                count++;</span><br><span class="line">                running--;</span><br><span class="line">                addStream(streams[index]);</span><br><span class="line">                <span class="keyword">if</span> (count &gt;= streamCount) &#123;</span><br><span class="line">                    streamInstance.emit(event);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">addStream</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (running &gt;= concurrency || !item) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        item.pipe(streamInstance, &#123; end: <span class="literal">false</span> &#125;);</span><br><span class="line">        bindEndEvent(item);</span><br><span class="line">        bindFinishEvent(item);</span><br><span class="line">        running++;</span><br><span class="line">        index++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> bindEndEvent = bindEvent(<span class="string">'end'</span>);</span><br><span class="line">    <span class="keyword">let</span> bindFinishEvent = bindEvent(<span class="string">'finish'</span>);</span><br><span class="line">    streams.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (running &gt;= concurrency) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        addStream(item);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    ... <span class="comment">// 剩下代码与 parallel 一致</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试代码: 限制同时执行的流数量为 1 </span></span><br><span class="line">parallel(<span class="number">1</span>, read1, read2).pipe(write).on(<span class="string">'finish'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'end'</span>);</span><br><span class="line">    <span class="built_in">console</span>.timeEnd(<span class="string">'streamParallel'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>这个时候你会发现由于设置并行流的数量为 1，所以得到的文件内容是与 concat 一致的而且执行效率是差不多的。</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="多个-pipe-的流动速度"><a href="#多个-pipe-的流动速度" class="headerlink" title="多个 pipe 的流动速度"></a>多个 pipe 的流动速度</h3><p>如果一个可读流有多个 pipe，那么这个管道是由读取数据最弱的下游来决定读取数据的速度的：<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> stream = <span class="built_in">require</span>(<span class="string">'stream'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> read = fs.createReadStream(<span class="string">'./1.pdf'</span>);</span><br><span class="line"><span class="keyword">const</span> write1 = fs.createWriteStream(<span class="string">'./2.pdf'</span>);</span><br><span class="line"><span class="keyword">const</span> write2 = fs.createWriteStream(<span class="string">'./3.pdf'</span>);</span><br><span class="line"><span class="keyword">const</span> pass = <span class="keyword">new</span> stream.PassThrough(&#123; highWaterMark: <span class="number">0</span> &#125;);</span><br><span class="line"></span><br><span class="line">read.pipe(write1).on(<span class="string">'finish'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123; <span class="built_in">console</span>.log(<span class="string">'write1 done'</span>, <span class="keyword">new</span> <span class="built_in">Date</span>()); &#125;);</span><br><span class="line">read.pipe(pass).on(<span class="string">'finish'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123; <span class="built_in">console</span>.log(<span class="string">'pass is done'</span>, <span class="keyword">new</span> <span class="built_in">Date</span>()); &#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(pass.readableHighWaterMark);</span><br><span class="line"><span class="built_in">console</span>.log(pass.writableHighWaterMark);</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(pass._readableState.buffer);</span><br><span class="line">    pass.pipe(write2).on(<span class="string">'finish'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123; <span class="built_in">console</span>.log(<span class="string">'write2 is done'</span>, <span class="keyword">new</span> <span class="built_in">Date</span>()); &#125;);</span><br><span class="line">&#125;, <span class="number">10000</span>);</span><br></pre></td></tr></table></figure></p>
+<p>打印的时间基本是同时的，即使设置了 10 秒之后才处理 write2 可写流。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://github.com/zhangxiang958/Node.js-Design-Patterns-Second-Edition/blob/master/Chapter5-Coding%20with%20Streams.md" target="_blank" rel="noopener">https://github.com/zhangxiang958/Node.js-Design-Patterns-Second-Edition/blob/master/Chapter5-Coding%20with%20Streams.md</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2018/09/01/理解 Node.js Stream 模块/" title="理解 Node.js Stream 模块">http://zhangxiang958.github.io/2018/09/01/理解 Node.js Stream 模块/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/15/你所需要知道的关于 Node 模块的一切/" rel="next" title="Node.js 中的模块机制">
+                <i class="fa fa-chevron-left"></i> Node.js 中的模块机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#静态服务器的搭建"><span class="nav-number">1.</span> <span class="nav-text">静态服务器的搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-fs-readFile-搭建静态服务器"><span class="nav-number">1.1.</span> <span class="nav-text">使用 fs.readFile 搭建静态服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-Stream"><span class="nav-number">1.2.</span> <span class="nav-text">使用 Stream</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stream-的四种类型"><span class="nav-number">2.</span> <span class="nav-text">Stream 的四种类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可读流的模式与状态"><span class="nav-number">3.</span> <span class="nav-text">可读流的模式与状态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Stream-可读流的两种模式"><span class="nav-number">3.1.</span> <span class="nav-text">Stream 可读流的两种模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#流动模式"><span class="nav-number">3.1.1.</span> <span class="nav-text">流动模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#暂停模式"><span class="nav-number">3.1.2.</span> <span class="nav-text">暂停模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两种模式的相互转换"><span class="nav-number">3.1.3.</span> <span class="nav-text">两种模式的相互转换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stream-可读流的三种状态"><span class="nav-number">3.2.</span> <span class="nav-text">Stream 可读流的三种状态</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现流"><span class="nav-number">4.</span> <span class="nav-text">实现流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Readable-流的实现"><span class="nav-number">4.1.</span> <span class="nav-text">Readable 流的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Writable-流的实现"><span class="nav-number">4.2.</span> <span class="nav-text">Writable 流的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Duplex-流的实现"><span class="nav-number">4.3.</span> <span class="nav-text">Duplex 流的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transform-流的实现"><span class="nav-number">4.4.</span> <span class="nav-text">transform 流的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ObjectMode"><span class="nav-number">5.</span> <span class="nav-text">ObjectMode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背压机制与-hightWaterMark"><span class="nav-number">6.</span> <span class="nav-text">背压机制与 hightWaterMark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多路复用与多路分解"><span class="nav-number">7.</span> <span class="nav-text">多路复用与多路分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stream-In-Action"><span class="nav-number">8.</span> <span class="nav-text">Stream In Action</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">9.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多个-pipe-的流动速度"><span class="nav-number">9.1.</span> <span class="nav-text">多个 pipe 的流动速度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">10.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

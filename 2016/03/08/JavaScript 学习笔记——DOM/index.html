@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这是本人学习 Javascript 的学习笔记，主要讲述 DOM 及 DOM 2 , 3 级的拓展。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 学习笔记——DOM">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/03/08/JavaScript 学习笔记——DOM/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="这是本人学习 Javascript 的学习笔记，主要讲述 DOM 及 DOM 2 , 3 级的拓展。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="1979-11-29T16:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 学习笔记——DOM">
+<meta name="twitter:description" content="这是本人学习 Javascript 的学习笔记，主要讲述 DOM 及 DOM 2 , 3 级的拓展。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2016/03/08/JavaScript 学习笔记——DOM/">
+
+
+
+
+
+  <title>JavaScript 学习笔记——DOM | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2016/03/08/JavaScript 学习笔记——DOM/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">JavaScript 学习笔记——DOM</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-08T15:15:24+08:00">
+                2016-03-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是本人学习 Javascript 的学习笔记，主要讲述 DOM 及 DOM 2 , 3 级的拓展。<br><a id="more"></a></p>
+<h2 id="DOM-是什么？"><a href="#DOM-是什么？" class="headerlink" title="DOM 是什么？"></a>DOM 是什么？</h2><p>DOM 是 JavaScript 的三大组成部分之一，它是针对 XML 的一个 API，用于操作网页的组件。</p>
+<p>##DOM 中的节点操作及其应用<br>DOM 中的节点类型比较多，在这里挑选了比较重要的几个类型来详细讲述。</p>
+<p>###Node 类型<br>Node 类型获取的都是节点，包括文本节点，元素节点，属性节点等。其中我们经常用到的是 NodeType 和<br>NodeValue 这两个属性。在判断节点类型的时候，应该使用它的数值判断而不是字符串类型判断，因为数值<br>判断是兼容所有浏览器的。<br>在对 Node 类型的操作上，我们很多属性来移动节点，parentNode，childNodes，nextSibling，previousSibling<br>这些属性可以判断两个节点是否有同一个父节点，比如 parentNode，而对于兄弟节点，可以使用 nextSibling 和<br>previousSibling，而 childNodes 获取的是一个类数组对象，包含了该节点的所有子节点。<br>在操作方法上，我们有 appendChild() 方法， insertBefore() 方法，看到方法名就知道，其实这两个方法都是<br>用于插入节点的，appendChild 会在父节点的最后一个节点之后插入节点，而 insertBefore 会在该节点之前插<br>入节点，但是很多人会有这样的需求，就是 insertAfter ，但是 Node 并没有这样的方法，所以需要我们自己去<br>实现，下面给出实现代码：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">function <span class="title">insertAfter</span><span class="params">(<span class="keyword">target</span>, <span class="keyword">new</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">new</span> == <span class="keyword">null</span>) <span class="keyword">return</span> ;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">target</span> == <span class="keyword">target</span>.parentNode.lastChild)&#123;</span><br><span class="line">        <span class="keyword">target</span>.parent.appendChild(<span class="keyword">new</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">target</span>.nextSibling.insertBefore(<span class="keyword">new</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###Document 类型<br>我们如果要对 DOM 进行操作，那么一定少不了 document.getElementsByTagName() 和 document.getElementById().<br>getElementsByTagName() 获取的是一个 NodeList 对象，这是一个类数组对象，它是动态的，所以在使用递归的时候<br>应该建立一个快照。还有一个常用的方法就是 getElementsByName() ，通过 name 值获取一批元素，但是值得注意的<br>是浏览器可能会返回一些错误的信息，因为有些浏览器会误将表单的 name 值与一些元素的 id 值混淆，所以为了避<br>免这样的错误，就应当避免表单的 name 值与元素的 id 重合。</p>
+<p>###Element 类型<br>Element 类型恐怕是我们见得最多并且是操作的最多的元素了。通常我们需要操作 Element 类型的样式，取得它的<br>类名，id 名，取得特性 getAttribute()，设置属性 setAttribute()，移除属性 removeAttribute() 。</p>
+<p>###Text 类型<br>创建一个文本节点，我们会使用 createTextNode() 方法，而使用这样的方法创建节点，浏览器在解析的时候不会<br>创建相邻的文本节点，因此如果需要相邻的文本节点，可以在父元素上使用 noemalize() 方法。<br>需要分割文本节点的时候使用 solitText() 方法。</p>
+<p>###Attr 类型<br>我们基本上很少直接操作 attr 类型节点。一般会使用 getAttribute(), setAttribute(), removeAttribute()<br>这三个方法去获取元素的属性。而这三个方法通常是用于取自定义的属性，而不是一些公认的属性比如 className等。</p>
+<p>###DocumentFragment 类型<br>这是一个文档碎片类型，它是一个轻量级的节点，不属于文档树，没有相对应的标签。但是这个类型很大的一个<br>作用就是它作为一个 DOM 片段仓库，可以包含与控制节点，将一些繁琐的 DOM 操作先集合到它身上，然后将它通过 appendChild()方法插入到文档中，但是它并不会插入到文档节点中，而是将它的子孙后代插入到文档中。<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> frag = <span class="built_in">document</span>.createDocumentFragment();</span><br><span class="line"><span class="keyword">var</span> div = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</span><br><span class="line"><span class="keyword">var</span> text = <span class="built_in">document</span>.createTextNode(<span class="string">"Jarvis"</span>);</span><br><span class="line"><span class="keyword">var</span> target = <span class="built_in">document</span>.getElementById(<span class="string">"test"</span>);</span><br><span class="line">div.appendChild(text);</span><br><span class="line">frag.appendChild(div);</span><br><span class="line">target.appendChild(frag);</span><br></pre></td></tr></table></figure></p>
+<p>这样的话可以减少重绘和重排，减轻浏览器性能消耗。</p>
+<h2 id="DOM-拓展的-API"><a href="#DOM-拓展的-API" class="headerlink" title="DOM 拓展的 API"></a>DOM 拓展的 API</h2><p>###querySelector 和 querySelectorAll<br>这部分是主要的拓展 API，用于选择元素，querySelector 返回的是第一个元素，而 querySelectorAll 是返回<br>一个 NodeList 对象。这里不得不说的就是关于常用的类库 JQuery 的选择器部分，它的大致思想就是获取一个<br>选择符，从而快速选择元素，抛弃的 getElementById 和 getElementsByTagName 这样繁琐的方法。<br>下面给出我自己实现的一个小的仿 JQuery 选择器：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">query</span>(<span class="params">selector, root</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">var</span> element = [];  <span class="comment">//存放元素列表</span></span><br><span class="line">   <span class="keyword">var</span> allChildren = <span class="literal">null</span>;</span><br><span class="line">   root = root || <span class="built_in">document</span>;</span><br><span class="line">   <span class="keyword">switch</span>(selector[<span class="number">0</span>])&#123;</span><br><span class="line">       <span class="keyword">case</span> <span class="string">"#"</span>:  <span class="comment">//id 选择器</span></span><br><span class="line">           element.push(root.getElementById(selector.substring(<span class="number">1</span>)));</span><br><span class="line">           <span class="keyword">break</span>;</span><br><span class="line">       <span class="keyword">case</span> <span class="string">"."</span>: <span class="comment">//类选择器</span></span><br><span class="line">           <span class="keyword">if</span>(root.getElmentsByClassName)&#123;  <span class="comment">//如果支持 getElementsByClassName 方法</span></span><br><span class="line">               element = root.getElementsByClassName(selector.subtring(<span class="number">1</span>));</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="keyword">var</span> classMode = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">"\\b"</span> + selector.substring(<span class="number">1</span>) + <span class="string">"\\b"</span>);</span><br><span class="line">               allChildren = root.getElementsByTagName(<span class="string">"*"</span>);</span><br><span class="line">               <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, len = allChildren.length; i &lt; len; i++)&#123;</span><br><span class="line">                   <span class="keyword">if</span>(classMode.test(allChildren[i].className))&#123;</span><br><span class="line">                       element.push(allChildren[i]);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">break</span>;</span><br><span class="line">       <span class="keyword">case</span> <span class="string">"["</span>:  <span class="comment">//属性选择器</span></span><br><span class="line">           <span class="keyword">if</span>(selector.indexOf(<span class="string">" "</span>) === <span class="number">-1</span>)&#123;  <span class="comment">//只有属性名</span></span><br><span class="line">               allChildren = root.getElementsByTagName(<span class="string">"*"</span>);</span><br><span class="line">               <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span> , len = allChildren.length; i &lt; len; i++) &#123;</span><br><span class="line">                   <span class="keyword">if</span>(allChildren[i].getAttribute(selector.splice(<span class="number">1</span>,<span class="number">-1</span>)) !== <span class="literal">null</span>) &#123;</span><br><span class="line">                       element.push(allChildren[i]);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;  <span class="comment">//既有属性名也有属性值</span></span><br><span class="line">               <span class="keyword">var</span> index = selector.indexOf(<span class="string">"="</span>);</span><br><span class="line">               allChildren = root.getElementsByTagName(<span class="string">"*"</span>);</span><br><span class="line">               <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span> , len = allChildren.length; i &lt; len; i++) &#123;</span><br><span class="line">                   <span class="keyword">if</span>(allChildren[i].getAttribute(selector.splice(<span class="number">1</span>,index)) === selector(index+<span class="number">1</span>, <span class="number">-1</span>)) &#123;</span><br><span class="line">                       element.push(allChildren[i]);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">break</span>;</span><br><span class="line">       <span class="keyword">default</span>: </span><br><span class="line">           element = root.getElementsByTagName(seclector);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> element;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">$</span>(<span class="params">selector</span>)</span>&#123;</span><br><span class="line">   <span class="keyword">if</span>(selector == <span class="built_in">document</span>) &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="built_in">document</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   selector.trim();  <span class="comment">//去除选择符前后的空格</span></span><br><span class="line">   <span class="keyword">if</span>(selector.indexOf(<span class="string">" "</span>) !== <span class="number">-1</span> )&#123;  <span class="comment">//如果有后代</span></span><br><span class="line">       <span class="keyword">var</span> selectorAll = selector.split(<span class="string">" "</span>);</span><br><span class="line">       <span class="keyword">return</span> query(selectorAll[<span class="number">1</span>], query(sectorAll[<span class="number">0</span>])[<span class="number">0</span>])[<span class="number">0</span>];</span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> query(selector,<span class="built_in">document</span>)[<span class="number">0</span>];</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>##DOM 2 和 3 级<br>DOM 1 ： dom core 和 dom html  映射文档结构<br>DOM 2 ： dom views 和 dom events 和 dom style 和 dom 遍历和范围<br>DOM 3 ：dom load and save 和 dom validation<br>元素大小这一部分的知识非常引人注意。</p>
+<ol>
+<li>偏移量，是指用户可见的元素的大小，包括 offsetWidth 和 offsetHeight.</li>
+<li>客户区，是指内边距和内容区的大小。</li>
+<li>滚动大小，scrollTop 是指可滚动元素上方被隐藏的像素，scrollWidth是指可滚动元素的原宽度。</li>
+<li>offsetTop 和 offsetLeft 是指元素到最近的包含块的距离</li>
+</ol>
+<p>##理解 DOM 的性能问题<br>理解 DOM ，最重要的就是理解它的性能问题。因为 NodeList 对象， HTMLCollection 对象等是动态的，不断更新的。<br>如果我们经常操作他们，浏览器每次都要重新更新一次，会造成性能问题。因此减少对上面两个对象的访问是对性能<br>优化的一步，最常用的操作就是将要访问的 NodeList 对象， HTMLCollection 对象用变量存储起来。<br>我们经常说 DOM 很慢，倒不是说操作这些对象很慢，而是操作这些对象会导致浏览器的重绘或重排行为，会对渲染，<br>性能造成很大损耗。为了减少这些行为，例如我们可以将一些 DOM 操作集合起来，最后再插入到 DOM 树里面，就是<br>通过上面所说的 DocumentFragment 对象来作为 DOM 操作的 “ 仓库 ”，减少实际操作 DOM 的行为。</p>
+<p>###DOM 优化<br>下面举出一些编写代码时候的建议，可以尽可能地优化性能。</p>
+<ol>
+<li>尽量将修改样式的代码批量操作，例如使用 cssText 属性，批量修改。</li>
+<li>将大量的 DOM 节点插入工作放在一个离线的 DOM 元素，比如 DocumentFragment 对象。</li>
+<li>对于访问的需要计算的值，应该存进一个快照里面，例如将元素的 offsetHeight,offsetLeft 等的这些属性。</li>
+</ol>
+<h3 id="DOM-的未来"><a href="#DOM-的未来" class="headerlink" title="DOM 的未来"></a>DOM 的未来</h3><p>即使我们上面采取了一系列的措施，DOM 的性能问题还是很庞大，其原因在于每一个 DOM 元素都有一个庞大的<br>原型链，在创建元素的时候，原型链会为它添加了大量的属性，因此 DOM 的性能问题是非常头疼的。因此未来的<br>方向应该会是使用例如 AngularJS 这样的 MVVM 框架来编写网页。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2016/03/08/JavaScript 学习笔记——DOM/" title="JavaScript 学习笔记——DOM">http://zhangxiang958.github.io/2016/03/08/JavaScript 学习笔记——DOM/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/27/JavaScript 学习笔记——数据类型及应用/" rel="next" title="JavaScript 学习笔记——数据类型及应用">
+                <i class="fa fa-chevron-left"></i> JavaScript 学习笔记——数据类型及应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/13/JavaScript 学习笔记——BOM/" rel="prev" title="JavaScript 学习笔记——BOM">
+                JavaScript 学习笔记——BOM <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM-是什么？"><span class="nav-number">1.</span> <span class="nav-text">DOM 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM-拓展的-API"><span class="nav-number">2.</span> <span class="nav-text">DOM 拓展的 API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-的未来"><span class="nav-number">2.1.</span> <span class="nav-text">DOM 的未来</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

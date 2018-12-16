@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在之前使用 React 做项目的时候, 由于时间比较紧, 对于项目中需要用到弹出框(模态框)的组件, 全部使用了 DOM 操作来达到视觉效果, 达到目的, 但是这样代码非常不优雅, 不符合 React 的思想, 因此在完成项目之后, 仔细研究了如何在组件中创建一个模态框 Modal.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Modal In React">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/04/05/Modal In React/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="在之前使用 React 做项目的时候, 由于时间比较紧, 对于项目中需要用到弹出框(模态框)的组件, 全部使用了 DOM 操作来达到视觉效果, 达到目的, 但是这样代码非常不优雅, 不符合 React 的思想, 因此在完成项目之后, 仔细研究了如何在组件中创建一个模态框 Modal.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-09T16:43:06.341Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Modal In React">
+<meta name="twitter:description" content="在之前使用 React 做项目的时候, 由于时间比较紧, 对于项目中需要用到弹出框(模态框)的组件, 全部使用了 DOM 操作来达到视觉效果, 达到目的, 但是这样代码非常不优雅, 不符合 React 的思想, 因此在完成项目之后, 仔细研究了如何在组件中创建一个模态框 Modal.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2017/04/05/Modal In React/">
+
+
+
+
+
+  <title>Modal In React | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/04/05/Modal In React/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Modal In React</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-05T14:30:24+08:00">
+                2017-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index">
+                    <span itemprop="name">React</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在之前使用 React 做项目的时候, 由于时间比较紧, 对于项目中需要用到弹出框(模态框)的组件, 全部使用了 DOM 操作来<br>达到视觉效果, 达到目的, 但是这样代码非常不优雅, 不符合 React 的思想, 因此在完成项目之后, 仔细研究了如何在组<br>件中创建一个模态框 Modal.<br><a id="more"></a></p>
+<p>##技术难点<br>Dialog 的难点在于这个 div 通常需要放置到 body 标签下, 需要的时候插入到 body 底部, 不需要的时候将这个模态框移<br>除. 但是在 React 中, DOM 结构是以组件的形式来封装的, 那么换言之, 模态框不能脱离组件而存在于 body 中, 如果直<br>接将模态框放在 body 中, 又不优雅并且复用性低.</p>
+<p>##解决方案</p>
+<p>###组件思路<br>根据我自己的经验, 如果一来就说内部实现逻辑会造成混乱, 所以先说调用的形式<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConfirmButton</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    constructor(props)&#123;</span><br><span class="line">        <span class="keyword">super</span>(props);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">this</span>.state = &#123;</span><br><span class="line">            show: <span class="literal">false</span>   <span class="comment">//控制 Modal 组件的显示或隐藏</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    handleHide()&#123;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123; show: <span class="literal">false</span> &#125;);  <span class="comment">//使用 this.state.show 来控制显隐</span></span><br><span class="line">        <span class="keyword">this</span>.<span class="type">Modal</span>.onHide();           <span class="comment">//或者直接调用模态框的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    handleShow()&#123;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123; show: <span class="literal">true</span> &#125;);  <span class="comment">//使用 this.state.show 来控制显隐</span></span><br><span class="line">        <span class="keyword">this</span>.<span class="type">Modal</span>.onShow();           <span class="comment">//或者直接调用模态框的方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;button onClick=&#123;<span class="keyword">this</span>.handleShow.bind(<span class="keyword">this</span>)&#125;&gt;confirm&lt;/button&gt;</span><br><span class="line">    </span><br><span class="line">        &lt;<span class="type">Modal</span></span><br><span class="line">            ref=&#123;(ref) =&gt; <span class="keyword">this</span>.<span class="type">Modal</span> = ref&#125;&gt;</span><br><span class="line">            &#123;<span class="comment">/*像下面一样, modal 组件里面是 DOM 结构和封装的组件都是可以的 */</span>&#125;</span><br><span class="line">            &lt;div&gt;modal&lt;/div&gt;</span><br><span class="line">            &#123;<span class="comment">/*</span></span><br><span class="line"><span class="comment">                or</span></span><br><span class="line"><span class="comment">                &lt;Modalcontent hide=&#123;this.handleHide.bind(this)&#125;/&gt;</span></span><br><span class="line"><span class="comment">            */</span>&#125;</span><br><span class="line">        &lt;/<span class="type">Modal</span>&gt;</span><br><span class="line">    );    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Modal 组件就是我们实现的 modal 抽象高阶组件了, 对调用方式清晰了之后, 我们需要实现的就是 Modal 内部, 而内部<br>关键点在于如何将 Modal 组件下的 DOM 结构或者子组件包裹在一个容器中并插到 body 的底部呢?</p>
+<p>###Modal 内部实现<br>综上, 我们会将模态框的行为抽象, 抽像成一个高阶的组件包着视觉组件.<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; from <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM from <span class="string">'react-dom'</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Modal</span> <span class="title">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(props)&#123;</span><br><span class="line">        <span class="keyword">super</span>(props);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">this</span>.state = &#123;</span><br><span class="line">            state: <span class="keyword">this</span>.props.show</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//显示 modal 的方法</span></span><br><span class="line">    onShow()&#123;</span><br><span class="line">        <span class="keyword">this</span>.modal = document.createElement(<span class="string">'div'</span>);</span><br><span class="line">        <span class="keyword">this</span>.modal.style.cssText = <span class="string">'position: absolute; top: 0; right: 0; bottom: 0; left: 0; background-color: rgba(0, 0, 0, 0.3)'</span>; <span class="comment">//在插入之前做 CSS 处理, 避免无谓的渲染, 也可以使用 css module 加入类名</span></span><br><span class="line">        document.body.appendChild(<span class="keyword">this</span>.modal);</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123; show: <span class="literal">true</span> &#125;);</span><br><span class="line">        <span class="comment">//核心方法</span></span><br><span class="line">        <span class="keyword">this</span>._renderLayer();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//隐藏 modal 的方法</span></span><br><span class="line">    onHide()&#123;</span><br><span class="line">        ReactDOM.unmountComponentAtNode(<span class="keyword">this</span>.modal);</span><br><span class="line">        document.body.removeChild(<span class="keyword">this</span>.modal);</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123; show: <span class="literal">false</span> &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//渲染方法</span></span><br><span class="line">    _renderLayer()&#123;</span><br><span class="line">        <span class="comment">//render the modal</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    render()&#123;</span><br><span class="line">        <span class="comment">//只是行为抽象, 不需要渲染 DOM 节点</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#123;<span class="comment">/*</span></span><br><span class="line"><span class="comment">            or</span></span><br><span class="line"><span class="comment">            return React.DOM.div(this.props);</span></span><br><span class="line"><span class="comment">        */</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面就是简略版的 modal 组件的内部, 包含了两个方法, 在调用 modal 组件的时候, 可以使用 ref 暴露方法来调用.<br>而对于 _renderLayer 方法, 问题在于我们已经创建了一个 body 下的 div 了, 我们怎样才能将子组件与 DOM 结构<br>渲染到这个 div 中呢?</p>
+<p>####使用 unstable_renderSubtreeIntoContainer<br> 答案是使用 React 中的一个不稳定的 API: ReactDOM.unstable_renderSubtreeIntoContainer(parentComponent<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先说明 ReactDOM.unstable_renderSubtreeIntoContainer(); 的几个参数作用</span></span><br><span class="line"><span class="keyword">this</span>.container = document.createElement(<span class="string">'div'</span>);</span><br><span class="line">document.body.appendChild(<span class="keyword">this</span>.container);</span><br><span class="line"></span><br><span class="line">_renderLayer()&#123;</span><br><span class="line">    ReactDOM.unstable_renderSubtreeIntoCiontainer(</span><br><span class="line">        <span class="keyword">this</span>,                 <span class="comment">//一般填 this, 父组件</span></span><br><span class="line">        <span class="keyword">this</span>.props.children,  <span class="comment">//组件中的子组件</span></span><br><span class="line">        <span class="keyword">this</span>.container,      <span class="comment">//容器 div, 包裹子组件</span></span><br><span class="line">        callback            <span class="comment">//回调(可空缺)</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用这个 API,将 Modal 组件下的子组件指定地渲染到我们需要的容器中, 也就是 this.modal, 这样就可以达到目的了.</p>
+<p>####使用 ReactDOM<br>在实现中发现有另外一种方法, 就是使用 ReactDOM.render();<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">_renderLayer()&#123;</span><br><span class="line">    ReactDOM.render(<span class="keyword">this</span>.props.children, <span class="keyword">this</span>.modal);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样也可以指定渲染.</p>
+<p>####一个有趣的地方<br>可以注意到, 上面我在 Modal 组件内部的 render 函数, 注释了可以使用 React.DOM.div(this.props);, 问题是这个有<br>什么作用呢? 这个 API 可以为子组件添加一个 div 容器.</p>
+<p>总结:<br>我们在平时开发的时候可能会遇到一些小提示框或者小的菜单栏(也就是 popup modal 和 menus), 其实上面的两个方法就是解决这两个痛点的, 一个是 body 下的 modal, 一个是父容器加上 overflow: hidden 但是需要在父容器外展示的菜单栏.</p>
+<p>##附录</p>
+<p>###React 的异步更新<br>在实现的过程中发现, 在一个函数中, 同时对一个 DOM 对象进行移除并将对象指向 null 的时候, 会报错, 报错信息如<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Invariant Violation: _registerComponent(…): Target container <span class="keyword">is</span> not a DOM element</span><br><span class="line"></span><br><span class="line">报错代码:</span><br><span class="line">function onHide()&#123;</span><br><span class="line">    ReactDOM.unmountComponentAtNode(<span class="keyword">this</span>.modal);</span><br><span class="line">	document.body.removeChild(<span class="keyword">this</span>.modal);</span><br><span class="line">	<span class="keyword">this</span>.modal = <span class="literal">null</span>;  <span class="comment">//这里去掉这句</span></span><br><span class="line">	<span class="keyword">this</span>.setState(&#123; show: <span class="literal">false</span> &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为是异步操作, 当 this.modal 指向 null 的时候, ReactDOM 调用需要的 this.modal 已经不是一个 DOM 节点了<br>所以报错.</p>
+<p>注: <a href="http://stackoverflow.com/questions/26566317/invariant-violation-registercomponent-target-container-is-not-a-dom-elem" target="_blank" rel="noopener">solution on stackflow</a><br>link:</p>
+<ul>
+<li><a href="http://jamesknelson.com/rendering-react-components-to-the-document-body/" target="_blank" rel="noopener">Rendering React components to the document body</a></li>
+<li><a href="https://github.com/react-bootstrap/react-bootstrap/blob/master/src/Overlay.js" target="_blank" rel="noopener">Boostrap overlay</a></li>
+<li><a href="http://www.cnblogs.com/qingguo/p/5701302.html" target="_blank" rel="noopener">一篇关于 React Dialog 的博文</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2017/04/05/Modal In React/" title="Modal In React">http://zhangxiang958.github.io/2017/04/05/Modal In React/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/28/深入响应式布局兼容/" rel="next" title="深入响应式布局兼容">
+                <i class="fa fa-chevron-left"></i> 深入响应式布局兼容
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/20/细说 window.performance/" rel="prev" title="细说 window.performance">
+                细说 window.performance <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

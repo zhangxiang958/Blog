@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="作用域与作用域链是 JavaScript 的核心，想要透彻理解 JavaScript 必须学习这份方面的知识。作用域对于理解 JavaScript 有很大帮助，从哪里正确地访问变量到 this 的正确赋值，不管是从功能还是性能，理解作用域都会有很大的进步。本篇博文是尽本人目前最大努力的深究，是作为我的学习笔记，日后还会继续深究，不断更新博文。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 核心学习——作用域与作用域链">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/03/30/JavaScript 核心学习——作用域与作用域链/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="作用域与作用域链是 JavaScript 的核心，想要透彻理解 JavaScript 必须学习这份方面的知识。作用域对于理解 JavaScript 有很大帮助，从哪里正确地访问变量到 this 的正确赋值，不管是从功能还是性能，理解作用域都会有很大的进步。本篇博文是尽本人目前最大努力的深究，是作为我的学习笔记，日后还会继续深究，不断更新博文。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="1979-11-29T16:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 核心学习——作用域与作用域链">
+<meta name="twitter:description" content="作用域与作用域链是 JavaScript 的核心，想要透彻理解 JavaScript 必须学习这份方面的知识。作用域对于理解 JavaScript 有很大帮助，从哪里正确地访问变量到 this 的正确赋值，不管是从功能还是性能，理解作用域都会有很大的进步。本篇博文是尽本人目前最大努力的深究，是作为我的学习笔记，日后还会继续深究，不断更新博文。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2016/03/30/JavaScript 核心学习——作用域与作用域链/">
+
+
+
+
+
+  <title>JavaScript 核心学习——作用域与作用域链 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2016/03/30/JavaScript 核心学习——作用域与作用域链/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">JavaScript 核心学习——作用域与作用域链</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-30T18:17:24+08:00">
+                2016-03-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>作用域与作用域链是 JavaScript 的核心，想要透彻理解 JavaScript 必须学习这份方面的知识。<br>作用域对于理解 JavaScript 有很大帮助，从哪里正确地访问变量到 this 的正确赋值，不管是从功能还是性能，<br>理解作用域都会有很大的进步。<br>本篇博文是尽本人目前最大努力的深究，是作为我的学习笔记，日后还会继续深究，不断更新博文。<br><a id="more"></a></p>
+<p>##编译原理<br>JavaScript 其实是一门编译语言，它在执行代码之前会做好执行代码的准备，也就是说 JavaScript 在执行代码之前<br>会对代码进行编译。举个浅显的例子：var a = 2; ，这句代码，Javascript 引擎首先会读到 var a ，在作用域中寻<br>找 a 变量，如果没有，则会创建一个变量并命名为 a ，最终的结果是 a 变量被找到（创建）然后执行赋值操作。</p>
+<p>在编译器的方面来说，在查找变量的时候，其术语为 LHS，L 是 left 的意思，在获取变量值的时候，其术语为 RHS，<br>R 是 right 的意思。LHS 意思是在赋值操作符的左边的操作，RHS 是赋值操作符右边的操作，更加浅显地说，就是<br>如果是对变量赋值操作，则会有 LHS，如果是获取变量的值，则会有 RHS，在 var a = b 这个例子中，首先会有 LHS<br>查找 a 变量，然后有 RHS 查找 b 变量以获取 b 变量的值，然后将值赋于 a 。<br>这部分知识对后面作用域的理解很有帮助，希望读者可以理解。</p>
+<p>##作用域<br>作用域，用浅显的话语来讲，就是可以起作用的范围。其实《JavaScript 权威指南》中对作用域的解释十分到位：函数<br>运行在被定义的作用域中，而不是被执行的作用域中。<br>作用域其实是一套根据变量名称查找变量值的规则。</p>
+<p>###如何理解作用域<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">para</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name = para;</span><br><span class="line">    <span class="built_in">console</span>.log(name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="string">"zhangxiang"</span>); <span class="comment">// "zhangxiang"</span></span><br></pre></td></tr></table></figure></p>
+<p>作用域可以理解为 Javascript 引擎与编译器与作用域之间的对话：<br>引擎: 首先我想对 <em>foo</em> 进行一个 <em>LHS</em> 。<br>作用域：<em>foo</em> 在全局作用域下，编译器将它定义为一个函数了。<br>引擎：我还想对 <em>para</em> 变量进行 <em>LHS</em> 。<br>作用域：<em>para</em> 在 <em>foo</em> 函数内部，它是 <em>foo</em> 函数的形参。<br>引擎：我还想对 <em>name</em> 变量进行一个 <em>LHS</em> 和对 <em>para</em> 进行 <em>RHS</em> 。<br>作用域：找到了，<em>name</em> 位于 <em>foo</em> 作用域下。<em>para</em> 是函数形参,它的值为 <em>“zhangxiang”</em> 。<br><em>name</em> 变量被赋值了，现在将 <em>name</em> 的值传进 <em>log</em> 中，打印出结果。</p>
+<p>###执行上下文<br>执行上下文，其实就相当于 C 语言中的栈帧，当一个函数被执行的时候，会将该函数环境压入栈中，等函数执行完，再<br>将函数环境出栈，将当前执行环境归还给上一个函数环境或全局环境。</p>
+<p>###作用域链<br>作用域链其实就是作用域的嵌套，理解它就通过一个类比，类比于一栋大厦，第一层是当前作用域，如果当前作用域没有所需的变量，则会不停地往上找，像坐电梯一样不断往上，直到最上层的全局作用域为止。<br>但是不要错误地认为函数在什么地方执行，那么它的作用域链就是被外层函数，外外层函数等逐层嵌套，这是不一定的。<br>因为函数定义在函数内部，那么它的上一层作用域就是外层函数，但是如果函数定义在全局作用域中，但是只是被运行<br>在某个函数内部，那么它的上一层作用域应该是全局作用域！更多的解释请看下面的部分。</p>
+<p>##词法作用域及理解误区<br>词法作用域，用简明的话语来说就是代码作用在它所写的地方。看下面两个例子应该会帮助理解：<br>第一个例子：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">    foo2();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(); <span class="comment">//2</span></span><br></pre></td></tr></table></figure></p>
+<p>在这个例子中，也许会有初学者认为打印出 “1” , 但是其实并不是，因为 <em>foo2</em> 函数是在全局作用域下定义的，虽然<br><em>foo2</em> 函数是在 <em>foo</em> 函数中被执行的，但是 <em>foo2</em> 函数的作用域链中根本没有 <em>foo</em> 函数，因为其实函数的作用<br>域在定义的时候就已经被创建。针对这个例子，说得简明一点，就是 foo2 与 foo 函数都是在全局作用域下定义的函数<br>并且函数是拥有块级作用域的，所以 foo2 也就没有权限访问 foo 内部的变量了。<br>第二个例子：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">foo2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(a);</span><br><span class="line">    &#125;</span><br><span class="line">    foo2();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(); <span class="comment">//1</span></span><br></pre></td></tr></table></figure></p>
+<p>在这个例子中，结果为 “1” ，与上面的例子不同的是，<em>foo2</em> 函数定义在 <em>foo</em> 函数内部，所以拥有对 <em>foo</em> 函数<br>内部变量访问的权限，并且在作用域链中，有一个遮蔽效应，所谓遮蔽效应，就是作用域如果在这一层中找到命名相同<br>的变量，就不会继续往下寻找了，就好比坐电梯在第二层找到了想要的东西，也就不会再到下一层寻找想要的东西了。<br>如果我们想要使用下一层或者全局的变量的时候，可以在前面加上相应的对象，使用对象属性访问规则,比如这里想要<br>打印出 “2” 的话，那么就使用 console.log(window.a);</p>
+<p>###词法欺骗<br>所谓词法欺骗就是使用 eval 或者 with 语句，欺骗词法作用域，仿佛代码原本就是写在那里的，在本质上，这两个函数<br>在作用域链的前端添加了一个块级作用域，在这里不展开阐述，只需知道不推荐使用这两个方法，因为使用这两个方法的<br>话，代码执行的性能就会下降，其原因在于 Javascript 引擎一旦遇到有 eval 或 with 的代码块时，不再对代码进行优<br>化。</p>
+<p>##变量提升<br>变量提升，是将变量提升到所在作用域的顶端。<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">console.log(a)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">var a = <span class="number">2</span><span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>很多人在这里会误解，认为这里脚本会出错，但是其实真实的是 console 出 <em>undefinded</em> 。为什么呢？其实引擎在<br>翻译 Javascript 的时候，会将变量的声明提升了，然后到了对变量执行赋值操作的那一行代码的时候才进行赋值操作。<br>至于为什么打印出 <em>undefinded</em> , 这是因为变量在只有声明而没有赋值的时候，自动拥有 <em>undefinded</em> 值。所以，<br>上面的代码应该被理解为：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var a<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">console.log(a)<span class="comment">;</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">a</span> = <span class="number">2</span><span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>###函数优先<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">foo(); <span class="comment">// "1"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"1"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"2"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在声明一个变量的时候，如果一个变量与一个函数的命名冲突，那么该变量会被优先定义为一个函数。而对于函数表达式<br>与函数声明，在第五行的代码是一个函数声明，而在第九行是一个函数表达式，他们的区别在于函数声明会提升，而函数<br>表达式是在代码执行到那一行才会被赋值为函数。区分函数声明与函数表达式的方法就是看代码的第一个字符是不是<br>function ，如果是，那么就是一个函数声明，如果不是，那么就是一个函数表达式。对于函数块级作用域的加以利用，<br>就出现一个模式叫做 IIFE 立即执行函数表达式。通过这个避免全局变量的污染，从而提高代码复用性。如下面例子：<br><figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">(<span class="function"><span class="keyword">function</span> <span class="params">()</span><span class="comment">&#123;</span></span></span><br><span class="line"><span class="function"><span class="comment">    var a = 2;</span></span></span><br><span class="line"><span class="function"><span class="comment">&#125;</span>)<span class="params">()</span>;</span></span><br><span class="line"></span><br><span class="line">console.log(a); <span class="comment">// "1"</span></span><br></pre></td></tr></table></figure></p>
+<p>不可靠的行为：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">foo();  <span class="comment">// "2"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(a) &#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"2"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的结果为 2 ，是因为如果有两个同名的函数声明，后面的声明将会覆盖前面的声明。而在 Javascript 中，if 语句<br>和 for 语句等等，都没有块级作用域，因此函数不会根据 a 变量的值去选择声明哪个函数。</p>
+<p>##ES6 的块级作用域<br>在 ES 6 中，有了块级作用域命令的出现——let，与 const。这里不在阐述，只需知道 let 用于声明块级作用域的变量，<br>而 const 是声明一个块级作用域常量。更多关于 ES6 特性请看阮一峰老师的 ES6 入门。<br><a href="http://es6.ruanyifeng.com/" target="_blank" rel="noopener">传送门</a></p>
+<p>##作用域有什么用<br>上面讲述了作用域的知识，如果没有实际作用就未免有点学院派了，其实在 《高性能 JavaScript》中已经提到作用域<br>对于功能以及性能方面有非常有帮助。功能就是上面所说的，找到合适的变量访问权限。而性能就是下面所说的代码优化</p>
+<p>###代码优化<br>我们知道，作用域是一级一级地往下寻找变量的，那么引擎就需要不停地往下寻找，但是我们知道，如果作用域在当前<br>作用域就能找到变量的话，就不必花费额外的消耗寻找了。看下面的例子：<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn1 = <span class="built_in">document</span>.getElementById(<span class="string">"btn1"</span>);</span><br><span class="line"><span class="keyword">var</span> btn2 = <span class="built_in">document</span>.getElementById(<span class="string">"btn2"</span>); </span><br><span class="line"><span class="keyword">var</span> btn3 = <span class="built_in">document</span>.getElementById(<span class="string">"btn3"</span>); </span><br><span class="line"><span class="keyword">var</span> btn4 = <span class="built_in">document</span>.getElementById(<span class="string">"btn4"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>像上面，在性能方面就非常损耗，进过改进，得到如下:<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var doc = window.document<span class="comment">;</span></span><br><span class="line">var <span class="keyword">btn1 </span>= doc.getElementById(<span class="string">"btn1"</span>)<span class="comment">;</span></span><br><span class="line">var <span class="keyword">btn2 </span>= doc.getElementById(<span class="string">"btn2"</span>)<span class="comment">; </span></span><br><span class="line">var <span class="keyword">btn3 </span>= doc.getElementById(<span class="string">"btn3"</span>)<span class="comment">; </span></span><br><span class="line">var <span class="keyword">btn4 </span>= doc.getElementById(<span class="string">"btn4"</span>)<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>参考文献：<br><a href="https://github.com/goddyZhao/Translation/blob/master/JavaScript/%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%EF%BC%88Scope%20Chain%EF%BC%89.md" target="_blank" rel="noopener">作用域链 Scope Chain</a><br><a href="https://github.com/goddyZhao/Translation/blob/master/JavaScript/%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%88Execution%20Context%EF%BC%89.md" target="_blank" rel="noopener">执行上下文 Execution Context</a><br><a href="https://github.com/goddyZhao/Translation/blob/master/JavaScript/%E5%8F%98%E9%87%8F%E5%AF%B9%E8%B1%A1%EF%BC%88Variable%20object%EF%BC%89.md" target="_blank" rel="noopener">变量对象 Variable object</a><br>《JavaScript 高级程序设计》<br>《你所不知道的 JavaScript 上卷》</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2016/03/30/JavaScript 核心学习——作用域与作用域链/" title="JavaScript 核心学习——作用域与作用域链">http://zhangxiang958.github.io/2016/03/30/JavaScript 核心学习——作用域与作用域链/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/22/JavaScript 学习笔记——事件/" rel="next" title="JavaScript 学习笔记——事件">
+                <i class="fa fa-chevron-left"></i> JavaScript 学习笔记——事件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/20/前端技能之 PHP 学习笔记/" rel="prev" title="前端技能之 PHP 学习笔记">
+                前端技能之 PHP 学习笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

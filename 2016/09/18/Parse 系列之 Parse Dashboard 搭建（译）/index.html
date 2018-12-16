@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="应老师的要求，因为项目需要使用 parse-server 来作为应用的后端支撑，因此我将我学习 parse-server 的笔记或译文放到博文中，希望可以帮助到师弟师妹的后续学习。本次译文翻译会生硬，欢迎大家提出意见。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Parse 系列之 Parse Dashboard 搭建（译）">
+<meta property="og:url" content="http://zhangxiang958.github.io/2016/09/18/Parse 系列之 Parse Dashboard 搭建（译）/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="应老师的要求，因为项目需要使用 parse-server 来作为应用的后端支撑，因此我将我学习 parse-server 的笔记或译文放到博文中，希望可以帮助到师弟师妹的后续学习。本次译文翻译会生硬，欢迎大家提出意见。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="1979-11-29T16:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Parse 系列之 Parse Dashboard 搭建（译）">
+<meta name="twitter:description" content="应老师的要求，因为项目需要使用 parse-server 来作为应用的后端支撑，因此我将我学习 parse-server 的笔记或译文放到博文中，希望可以帮助到师弟师妹的后续学习。本次译文翻译会生硬，欢迎大家提出意见。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2016/09/18/Parse 系列之 Parse Dashboard 搭建（译）/">
+
+
+
+
+
+  <title>Parse 系列之 Parse Dashboard 搭建（译） | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2016/09/18/Parse 系列之 Parse Dashboard 搭建（译）/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Parse 系列之 Parse Dashboard 搭建（译）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-18T18:59:24+08:00">
+                2016-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Parse/" itemprop="url" rel="index">
+                    <span itemprop="name">Parse</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>应老师的要求，因为项目需要使用 parse-server 来作为应用的后端支撑，因此我将我学习 parse-server 的笔记<br>或译文放到博文中，希望可以帮助到师弟师妹的后续学习。<br>本次译文翻译会生硬，欢迎大家提出意见。<br><a id="more"></a></p>
+<p>##启动项目<br>需要 Node.js 4.3 以上版本与 Parse Server 2.1.4 以上版本。</p>
+<p>##本地搭建<br>通过 npm 安装 dashboard.<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span> -g <span class="keyword">parse</span>-dashboard</span><br></pre></td></tr></table></figure></p>
+<p>你可以通过像下面这样的一个填好 app ID 和 master key URL 和 name 的命令来启动应用的 dashboard。<br><figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">parse-dashboard </span><span class="built_in">--appId</span> <span class="string">yourAppId </span><span class="built_in">--masterKey</span> <span class="string">yourMasterKey </span><span class="built_in">--serverURL</span> <span class="string">"https://example.com/parse"</span> <span class="built_in">--appName</span> <span class="string">optionalName</span></span><br></pre></td></tr></table></figure></p>
+<p>你可能需要–host，–post 和 –mountPath 的 parse-dashboard 选项来设置域名，端口，安装路径。你可以使用任何<br>你想要的 app 名称或者使用 app ID。<br>启动 dashboard 之后，你可以浏览器访问 <a href="http://localhost:4040" target="_blank" rel="noopener">http://localhost:4040</a> 来查看。 </p>
+<p>###配置 Parse Dashboard</p>
+<p>####配置文件<br>你可以通过配置文件在命令行中启动 dashboard。如果想这样，我们需要新建一个文件命名为 parse-dashboard-config.json，并放在你的本地 Parse Dashboard 文件目录里面，文件内容如下：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"apps"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"serverURL"</span>: <span class="string">"http://localhost:1337/parse"</span>,</span><br><span class="line">      <span class="attr">"appId"</span>: <span class="string">"myAppId"</span>,</span><br><span class="line">      <span class="attr">"masterKey"</span>: <span class="string">"myMasterKey"</span>,</span><br><span class="line">      <span class="attr">"appName"</span>: <span class="string">"MyApp"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以通过 parse-dashboard –config parse-dashboard-config.json 命令来启动 dashboard。</p>
+<p>####环境参数<br>这个只有在使用命令行启动应用的时候才可用，这里也有两个方法来使用环境参数来配置你的 dashboard。</p>
+<p>#####多个应用<br>在 PARSE_DASHBOARD_CONFIG 中提供完整的 JSON 格式的配置参数，它将会被像配置文件一样解释。</p>
+<p>#####单个应用<br>你也可以单独配置每一个参数。<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">HOST:</span> <span class="string">"0.0.0.0"</span></span><br><span class="line"><span class="symbol">PORT:</span> <span class="string">"4040"</span></span><br><span class="line"><span class="symbol">MOUNT_PATH:</span> <span class="string">"/"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_ALLOW_INSECURE_HTTP:</span> undefined // <span class="keyword">Or</span> <span class="string">"1"</span> to allow http</span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_SERVER_URL:</span> <span class="string">"http://localhost:1337/parse"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_MASTER_KEY:</span> <span class="string">"myMasterKey"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_APP_ID:</span> <span class="string">"myAppId"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_APP_NAME:</span> <span class="string">"MyApp"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_USER_ID:</span> <span class="string">"user1"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_USER_PASSWORD:</span> <span class="string">"pass"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_SSL_KEY:</span> <span class="string">"sslKey"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_SSL_CERT:</span> <span class="string">"sslCert"</span></span><br><span class="line"><span class="symbol">PARSE_DASHBOARD_CONFIG:</span> undefined // Only for reference, it must not exist</span><br></pre></td></tr></table></figure></p>
+<p>###管理多个应用 app<br>在同样的 dashboard 中管理多个应用是可能的。要做的只是简单地添加信息到 parse-dashboard-config.json 文件中的 apps 数组中。<br>你可以管理本地服务器和 Parse.com 上的 Parse Server 应用，在你的配置文件中，你需要添加 restKey 和 javascriptKey 和其他一些参数，你可以在 dashboard.parse.com 找到相关信息。设置 serverURL 到 <a href="http://api.parse.com/1：" target="_blank" rel="noopener">http://api.parse.com/1：</a><br><figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"apps"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"serverURL"</span>: <span class="string">"https://api.parse.com/1"</span>, // Hosted on Parse.com</span><br><span class="line">      <span class="string">"appId"</span>: <span class="string">"myAppId"</span>,</span><br><span class="line">      <span class="string">"masterKey"</span>: <span class="string">"myMasterKey"</span>,</span><br><span class="line">      <span class="string">"javascriptKey"</span>: <span class="string">"myJavascriptKey"</span>,</span><br><span class="line">      <span class="string">"restKey"</span>: <span class="string">"myRestKey"</span>,</span><br><span class="line">      <span class="string">"appName"</span>: <span class="string">"My Parse.Com App"</span>,</span><br><span class="line">      <span class="string">"production"</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"serverURL"</span>: <span class="string">"http://localhost:1337/parse"</span>, // Self-hosted Parse Server</span><br><span class="line">      <span class="string">"appId"</span>: <span class="string">"myAppId"</span>,</span><br><span class="line">      <span class="string">"masterKey"</span>: <span class="string">"myMasterKey"</span>,</span><br><span class="line">      <span class="string">"appName"</span>: <span class="string">"My Parse Server App"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###app 应用图标配置<br>parse dashboard 支持为每一个应用添加 icon，这样你可以更容易在列表中分辨他们。你必须使用配置文件，配置一个<br>iconsFolder 字段，为每个应用（包括拓展）填写 iconName 参数，这个 iconsFolder 的路径是相对于配置文件的，如果你已经全局安装了 ParseDashboard，那么你需要填写 iconsFolder 的绝对路径。为了让这个更明了，在下面的例子中， icons 是与本地配置文件相同路径下的一个文件夹。<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"apps"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"serverURL"</span>: <span class="string">"http://localhost:1337/parse"</span>,</span><br><span class="line">      <span class="attr">"appId"</span>: <span class="string">"myAppId"</span>,</span><br><span class="line">      <span class="attr">"masterKey"</span>: <span class="string">"myMasterKey"</span>,</span><br><span class="line">      <span class="attr">"appName"</span>: <span class="string">"My Parse Server App"</span>,</span><br><span class="line">      <span class="attr">"iconName"</span>: <span class="string">"MyAppIcon.png"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"iconsFolder"</span>: <span class="string">"icons"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###其他配置参数<br>你可以在配置文件中为每个应用设置 appNameForURL 字段在 dashboard 中控制你的应用 URl。这个让 dashboard 中使用书签或分享链接更简单。</p>
+<p>改变应用环境到生产环境，只要在你的配置文件中简单地设置 production 为 true。 </p>
+<p>##作为 Express 中间件使用<br>不仅可以通过命令行来使用 Parse Dashboard，也可以在 express 以中间件的形式来使用。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="keyword">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> ParseDashboard = <span class="keyword">require</span>(<span class="string">'parse-dashboard'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> dashboard = <span class="keyword">new</span> ParseDashboard(&#123;</span><br><span class="line">  <span class="string">"apps"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"serverURL"</span>: <span class="string">"http://localhost:1337/parse"</span>,</span><br><span class="line">      <span class="string">"appId"</span>: <span class="string">"myAppId"</span>,</span><br><span class="line">      <span class="string">"masterKey"</span>: <span class="string">"myMasterKey"</span>,</span><br><span class="line">      <span class="string">"appName"</span>: <span class="string">"MyApp"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">// make the Parse Dashboard available at /dashboard</span></span><br><span class="line">app.<span class="keyword">use</span>(<span class="string">'/dashboard'</span>, dashboard);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> httpServer = <span class="keyword">require</span>(<span class="string">'http'</span>).createServer(app);</span><br><span class="line">httpServer.listen(<span class="number">4040</span>);</span><br></pre></td></tr></table></figure></p>
+<p>如果你想要在同一个服务器或端口上同时运行 Parse Server 和 Parse Dashbord，如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="keyword">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> ParseServer = <span class="keyword">require</span>(<span class="string">'parse-server'</span>).ParseServer;</span><br><span class="line"><span class="keyword">var</span> ParseDashboard = <span class="keyword">require</span>(<span class="string">'parse-dashboard'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> allowInsecureHTTP = <span class="keyword">false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> api = <span class="keyword">new</span> ParseServer(&#123;</span><br><span class="line">    <span class="comment">// Parse Server settings</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> dashboard = <span class="keyword">new</span> ParseDashboard(&#123;</span><br><span class="line">    <span class="comment">// Parse Dashboard settings</span></span><br><span class="line">&#125;, allowInsecureHTTP);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">// make the Parse Server available at /parse</span></span><br><span class="line">app.<span class="keyword">use</span>(<span class="string">'/parse'</span>, api);</span><br><span class="line"></span><br><span class="line"><span class="comment">// make the Parse Dashboard available at /dashboard</span></span><br><span class="line">app.<span class="keyword">use</span>(<span class="string">'/dashboard'</span>, dashboard);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> httpServer = <span class="keyword">require</span>(<span class="string">'http'</span>).createServer(app);</span><br><span class="line">httpServer.listen(<span class="number">4040</span>);</span><br></pre></td></tr></table></figure></p>
+<p>##部署 Parse Dashboard</p>
+<p>###准备部署<br>确保 srver URL 可以被你的浏览器解析。如果你想要部署 dashboard，那么 localhost urls 将会无效。</p>
+<p>###考虑安全<br>为了省略你的应用 master key 并安全部署 dashboard ，你需要使用 HTTPS 和基本认证。</p>
+<p>如果你使用安全链接到已经部署的 dashboard 会发现的。如果你正在使用一个负载均衡或者代理服务器来更早地使用 SSL 认证来部署，那么应用将不会被安全链接。如果是这样，你可以通过 –allowInsecureHTTP=1 字段来启动 dashboard。你有责任确保你的负载均衡器和你的代理服务器只能允许 HTTPS 协议。</p>
+<p>####基本认证配置<br>你可以通过添加用户名和密码到你的 parse-dashboard-config.json 文件来配置你的 Basic Authentication。<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"apps"</span>: [&#123;<span class="attr">"..."</span>: <span class="string">"..."</span>&#125;],</span><br><span class="line">  <span class="attr">"users"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"user"</span>:<span class="string">"user1"</span>,</span><br><span class="line">      <span class="attr">"pass"</span>:<span class="string">"pass"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"user"</span>:<span class="string">"user2"</span>,</span><br><span class="line">      <span class="attr">"pass"</span>:<span class="string">"pass"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"useEncryptedPasswords"</span>: <span class="literal">true</span> | <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>你可以存储 plain text 或 bcrypt 两种格式的密码。为了能够使用 bcrypt 格式，你需要设置 useEncryptedPasswords<br>字段值为 true。你可以使用在线加密工具来对密码加密。</p>
+<p>####分离用户的应用权限<br>如果你已经配置好了你的 dashboard 来管理多个应用，你可以限制应用的管理员身份。<br>如果想达到目的，以下面的格式更新你的 parse-dashboard-config.json 文件：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"apps"</span>: [&#123;<span class="attr">"..."</span>: <span class="string">"..."</span>&#125;],</span><br><span class="line">  <span class="attr">"users"</span>: [</span><br><span class="line">     &#123;</span><br><span class="line">       <span class="attr">"user"</span>:<span class="string">"user1"</span>,</span><br><span class="line">       <span class="attr">"pass"</span>:<span class="string">"pass1"</span>,</span><br><span class="line">       <span class="attr">"apps"</span>: [&#123;<span class="attr">"appId"</span>: <span class="string">"myAppId1"</span>&#125;, &#123;<span class="attr">"appId"</span>: <span class="string">"myAppId2"</span>&#125;]</span><br><span class="line">     &#125;,</span><br><span class="line">     &#123;</span><br><span class="line">       <span class="attr">"user"</span>:<span class="string">"user2"</span>,</span><br><span class="line">       <span class="attr">"pass"</span>:<span class="string">"pass2"</span>,</span><br><span class="line">       <span class="attr">"apps"</span>: [&#123;<span class="attr">"appId"</span>: <span class="string">"myAppId1"</span>&#125;]</span><br><span class="line">     &#125;  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>效果将是：<br>当 user1 登录，他将只能在 dashboard 上管理 myAppId1 和 myAppId2。<br>当 user2 登录，他将只能在 dashboard 上管理 myAppId1 。</p>
+<p>##Docker 中的应用<br>在 Docker 使用是非常简单的。第一步要建立镜像：<br><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">build</span> -t <span class="keyword">parse</span>-dashboard .</span><br></pre></td></tr></table></figure></p>
+<p>使用 config.json 文件来启动镜像<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -<span class="selector-tag">p</span> <span class="number">8080</span>:<span class="number">4040</span> -v host/path/to/config<span class="selector-class">.json</span>:/src/Parse-Dashboard/parse-dashboard-config<span class="selector-class">.json</span> parse-dashboard</span><br></pre></td></tr></table></figure></p>
+<p>默认在 4040 端口启动项目，然而，你也可以运行管理者命令来改变。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -<span class="selector-tag">p</span> <span class="number">80</span>:<span class="number">8080</span> -v host/path/to/config<span class="selector-class">.json</span>:/src/Parse-Dashboard/parse-dashboard-config<span class="selector-class">.json</span> parse-dashboard --port <span class="number">8080</span></span><br></pre></td></tr></table></figure></p>
+<p>如果你对 docker 不熟悉，–port 8080 将会被当作参数传入命令中 npm start – –port 8080. 应用将会在 8080 端口中运行并在远程主机中的 80 端口运行。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2016/09/18/Parse 系列之 Parse Dashboard 搭建（译）/" title="Parse 系列之 Parse Dashboard 搭建（译）">http://zhangxiang958.github.io/2016/09/18/Parse 系列之 Parse Dashboard 搭建（译）/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/18/2016 女生节许愿墙脚手架文档/" rel="next" title="2016 女生节许愿墙脚手架文档">
+                <i class="fa fa-chevron-left"></i> 2016 女生节许愿墙脚手架文档
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/25/HTTP 必知必会/" rel="prev" title="HTTP 必知必会">
+                HTTP 必知必会 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

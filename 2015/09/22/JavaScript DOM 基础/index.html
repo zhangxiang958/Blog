@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本博文是学习 JavaScript DOM 编程艺术 的读书笔记。主要讲 DOM 的一些基本知识和操作方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript DOM 基础">
+<meta property="og:url" content="http://zhangxiang958.github.io/2015/09/22/JavaScript DOM 基础/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="本博文是学习 JavaScript DOM 编程艺术 的读书笔记。主要讲 DOM 的一些基本知识和操作方法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="1979-11-29T16:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript DOM 基础">
+<meta name="twitter:description" content="本博文是学习 JavaScript DOM 编程艺术 的读书笔记。主要讲 DOM 的一些基本知识和操作方法。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2015/09/22/JavaScript DOM 基础/">
+
+
+
+
+
+  <title>JavaScript DOM 基础 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2015/09/22/JavaScript DOM 基础/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">JavaScript DOM 基础</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-09-22T18:10:24+08:00">
+                2015-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre><code>本博文是学习 JavaScript DOM 编程艺术 的读书笔记。主要讲 DOM 的一些基本知识和操作方法。
+</code></pre><a id="more"></a>
+<p>##基本知识</p>
+<p>###样式，结构，行为的分离。<br>    在编程的时候，应该将 JavaScript 的代码用文件打包起来，在 HTML 中用 <script> 标签链接到 HTML 文档中，<br>    并且将 <script> 标签放在 <body> 的闭合标签之前，这样运行效率会比较快。<br>    样式与结构的分离也非常重要。建议不要将样式直接写在 HTML 的标签中。比如：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span> = <span class="string">"color: red;"</span>&gt;</span>Jarvis DOM<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这样不便于代码的维护，通常的做法是将样式集中到一个文件中 CSS 文件中，方便管理。另外，在做其他比较大的项目的时候，我们还可以将项目中的颜色样式集中到一个 <em>color.css</em> 文件里面，把布局集中到 <em>layout.css</em> 文件中，最后用一个 <em>basic.css</em> 文件将其他的样式表文件包括在内。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@impotr</span> url(<span class="string">style/color.css</span>);</span><br><span class="line"><span class="keyword">@import</span> url(<span class="string">style/layout.css</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这也是最浅层的模块化编程的思想。</p>
+<h4 id="CSS-编程习惯"><a href="#CSS-编程习惯" class="headerlink" title="CSS 编程习惯"></a>CSS 编程习惯</h4><pre><code>关于 CSS 在编程过程中的一些良好的习惯，我们应该在日常的时候就养成，这样方便日后对自己代码的维护以及增加代码的可读性与优雅性。
+这块内容牵扯到近日所做的项目——一个关于摄影的网站开发。在开发过程中，发现自己的 CSS 命名的习惯很不好，遇到了很多的坑。在这里会讲述相关知识，防止日后在陷入同样的坑。
+</code></pre><p>##JavaScript DOM 操作方法</p>
+<p>###DOM 检索（抓取）元素<br>常用的检索方法：1. getElementsByTagName(); 2. getElementById(); 3. getElementsByClassName();<br>另外，还有 getAttrbute(“property”,”value”); 和 setAttrbute((“property”,”value”); , 不过这两个方法不属于 Document 对象，不能够通过 document 对象来调用，需要和常用的检索方法相互配合。<br>getElementsByTagName(); 和 getElementsByClassName(); 都是获取到很多子元素然后存储在一个数组里面。</p>
+<p>###DOM 添加元素<br>常用的添加方法：1.createElement(); 2.createTextNode(); 3.appendChild(); 4.insertBefore(new,target);<br>第一个方法是生成一个元素节点，但是没有添加到 HTML 文件中。第二个方法是生成一个文本节点。第三个方法是将一个节点插入到目 标节点的最后。第四个方法是将一个节点插入到目标节点的前面。</p>
+<p>###获取样式或是修改样式<br>使用 Element.style.property 来修改样式的值。Element.style.property 是没法获取通过链接在 HTML 文件上的 CSS 文件的 style 属性值<br>的，只能获取内联样式，但是它能够写入，因此这样可以改变样式。其实实际上，最好的办法是设置多组 Class ，通过修改类名来达到改变样式的目的。</p>
+<p>###节点关系<br>注意，这里是节点而不是元素，节点包括文本节点，属性节点，元素节点。<br>childNodes 所有的子节点<br>nodeType 节点类型(返回 1 表示元素节点，返回 2 表示属性节点，返回 3 表示文本节点，共12种取值)<br>nodeValue 节点值<br>firstChild 第一个子节点<br>lastChild 最后一个子节点<br>nextSibling 下一个兄弟节点<br>previousSibling 上一个兄弟元素</p>
+<p>##DOM 的一些思想与一些有用的封装函数</p>
+<p>###平稳退化与渐进增强的思想<br>所谓平稳退化，就是当浏览器无法加载 Javascript 文件时，不妨碍用户访问到网页的核心内容。这里就需要多做一些兼容性检测和少做假设。比如给 <a> 标签的 href 属性加上确定的值。<br>所谓渐进增强，就是用信息层将原始数据包裹起来。</p>
+<p>###有用的封装函数<br>包括DOM 本身没有提供的 insertAfter()函数，制造加载队列的 addLoadEvent()，添加类名函数 addClassName()<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addLoadEvent</span>(<span class="params">func</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> load = <span class="built_in">window</span>.onload;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="built_in">window</span>.onload != <span class="string">"function"</span>) &#123;</span><br><span class="line">        <span class="built_in">window</span>.onload = func;<span class="comment">//如果 window.onload 没有被赋值为函数</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="comment">//如果 window.onload 已经赋值为函数，则形成一个执行函数队列</span></span><br><span class="line">            load();</span><br><span class="line">            func();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">innerAfter</span></span>(<span class="keyword">new</span><span class="type">Element</span>, targetElement) &#123;</span><br><span class="line">    <span class="keyword">var</span> parent = targetElement.parentNode;</span><br><span class="line">    <span class="comment">//检查目标元素是不是目标元素的父元素的最后一个节点</span></span><br><span class="line">    <span class="keyword">if</span>(targetElement == parent.lastChild) &#123; </span><br><span class="line">        parent.appendChild(<span class="keyword">new</span><span class="type">Element</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">//不是则在目标元素的下一个兄弟元素之前插入新元素 </span></span><br><span class="line">        parent.insertBefore(<span class="keyword">new</span><span class="type">Element</span>, targetElement.nextSibling);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addClassName</span></span>(element,value) &#123;</span><br><span class="line">    <span class="keyword">if</span>(!element.className) &#123;<span class="comment">//如果 element 没有类名</span></span><br><span class="line">        element.className = value;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">//如果 element 原本有类名</span></span><br><span class="line">        <span class="keyword">new</span><span class="type">ClassName</span> = element.className;</span><br><span class="line">        <span class="keyword">new</span><span class="type">ClassName</span> += <span class="string">" "</span>; <span class="comment">//类名之间有空格</span></span><br><span class="line">        <span class="keyword">new</span><span class="type">ClassName</span> += value;</span><br><span class="line">        eleement.className = <span class="keyword">new</span><span class="type">ClassName</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>###简单初略地介绍 AJAX<br>什么是 AJAX ？ 就是网页通过异步请求，做到网页的局部更新与更换内容。它的核心就是 XMLHttpRequest 对象，此对象充当客户端与服务器之间的中间角色，可以通过 Javascript 自行向服务器端发请求，简单来说，就是不必 URL 跳转也可以看到更新内容。<br>由于 AJAX 在不同浏览器之间所使用的 XMLHttpRequest 对象的版本不同，所以为了兼容不同浏览器，就有了 getHTTPObject 函数。<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getHTTPObject</span></span>() &#123;</span><br><span class="line">    <span class="keyword">if</span>(typeof XMLHttpRequest == <span class="string">"undefind"</span>)</span><br><span class="line">        XMLHttpRequest = <span class="function"><span class="keyword">function</span></span>() &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123; <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ActiveXobject</span>(<span class="string">"Msxml2.XMLHTTP.6.0"</span>); &#125;</span><br><span class="line">                <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">            <span class="keyword">try</span> &#123; <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ActiveXObject</span>(<span class="string">"Msxml2.XMLHTTP.3.0"</span>); &#125;</span><br><span class="line">                <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">            <span class="keyword">try</span> &#123; <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ActiveXObject</span>(<span class="string">"Msxml2.XMLHTTP"</span>); &#125;</span><br><span class="line">                <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;           </span><br><span class="line">        &#125;</span><br><span class="line">        console.log(<span class="keyword">new</span> <span class="type">XMLHttpRequest</span>());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">XMLHttpRequest</span>();    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另外，提交请求有 5 种状态，分别用数字 0-4 来表示。<br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">0 </span>表示未初始化</span><br><span class="line"><span class="symbol">1 </span>表示正在加载</span><br><span class="line"><span class="symbol">2 </span>表示加载完毕</span><br><span class="line"><span class="symbol">3 </span>表示正在交互</span><br><span class="line"><span class="symbol">4 </span>表示完成</span><br></pre></td></tr></table></figure></p>
+<p>所以在 AJAX 中有一个 onreadystatechange 事件是专门用来响应当状态码改变的时候，执行一个回调函数的。<br>request.onreadstatechange = dosomthing;<br><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">request</span>.onreadystatechange = <span class="keyword">function</span> () &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">request</span>.readyState == <span class="number">4</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">request</span>.status == <span class="number">200</span> || <span class="built_in">request</span>.status == <span class="number">0</span>) &#123;</span><br><span class="line">                ***********</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               ************</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"><span class="built_in">request</span>.send(<span class="literal">null</span>);</span><br></pre></td></tr></table></figure></p>
+<p>目前来说，前端许多框架都对 AJAX 兼容很好，例如 JQuery，在写 AJAX 请求时不像以上的原生代码一样量多，所以善用工具可以简化我们的工作量。<br>作者 张翔<br>2015 年 09 月 22 日<br><a href="http://developer.51cto.com/art/201009/226852.htm">详解CSS选择器</a></p>
+</script></p>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2015/09/22/JavaScript DOM 基础/" title="JavaScript DOM 基础">http://zhangxiang958.github.io/2015/09/22/JavaScript DOM 基础/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/14/新番！羁绊の协同前端！/" rel="next" title="新番！羁绊の协同前端！">
+                <i class="fa fa-chevron-left"></i> 新番！羁绊の协同前端！
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/08/详谈 css 选择器/" rel="prev" title="详谈 CSS 选择器">
+                详谈 CSS 选择器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

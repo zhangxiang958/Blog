@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在编写代码的时候已经基本使用 ES6 的语法了, 所以想抽空将 ES6 的语法中需要注意的东西总结一个.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 小结">
+<meta property="og:url" content="http://zhangxiang958.github.io/2017/06/13/ES6 小结/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="最近在编写代码的时候已经基本使用 ES6 的语法了, 所以想抽空将 ES6 的语法中需要注意的东西总结一个.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="1979-11-29T16:00:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ES6 小结">
+<meta name="twitter:description" content="最近在编写代码的时候已经基本使用 ES6 的语法了, 所以想抽空将 ES6 的语法中需要注意的东西总结一个.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2017/06/13/ES6 小结/">
+
+
+
+
+
+  <title>ES6 小结 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2017/06/13/ES6 小结/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ES6 小结</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-13T21:21:24+08:00">
+                2017-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在编写代码的时候已经基本使用 ES6 的语法了, 所以想抽空将 ES6 的语法中需要注意的东西总结一个.<br><a id="more"></a></p>
+<p>##Let &amp;&amp; const<br><em>let, const</em> 命令为 <em>javascript</em> 语法增添了块级作用域的便捷性, 对比 <em>var</em>, <em>let</em> 与 <em>const</em> 不能<strong>重复声明</strong><br>并且在声明之前不能使用, 也就是存在暂时性死区, var 声明的变量相当于全局对象的属性, 但是 let, const 声明的变量<br>变更不会变成全局对象的属性.<br>注意 const 声明的是常量, 需要在声明的时候作初始化, 并且它保持不变的是引用变量的地址, 而非值, 也就是说, 对于<br>对象这种值, 可以修改 const 声明的对象的属性.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*let 命令编译前:*/</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++ ) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> i);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*let 命令编译后*/</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> _i = <span class="number">0</span>; _i &lt; <span class="number">3</span>; _i++)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(_i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> i);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*let 命令编译前 */</span></span><br><span class="line"><span class="keyword">var</span> li = $(<span class="string">'li'</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>, length = li.length; i &lt; length; i ++) &#123;</span><br><span class="line">    li.eq(i).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"let:"</span> + i);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>, length = li.length; j &lt; length; j++) &#123;</span><br><span class="line">    li.eq(j).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"var:"</span> + j);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*let 命令编译后*/</span></span><br><span class="line"><span class="keyword">var</span> li = $(<span class="string">'li'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> _loop = <span class="function"><span class="keyword">function</span> <span class="title">_loop</span>(<span class="params">i</span>)</span>&#123;</span><br><span class="line">    li.eq(i).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> _i = <span class="number">0</span>, _length = li.length; _i &lt; _length; _i ++) &#123;</span><br><span class="line">    _loop(_i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> j = <span class="number">0</span>, length = li.length; j &lt; length; j++) &#123;</span><br><span class="line">    li.eq(j).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"var:"</span> + j);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>建议使用 ES6 语法后使用 let 与  const 取代 var 的大部分场景.</p>
+<p>##解构赋值<br>只要符合一定的模式, 就可以按照某种模式进行赋值就是解构赋值, 解构赋值在我们提取 JSON 格式数据, 数组元素,<br>当函数返回多个值或函数参数设置默认值时非常有用.<br>需要记住的是在对对象类型的值进行解构赋值的时候, 需要先知道对象的类型, 不能使用 [] 对对象进行赋值.并且在解<br>构赋值中, 是先找到模式, 再对变量进行赋值:<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123; foo: baz &#125; = &#123; foo: <span class="string">'shawn'</span> &#125;;</span><br><span class="line"></span><br><span class="line">console.log(baz);  //<span class="string">'shawn'</span></span><br><span class="line">console.log(foo);  // Error</span><br><span class="line"></span><br><span class="line">//foo 是模式, 在等号右边找到对象相同的属性名后, 将属性对应的值赋给后面的变量, 我们常写的 <span class="keyword">let</span> &#123; foo &#125; = &#123;foo: <span class="string">'shawn'</span>&#125; 是简写.</span><br></pre></td></tr></table></figure></p>
+<p>解构赋值不能重复声明(let, const 命令):</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> foo;</span><br><span class="line"><span class="keyword">let</span> &#123; foo &#125; = &#123;foo: <span class="number">123</span>&#125;;</span><br><span class="line">//以上代码报错</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> foo;</span><br><span class="line">(&#123;foo&#125; = &#123;foo: <span class="number">123</span>&#125;);</span><br><span class="line">//正确</span><br></pre></td></tr></table></figure>
+<p>只有在模式对应的值是严格等于 undefined 的时候, 才会使用默认值<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let &#123; foo = <span class="number">456</span>, baz = <span class="string">'shawn'</span>, bar = <span class="string">'zhang'</span> &#125; = &#123; <span class="string">foo:</span> <span class="string">'test'</span> , <span class="string">baz:</span> <span class="literal">null</span> &#125;;</span><br><span class="line"></span><br><span class="line">foo;  <span class="comment">// 'test'</span></span><br><span class="line">baz;  <span class="comment">// null</span></span><br><span class="line">bar;  <span class="comment">// 'zhang'</span></span><br></pre></td></tr></table></figure></p>
+<p>解构赋值减轻了我们在函数参数设置上的代码量, 我们的函数参数往往会有默认值, 如果没有解构赋值, 那么往往需要编<br>写类似 x = arguments[0] || ‘zhang’ 这样的代码, 如果使用解构赋值, 那么可以 foo(x = ‘zhang’) 这<br>样清晰简略的代码.<br>另外需要注意的是字符串数字布尔值这样基本类型在解构赋值的时候会自动变为包装类型: let {toString: s} = 123.<br>解构赋值在声明时不能带有括号, 在函数参数时不能带有括号, 不能将括号带入模式中, 否则将会报错.</p>
+<p>##字符串<br>在 ES5 中, 字符串监测是否含有另一个字符串只能通过 indexOf 返回的数字是否是 -1 来判断, 但是在 ES6 中, 新增<br>了几个有用的 API, 添加了灵活性, 我们在 ES6 中可以使用 includes 来判断字符串是否含有另一个字符串, 返回的是<br>布尔值, 更加便捷语义更鲜明, 而 startsWith 可以判断源字符串开头是否是另一个字符串, endsWith 可以判断字符串<br>结尾是否是另一个字符串.<br>另外, ES6 中也有几个个人觉得挺好用的 API, repeat 可以重复某个字符串若干次并返回新的字符串, 如果输入 NaN,<br>会返回空字符串. 而自动补全 API: padStart(num, ‘xx’) 和 padEnd(num, ‘xx’) 可以分别在开头和结尾补全字符串.<br>对于省略第二个参数则会补空.<br>ES6 字符串最有用的则是模板字符串, 使用反引号, 中间可以使用 ${} 这样将表达式括起来. </p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> a = <span class="string">'world'</span>;</span><br><span class="line"></span><br><span class="line">`hello $&#123; a &#125;`</span><br><span class="line"></span><br><span class="line">`hello $&#123;a + b&#125;`</span><br><span class="line"></span><br><span class="line">`hello $&#123; a() &#125;`</span><br></pre></td></tr></table></figure>
+<p>模板字符串最有用的是编译模板， 函数后面跟模板字符串可以用于防范 XSS<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> template = `</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">        &lt;% <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; data.supplies.length; i++) &#123; %&gt;</span><br><span class="line">            &lt;li&gt;&lt;%= data.supplies[i]  %&gt;&lt;/li&gt;</span><br><span class="line">        &lt;% &#125; %&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">`;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">complie</span><span class="params">(template)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> evalExpr = /&lt;%=(.+?)%&gt;/g;</span><br><span class="line">    <span class="keyword">var</span> evpr = /&lt;%([\s\S]+?)%&gt;/g;</span><br><span class="line">    </span><br><span class="line">    template = template</span><br><span class="line">                .replace(evalExpr, <span class="string">'`); \n echo($1); \n echo(`'</span>)</span><br><span class="line">                .replace(expr, <span class="string">'`); \n $1 \n echo(`'</span>);</span><br><span class="line">    </span><br><span class="line">    template = <span class="string">'echo(`'</span> + template + <span class="string">'`);'</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> script = </span><br><span class="line">    `(<span class="function"><span class="keyword">function</span> <span class="title">parse</span><span class="params">(data)</span></span>&#123;</span><br><span class="line">        <span class="keyword">var</span> output = <span class="string">''</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">echo</span><span class="params">(html)</span> </span>&#123;</span><br><span class="line">            output += html;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        $&#123; template &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> output;</span><br><span class="line">    &#125;)`;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> script;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>可以使用解构赋值来进一步简化函数代码, ES5 中如果使用 x || 1 这种表达式也有缺点, 如果 x 值本身赋予的<br>就是 false 这样的布尔值, 那么就会被赋值为后面的值, 所以为了保证值的安全和准确往往会使用判断 if x == undefined 这样的式子, 但是这样代码就会冗余, 在 ES6 使用解构赋值就可以简化代码了.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x = <span class="number">1</span>, y = <span class="number">2</span></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(x, y);  <span class="comment">//免除了 x = 'test' || 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>默认赋值的作用域与 ES5 中一样, 根据函数的变量对象来查找<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">(x = y, y = 2)</span></span>&#123;</span><br><span class="line">    console.<span class="built_in">log</span>(x, y);  //throw <span class="built_in">error</span>, y is <span class="keyword">not</span> defined</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###rest 参数 &amp;&amp; 拓展运算符<br>rest 参数和拓展运算符就像逆运算符, rest 参数是将参数集合到一个数组中, 而拓展运算符是将数组中的拆分出来.</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">(a, <span class="rest_arg">...arg</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> arr = [...arg];   <span class="comment">//快速将 arguments 等类数组对象变为数组对象</span></span><br><span class="line">    <span class="keyword">var</span> length = [...arg].length;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果对于 MySQL 或者 MongoDB 等数据库查询返回的一列对象, 在返回的时候, 使用拓展运算符可以便捷赋值.<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">var queryObj = doQuery()<span class="comment">;</span></span><br><span class="line">res.send(...queryObj)<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>在合并数组的时候不再像 ES5 中需要借助数组方法的 concat.<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">var arr = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line">var newArr = [<span class="number">1</span>, ...arr];  <span class="comment">//[1, 2, 3, 4, 5]</span></span><br></pre></td></tr></table></figure></p>
+<p>###name 属性<br>提供获取本函数的名称, 彻底废弃 arguments.callee 这种调用<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">var <span class="keyword">func</span> = <span class="keyword">function</span>()&#123;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="regexp">//</span>ES5 </span><br><span class="line"><span class="keyword">func</span>.name  <span class="regexp">//</span><span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="regexp">//</span>ES6</span><br><span class="line"><span class="keyword">func</span>.name  <span class="regexp">//</span><span class="string">'func'</span></span><br></pre></td></tr></table></figure></p>
+<p>###箭头函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//如果函数不需要参数传参, 那么使用一个空括号</span></span><br><span class="line"><span class="keyword">var</span> func1 = <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">return</span> <span class="number">5</span>;</span><br><span class="line"><span class="comment">//简化函数代码</span></span><br><span class="line"><span class="keyword">var</span> func2 = <span class="function"><span class="params">a</span> =&gt;</span> a;</span><br><span class="line"><span class="comment">//如果函数代码块需要的语句超过两句的时候需要使用花括号括起来</span></span><br><span class="line"><span class="keyword">var</span> func3 = <span class="function">(<span class="params">a</span>) =&gt;</span> &#123; a ++; <span class="keyword">return</span> a + <span class="number">5</span>; &#125; </span><br><span class="line"><span class="comment">//因为花括号会被认为代码块, 所以如果需要返回对象, 对象需要括号括起来</span></span><br><span class="line"><span class="keyword">var</span> func4 = <span class="function">(<span class="params">name</span>) =&gt;</span> &#123; <span class="keyword">return</span> (&#123; <span class="attr">name</span>: name &#125;); &#125;</span><br></pre></td></tr></table></figure>
+<p>箭头函数与 ES5 的函数最大的不同点在于, 箭头函数中的 this 值是不变的, 这是因为箭头函数中根本没有自己的 this 对象, 它的定义的时候就使用了父级的作用域的 this 对象.正因为箭头函数没有 this 对象, 所以它的 this 是固定的,也是不可变的.<br>arguments, super, new.target 在箭头函数中也是不存在的. </p>
+<h2 id="面对对象"><a href="#面对对象" class="headerlink" title="面对对象"></a>面对对象</h2><p>对于面向对象来讲, Javascript 里面依然没有类, 依旧是原型继承, ES6 中的 class 只是为了简化原型继承的语法糖.</p>
+<h3 id="Class"><a href="#Class" class="headerlink" title="Class"></a>Class</h3><p>class 只是 Javascript 中原型继承的语法糖，与 ES5 中的继承一致.<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> MyClass <span class="comment">&#123;</span></span><br><span class="line"><span class="comment">    constructor(x, y)&#123;</span></span><br><span class="line"><span class="comment">        this.x = x;</span></span><br><span class="line"><span class="comment">        this.y = y;</span></span><br><span class="line"><span class="comment">    &#125;</span>,</span><br><span class="line">    <span class="function"><span class="keyword">method</span><span class="params">()</span><span class="comment">&#123;</span></span></span><br><span class="line"><span class="function"><span class="comment"></span></span></span><br><span class="line"><span class="function"><span class="comment">    &#125;</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">相当于</span></span><br><span class="line"><span class="function"><span class="title">MyClass</span>.<span class="title">prototype</span> = <span class="comment">&#123;</span></span></span><br><span class="line"><span class="function"><span class="comment">    constructor()&#123;</span></span></span><br><span class="line"><span class="function"><span class="comment"></span></span></span><br><span class="line"><span class="function"><span class="comment">    &#125;</span>,</span></span><br><span class="line"><span class="function">    <span class="title">method</span><span class="params">()</span> <span class="comment">&#123;</span></span></span><br><span class="line"><span class="function"><span class="comment"></span></span></span><br><span class="line"><span class="function"><span class="comment">    &#125;</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>在 class 声明的方法不能被枚举, 并且都是在原型上的。class 没有变量提升，所以在声明之前使用会报错。<br>实例对象可以通过 persion1.<strong><strong>proto</strong></strong> 访问到原型。person1.<strong><strong>proto</strong></strong> === person2.<strong><strong>proto</strong></strong> === Person.<br>name 属性会返回 class 名<br>可以使用下面这样的形式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建了一个实例</span></span><br><span class="line"><span class="keyword">const</span> person = <span class="class"><span class="keyword">class</span> <span class="title">Me</span></span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(name)&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;(<span class="string">'shawn'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Person = <span class="class"><span class="keyword">class</span> <span class="title">Me</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">这里如果使用 Person.name 会打印出 Person， Me 只能是内部使用，指代当前类</span><br></pre></td></tr></table></figure>
+<p>类只能使用 new 命令来调用, 而且 class 命名不能提升, 也就是存在暂时性死区, 而且内部代码会自动运行在严格模式下, 类中所有方法都是不可枚举的, 而且类中不能修改类名:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Klass = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"><span class="meta">    'use strict'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> Klass = (<span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">new</span>.target === <span class="string">'undefined'</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">''</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;());</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(Klass.prototype, <span class="string">'syaName'</span>, &#123;</span><br><span class="line">        value: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">        &#125;,</span><br><span class="line">        enumerable: <span class="literal">false</span>,</span><br><span class="line">        writable: <span class="literal">true</span>,</span><br><span class="line">        configurable: <span class="literal">true</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;());</span><br></pre></td></tr></table></figure></p>
+<p>从上面也明白, 为什么在内部不可修改类名(const), 而且每个定义的方法都会使用 Object.definePerproty 来定义</p>
+<h3 id="extends"><a href="#extends" class="headerlink" title="extends"></a>extends</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    constructor(...args)&#123;</span><br><span class="line">        <span class="keyword">super</span>(...args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在子类中继承父类，constructor 中一定要先使用 super 关键字，因为子类是没有自己的 this 对象的，需要先调用父类的 constructor 方法构造出 this 对象，然后在对 this 对象进行加工，<br>这个和 ES5 继承不同，ES5 是先构造出 this 对象，在使用 Parent.call(this); 这样，所以如果子类 constructor 没有 super 会报错。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">B</span>.__proto__ === <span class="type">A</span></span><br><span class="line"><span class="type">B</span>.prototype.__proto__ === <span class="type">A</span>.protoytpe</span><br><span class="line"></span><br><span class="line"><span class="type">AB</span> 的继承其实是按照</span><br><span class="line"><span class="keyword">extends</span> 做了什么？</span><br><span class="line">其实就是将</span><br><span class="line">setPrototypeof(<span class="type">B</span>.protoytpe, <span class="type">A</span>.prototype); <span class="comment">//表示实例对象的继承</span></span><br><span class="line">setPrototypeof(<span class="type">B</span>,<span class="type">A</span>);  <span class="comment">//表示构造函数的继承</span></span><br><span class="line"></span><br><span class="line">setPrototypeof(obj, proto) &#123;</span><br><span class="line">    obj.__proto__ = prto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>class 是构造函数的另一种写法，class.prototype.constructor === class , 和 ES5 一样.</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">|<span class="string">-------</span>|</span><br><span class="line">|<span class="string"> class </span>|<span class="string">-------</span>|<span class="string">constructor </span></span><br><span class="line">|<span class="string">-------</span>|<span class="string">       </span>|</span><br><span class="line">   |<span class="string">            </span>|<span class="string"> </span></span><br><span class="line"><span class="string">   </span>|<span class="string">protoyepe   </span>|<span class="string"> </span></span><br><span class="line"><span class="string">   </span>|<span class="string">            </span>|</span><br><span class="line">|<span class="string">-----------------</span>|</span><br><span class="line">|<span class="string"> class.prototype </span>|<span class="string"> </span></span><br><span class="line">|<span class="string">-----------------</span>|</span><br></pre></td></tr></table></figure>
+<p>如果前面有 static 命令，说明这是静态（私有）方法，不会被实例继承，只能通过类来调用, 但是可以被子类继承<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    static method()&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> parent1 = <span class="keyword">new</span> <span class="type">Parent</span>();</span><br><span class="line">parent1.method();  <span class="comment">//error</span></span><br><span class="line"><span class="type">Parent</span>.method();  <span class="comment">//right</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        <span class="keyword">super</span>.method();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">Son</span>.method();  <span class="comment">//right</span></span><br></pre></td></tr></table></figure></p>
+<p>class 只有静态方法没有静态属性，也就是说，如果属性写在 class 花括号里面都是无效的, 静态属性也就是设置在类上，而不是设置在实例上的属性。<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span> &#123;</span></span><br><span class="line"><span class="symbol">    prop:</span> <span class="number">2</span>,  <span class="comment">//无效</span></span><br><span class="line">    <span class="keyword">static</span> <span class="string">prop:</span> <span class="number">2</span>  <span class="comment">//无效</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Parent.prop = <span class="number">2</span>;  <span class="comment">//有效</span></span><br></pre></td></tr></table></figure></p>
+<p>new.target 可以用于限定构造器只能通过 new 命令来调用。<br>如果继承类没有 constructor, 那么在 new 调用的时候会自动使用 super, 而对于有 constructor 的类 super() 必须要在 this 前调用.<br>extends 可以继承内置对象, 可以解决 ES5 不能完美继承数组对象的 bug.</p>
+<h2 id="Module"><a href="#Module" class="headerlink" title="Module"></a>Module</h2><p>ES6 中模块机制为我们带来了极大的便利, 真正地为 Javascript 带来了模块化编程, 并且它与 commonJS 这样的模块<br>规范不同, ES6 Module 设计出来是为了引入时能够进行编译优化, commonJS 引入的模块是运行时载入的, 而 ES6 是<br>编译时静态载入的, 可以在编译的时候就进行优化, 不必引入整个模块, 举个例子:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//commonJS</span></span><br><span class="line"><span class="keyword">var</span> &#123; foo, bar, baz &#125; = <span class="built_in">require</span>(<span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//相当于</span></span><br><span class="line"><span class="keyword">var</span> test = <span class="built_in">require</span>(<span class="string">'test'</span>);</span><br><span class="line"><span class="keyword">var</span> foo = test.foo, bar = test.bar, baz = test.baz;</span><br><span class="line"><span class="comment">//这样相当于载入整个模块, 将模块中的某个部分赋予变量</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//ES6 module</span></span><br><span class="line"><span class="keyword">let</span> &#123; foo, bar, baz &#125; <span class="keyword">from</span> <span class="string">'test'</span>;</span><br><span class="line"><span class="comment">//ES6 module 只是载入了 foo, bar, baz 三个方法, 模块的其他部分不载入, 虽然导致了模块本身不可用, 但是优化了编译时的速度与效率</span></span><br></pre></td></tr></table></figure></p>
+<p>对于 import, 不能使用在条件语句或者在函数块中, 因为这些都有条件判断的意味在, 正正和 ES6 Module 设计的初衷<br>违背, 并且 import 进来的模块具有提升作用, 即是可以在引入前使用, 相当于变量提升, 但是为了语义性, 还是建议<br>在模块的开头进入那些需要的模块.(对于 export 也一样)<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//暴露命令, 将模块以一种形式暴露出去被其他模块引入</span></span><br><span class="line"><span class="keyword">export</span></span><br><span class="line"><span class="keyword">export</span> &#123;</span><br><span class="line">    foo <span class="keyword">as</span> Foo</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="comment">//暴露模块默认值</span></span><br><span class="line"><span class="comment">//相当于 暴露出一个名叫 default 的变量</span></span><br><span class="line"><span class="comment">// export &#123; xxx as defualt &#125;</span></span><br><span class="line"><span class="comment">// import &#123; default as Module &#125; form './module';</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//引入命令</span></span><br><span class="line"><span class="keyword">import</span> </span><br><span class="line"><span class="keyword">import</span> * form <span class="string">'./module'</span>;  <span class="comment">//将模块全部方法属性引入</span></span><br><span class="line"><span class="keyword">import</span> &#123; foo, bar, baz &#125; <span class="keyword">from</span> <span class="string">'./module'</span>;  <span class="comment">//引入 foo, bar, baz 三个方法</span></span><br><span class="line"><span class="keyword">import</span> &#123; * <span class="keyword">as</span> <span class="built_in">module</span> &#125; <span class="keyword">from</span> <span class="string">'./module'</span>; <span class="comment">// 给引入的模块加一个别名</span></span><br><span class="line"><span class="keyword">import</span> &#123; foo <span class="keyword">as</span> FooModule &#125; <span class="keyword">from</span> <span class="string">'./module'</span>; <span class="comment">// 给引入的方法加一个别名</span></span><br></pre></td></tr></table></figure></p>
+<p>module 加载的实质就是 Linux 的符号链接, 是引用而不是像 commonJS 的复制, commonJS 对引入变量改变不会影响<br>原本模块的值, 而 module 的加载是在载入时不引入, 只是生成一个符号链接, 当运行的时候再去调取模块的值.<br>当然, 因为这个特性, 模块引入的值地址不变, 也就是说对于引用类型(对象等)属性可变, 但是对象本身 <code>obj = {}</code> 这样的修改是不可以的, 其他基本类型不能变.<br>相比于 CommonJS , CommonJS 是单对象输出单对象加载的格式, 和 ES6 的多对像输出多对象加载不同. </p>
+<h3 id="Module-加载原理"><a href="#Module-加载原理" class="headerlink" title="Module 加载原理"></a>Module 加载原理</h3><p>Module 加载的本质其实就是将引入模块链接到另一个文件中, 通过类似软链接的形式, 当代码运行需要模块中的变量或<br>方法的时候再去调取, 不同于 CommonJS 的调取, CommonJS 的调取是同步的, 并且是将另一模块的值复制后赋到文件中<br>的.<br>所以 Module 的加载取得的值有可能会随着时间的变化而不同，而 CommonJS 的加载是复制的，所以除非清除系统缓存， 否则第一次加载和第 n 次加载的值是一样的。<br>目前浏览器端都不支持 ES6 的模块机制, 需要使用 babel 这样的工具, 转为 CommonJS 规范再用 webpack 这样的工具<br>打包在一起.</p>
+<ul>
+<li>语法解析:检查语法</li>
+<li>加载: 没有被标准化,需要最终实现</li>
+<li>连接: 将模块的变量连接到一个新的作用域</li>
+<li>如果导入的变量在模块中没有,则报错</li>
+<li></li>
+</ul>
+<h3 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h3><p>循环引用就是两个文件相互依赖的情况。而 CommonJS 与 ES6 处理循环引用的方式也是不同的。<br>CommonJS 遇到循环引用，由于是同步引用，所以会将依赖的文件先执行的部分输出，未执行的部分不输出，那么<br>也就意味着 CommonJS 循环依赖必须有值返回，否则会出错。<br>但是 ES6 的模块引用是动态的，只是符号链接，所以只要代码里面有声明就可以运行。</p>
+<p>以上就是 ES6 中最最常用的部分了.</p>
+<h4 id="updated-in-2017-08-27"><a href="#updated-in-2017-08-27" class="headerlink" title="updated in 2017/08/27"></a>updated in 2017/08/27</h4>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2017/06/13/ES6 小结/" title="ES6 小结">http://zhangxiang958.github.io/2017/06/13/ES6 小结/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/09/当我在谈论前端监控时我在谈什么/" rel="next" title="当我在谈论前端监控时我在谈什么">
+                <i class="fa fa-chevron-left"></i> 当我在谈论前端监控时我在谈什么
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/23/浅谈设计模式实战/" rel="prev" title="浅谈设计模式实战">
+                浅谈设计模式实战 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">1.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面对对象"><span class="nav-number">2.</span> <span class="nav-text">面对对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Class"><span class="nav-number">2.1.</span> <span class="nav-text">Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#extends"><span class="nav-number">2.2.</span> <span class="nav-text">extends</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Module"><span class="nav-number">3.</span> <span class="nav-text">Module</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Module-加载原理"><span class="nav-number">3.1.</span> <span class="nav-text">Module 加载原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#循环引用"><span class="nav-number">3.2.</span> <span class="nav-text">循环引用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#updated-in-2017-08-27"><span class="nav-number">3.2.1.</span> <span class="nav-text">updated in 2017/08/27</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
