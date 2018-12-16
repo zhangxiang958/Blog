@@ -1,0 +1,115 @@
+title: 前端初学之浅谈前后端关系
+date: 2015-11-25 21:15:24
+categories: 前端杂烩
+---
+最近因为要做一个 JAVA 课设作业，因此我选择完成一个网页版的学生信息管理系统。
+一方面让自己了解 JAVA 这门语言，另一方面可以对后台知识有一些了解，以帮助自己更好地学习前端。
+<!--more-->
+    进入正题，本次开发采用的是最为传统的方式。
+    即是用 HTML 写出静态模板，再用 JAVA 写出 .JSP 文件，与传统的 PHP 开发模式类似。
+##开发准备
+首先，管理系统必须采用数据库来存储数据，我采用的是最为常见的 MySQL server 5.0 来作为数据库，
+并且用 MySQL Front 来管理存储的数据。服务器采用的是 apache-tomcat 服务器。JDK 采用 1.6 版本。
+具体的开发工具相信网上的教程已经说的十分详细，这里不再累述。我们先来了解一个 Java WEB 项目的
+结构是怎么样的：
+![文件树](http://7xns9g.com1.z0.glb.clouddn.com/jiegou.png)
+上面的 WEB-INF 文件夹就是 Java WEB 项目的安全项目，用通过 web.xml 映射才能够访问。
+以下是 WEB-INF 内部结构，其中 classes 是放编译好的类文件，而 lib 是放需要用到的 jar 包，
+比如 *mysql-connector-java-5.1.12-bin.jar* 这个 jar 文件，这是 MySQL 专门按照 JDBC 标准
+而制定的接口供 Java 调用。
+![文件树](http://7xns9g.com1.z0.glb.clouddn.com/jiegou2.png)
+而真正运行项目的时候，项目文档要放在 tomcat/webapps/ 下才可以，
+开启服务之后，可以在 localhost:8080/ 项目名称 /文件名称 进行访问。
+##知识储备
+这里需要基本的 HTML + CSS + Javascript 的基本用法，以及 Java 语法，和 SQL语法 。
+```
+DROP DATABASE IF EXISTS `st`;
+CREATE DATABASE `st`;
+USE `st`;
+
+DROP TABLE IF EXISTS `st_society`;
+CREATE TABLE `st_society` (
+  `st_id` int(11) NOT NULL auto_increment COMMENT '社团id（自增、从0000起）',
+  `st_password` varchar(20) NOT NULL default '123456' COMMENT '社团登录密码，默认123456',
+  `st_name` varchar(100) NOT NULL COMMENT '社团名称',
+  `st_city` varchar(20) default NULL COMMENT '城市',
+  `st_school` varchar(100) default NULL COMMENT '院校',
+  `st_addtime` datetime NOT NULL COMMENT '注册时间',
+  `st_desc` varchar(1000) default NULL COMMENT '简要',
+  `lx_name` varchar(20) default NULL COMMENT '联系人姓名',
+  `lx_phone` varchar(20) default NULL COMMENT '联系人电话',
+  `lx_email` varchar(100) default NULL COMMENT '联系人邮箱',
+  `lx_qq` varchar(20) default NULL COMMENT '联系人qq',
+  PRIMARY KEY  (`st_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='社团信息';
+INSERT INTO `st_society` VALUES (0000, '123456', '计算机学院', '广州', '广东工业大学', 
+'2015-11-24 00:00:00', '广东工业大学是一所学校.', 
+'张翔', '13100010001', '95800333@qq.com', '95800333');
+
+DROP TABLE IF EXISTS `st_member`;
+CREATE TABLE `st_member` (
+  `m_id` varchar(100) NOT NULL COMMENT '会员id（使用UUID）',
+  `m_name` varchar(20) NOT NULL COMMENT '姓名',
+  `m_sex` varchar(10) default NULL COMMENT '性别',
+  `m_major` varchar(100) default NULL COMMENT '院系专业班级',
+  `m_dorm` varchar(100) default NULL COMMENT '宿舍',
+  `m_qq` varchar(20) default NULL COMMENT 'qq',
+  `m_email` varchar(100) default NULL COMMENT '邮箱',
+  `m_phone` varchar(20) default NULL COMMENT '电话',
+  `m_dept` varchar(20) default NULL COMMENT '部门',
+  `m_post` varchar(20) default NULL COMMENT '职务',
+  `m_money` varchar(20) NOT NULL default '未交' COMMENT '会费缴纳情况：**已交/未交/已退出',
+  `m_addtime` datetime default NULL COMMENT '入会时间',
+  `m_state` varchar(10) NOT NULL COMMENT '会员状态（在册/已退出）',
+  `m_leavetime` datetime default NULL COMMENT '毕业时间/退出时间',
+  `m_desc` varchar(1000) default NULL COMMENT '备注',
+  `st_id` int(11) NOT NULL COMMENT '社团id',
+  PRIMARY KEY  (`m_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员表';
+
+DROP TABLE IF EXISTS `st_admin`;
+CREATE TABLE `st_admin` (
+  `admin_id` varchar(100) NOT NULL COMMENT '用户ID（使用UUID，暂时只支持单管理员）',
+  `admin_username` varchar(20) NOT NULL COMMENT '用户名(系统唯一，暂时只支持单管理员)',
+  `admin_password` varchar(20) NOT NULL COMMENT '密码',
+  PRIMARY KEY  (`admin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台管理表';
+INSERT INTO `st_admin` VALUES ('1', 'admin', 'admin111');
+```
+以上语句，创建了一个数据库。
+##开发过程
+首先，在传统模式下，我们要写出 HTML 静态页面模板。
+而这里数据的传输我采用的是最为常见的 from 表单传输。举个简单的例子，
+整个项目的接下来的代码都与这两个类似，这是我项目中的登陆页面HTML代码：
+HTML 中如果需要填入数据，就比如查看成员详细信息的话，就取到该成员独特的 ID ，
+这里是用到 Uuid 包自动生成特殊的字符串作为 id ，然后声明变量，使用 JDBC 技术，
+在数据库中查找到相应的字段，将字段中的数据填入表单中。
+![](http://7xns9g.com1.z0.glb.clouddn.com/code.png)
+
+```
+//如果需要填入数据
+<input type="text" class="login-input" name="m_name" value="<%=m_name%>" />
+这里的 m_name 变量是之前定义好的，name 属性需要与数据库中的字段命名相同
+```
+
+以下是 JSP 文件中的 Java 代码：
+![](http://7xns9g.com1.z0.glb.clouddn.com/code2.png)
+这里的 Connection 类是建立 JDBC 与数据库之间的链接，相当于一座桥梁，而 Statement 对象则负责
+将 sql 语句传送到数据库中，相当于运输车。rs 接受返回的结果集，所需要的数据都在结果集中按照字段一一
+拿取。
+##解惑
+![](http://7xns9g.com1.z0.glb.clouddn.com/rel.png)
+其实，做这个课设的最大收获在于明白前后端之间数据的传输与大致分工。
+在这种模式中，在平时做项目开发中采用比较多，前端负责静态视图，后端将后端代码嵌入 HTML 模板中。
+所有的代码编写都是围绕在前端编写的 HTML 静态模板而编写的。所以前端负责的代码编写中， name 属性
+尤为重要，因为它是与数据库中的字段相关联的，出现错误的话就会有可能出现无法拿取数据的情况。其实
+from 表单的 action 与 ajax 的 url 都类似，都是讲请求发送到一个后端文件中，比如 JAVA 的 .jsp 文件
+中去，像上面的 login_do.jsp 文件，由这个 .jsp 文件建立与数据库的链接，使用一个传输器对象，将 sql 语句传输到数据库，进行增
+删查改的操作，然后返回一个结果集，将结果集中按字段抓取想要的数据，将数据填入表单中，
+就可以实现页面的动态效果。
+在这种合作模式中，就必须要求前端代码要简洁易读。而采用 ajax 则不需要看彼此代码，但是规定好 API。
+
+作者   张翔  
+2015 年 11 月 25日    
+
+

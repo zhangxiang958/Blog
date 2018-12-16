@@ -1,0 +1,235 @@
+﻿title: 代码规范那些事
+date: 2015-10-31 12:25:24
+categories: 代码规范
+---
+在最近完成的两个项目中，由于多人协作，明白在项目开发方面沟通的能力相当重要，除此之外，就是代码规范的问题成本最大。代码规范是入行前端以来就一直在强调的，代码不规范，会导致维护与开发的成本都会大增。
+    <!--more-->
+##代码风格
+###缩进
+在同一个项目中应该规定好代码缩进的规格，一般是规定缩进 2 或 4 个空格。我们一般是使用 sublime 文本编辑器，这个方面问题不大，只需设置配置文件就行了。并且，在大公司里的多人协作，代码风格实在太难统一，因此他们一般是使用插件一键规范代码，将缩进统一。但是绝对不允许一个项目文件里既有 4 个空格的，也有 2 个空格的。
+###命名
+####类的命名
+在 HTML 文件中，类名的命名应该使用小写英文字母，绝对不允许使用拼音与英文混合使用。举个栗子：
+  ![1](http://7xns9g.com1.z0.glb.clouddn.com/code-1.png "1")
+  
+像以上的命名会给维护造成很大的困扰，在类名为 *"warp"* 的 div 标签下的第一个子 div 类名为 *"header"* ,但是第二个子 div 的类名为 *"xinxi"* , 会导致代码不可一目了然。
+    有人应该注意到栗子中类名单词的连接方式并没有统一，的确，类名命名的时候，个人开发当然无所谓，可以采用三种形式： 使用 “-” 链接单词， 使用 “_” 链接单词， 使用驼峰命名法。但是在团队协作里面就很有必要规定采用哪种方式。
+    从优劣性方面来说，三种方式并没有太大差别，只是现在大部分是采用 “-” 的方式，并且方便。建议在特殊情况下才使用驼峰命名法。
+  ![2](http://7xns9g.com1.z0.glb.clouddn.com/code-2.png "2")
+  
+类名的命名不可以以元素的样式信息作为类名，正确的做法是以元素的功能或者内容命名。像以上的栗子是错误的做法。
+    类名命名时，应当考虑清楚，要保持代码的整洁性与简洁性，不是迫不得已的时候，不能为了 hook 脚本而去创建一些无样式的 class 名。更好的做法是采取 id 或是 属性抓取。
+    
+![3](http://7xns9g.com1.z0.glb.clouddn.com/code-3.png "3")
+
+这里的 "caret" 类名是没有样式的。
+####类名到底如何是好？
+class 的命名是一个老大难问题了。不仅在命名时担心可读性，还要担心贴切性。Jarvis 我自己在开发时有也有过这样的困惑，由于多人协作往往会担心修改别人 class 名时害怕这个类名到底是只用在这个地方还是很多地方，最后只能采取一些无奈之举：命名一个极其奇葩的类名，只是为了在网页上显示效果。
+    说实话，CSS 里面有两个东西可以批量修改样式（除去标签），就是类和 id 了。但是由于 id 的唯一性，导致我们会将所有样式集中在 class 上。事实上，这样做也是没错，因为 class 本来设计就是为了复用的。
+    但是我在开发了两个项目后最大的感受是必须保证类名简洁的同时保证唯一性，因为项目开发过程中我经常花费很多时间精心设置了一个样式，但是复用时却因为权重问题（我的上一篇博文有提及）而需要不断地调试才出现想要的结果，这样是非常低效的。
+    所以我将会介绍几种方法：方法没有绝对的优劣，要看使用的场所。
+```
+//1.原始模式
+h1.title { font-size: 1.2rem;}
+.title-1 {color: red;}
+这样就是原始模式，可以看到，非常混杂，但是个人在做一些 demo 时，就
+非常方便。
+或者是像上面的第一段代码一样，非常混乱，也是我们在项目中不允许出现的。
+```
+```
+//2.原子类模式
+.fl { float: left;}
+.ml15 { margin-left: 15px;}
+```
+像上面这样的我们称之为原子类。原子类的争议性很大，详情请看知乎上的问答。
+    我个人觉得，原子类在开发过程中虽然会提供一定的便捷，想要使用某些样式的时候就可以迅速复用。但是不好之处在于，这样的样式很容易被覆盖，而且一旦修改了样式参数，名字往往也要随之变化，且不说这样修改的工程量大，这里也没有体现结构与样式的完全分离，要知道好的 CSS 结构应该独立，不与 HTML 结构混杂。
+    在这里， Jarvis 我不是很推荐在大项目中使用这样的方式。
+    但是我们应该去体会原子类的思想，它的核心思想就是 **复用代码，抽出核心样式**。
+    
+详情请点击 [知乎传送门](http://www.zhihu.com/question/22110291"前端使用原子类的优劣") 。
+```
+//3.模块化模式
+//l 表示 layout， g 表示 global
+.l-left {}
+.l-red {}
+.g-head {}
+.g-title {}
+像这样通过加前缀来区分类的职能，就叫做模块化。
+```
+但是这样的模式容易造成前缀繁杂，多级前缀。
+```
+//4.BEM 模式
+.block {} //表示更加高级的组件
+.block-element {} //表示 .block 的子类
+.block--modifier {} //表示 .block 的不同状态
+```
+像上面的就是现在很多人推荐的 BEM 模式。所谓 BEM，就是 block 块，element 元素，modifier 修饰符。
+    我们通常的命名是这样的:
+```
+.dog {}
+.eyes {}
+.tail {}
+.head {}
+
+//BEM 模式下
+.dog {}
+.dog-eyes {}
+.dog-tail {}
+.dog-head {}
+```
+
+第一段 CSS 命名已经有了一定的语义化，但是还不够完全。相比于 BEM 模式，第二段更一目了然。
+![4](http://7xns9g.com1.z0.glb.clouddn.com/code-4.png "4")
+
+    像上面的命名已经初步用到了 BEM 命名的思想。但是值得注意的点是，我们不能盲目地使用 BEM 命名，没有必要每个地方都去使用，一些单独的样式就可以独立设置。
+    
+如果想了解更多关于 BEM 模式的命名，请移步 [segmentfault上的一篇文章](http://segmentfault.com/a/1190000000391762 "BEM")。    
+感谢 [参考文档](http://www.w3cplus.com/css/css-class-name.html) 的精彩解读。
+####ID 的使用
+id 应当采取唯一性与特殊性，保证页面中此 id 只出现一次。同样地，id 在命名时应当在单词之间采取适当的方式进行连接，保持风格统一。 
+    在同一个页面，避免使用同名的 id 和 name，因为有些浏览器会分不清 id 与 name 属性，在抓取的时候会出现混乱。
+###标签
+可闭合的标签必须闭合，单标签的后面必须加上 "/" 。
+```
+<ul>
+    <li>1</li>
+    <li>2</li>
+</ul>
+<img src = "images/1.jpg" alt ="1" />
+```
+标签的使用必须简洁，避免一些无谓的空标签，比如用空标签来清除浮动。
+###属性
+属性名应该用小写字母，并且用双括号来括起属性值。
+![5](http://7xns9g.com1.z0.glb.clouddn.com/code-5.png "5")
+##文件引入
+###CSS 引入
+![6](http://7xns9g.com1.z0.glb.clouddn.com/code-6.png "6")
+
+在 head 标签下引入文档所需的全部样式表文件，要注明 rel = "stylesheet".其实还有另外一种方式来引入 CSS 文件的，就是在一个 CSS内部使用 
+@import url(css 文件地址) 达到引用多个文件的目的，但是这样性能较差。
+实践表明，使用单个链接型的 CSS 文件速度较快，建议使用。
+###Javascript 引入
+![7](http://7xns9g.com1.z0.glb.clouddn.com/code-7.png "7")
+
+这一点在我之前的博文就提到过，详情请翻阅。
+
+##图片
+   图片有一个原则：对于有下载需求的图片，例如用户头像，网站 LOGO 等用 img 标签，而其他则用 CSS 背景来实现。
+    src 属性不能为空，迫不得已应用一个空白的图片代替，而且要加上 width 和 height 属性防止页面出现抖动。
+    除此之外，应当加上适当的 alt 属性，除去不必要的 title 属性。
+##表单
+在项目开发中发现，为了比较好的用户体验，在表单里面，比如 input 标签等应当加上 label 标签。具体形式如下 ：
+```
+//方法1：
+<label><input type="radio" name="confirm" value="on" />苹果</label> 
+<label><input type="radio" name="confirm" value="on" />香蕉</label>
+<label><input type="radio" name="confirm" value="on" />西瓜</label>
+//方法2：
+<label for="username">用户名：</label>
+<input type="textbox" name="username" id="username" />//这样点击文本也可以选中输入框。
+```
+两种方法的效果类似，但是方法 1 可以避免一些不必要的 id 。
+    使用 button 标签的时候应该确定并填写它的 type 属性，这样可以帮助理解，
+    而避免使用它的 name 属性，因为不是全部的浏览器都可以将带有 name 属性的 button 值传输到服务端。
+##访问性
+在编写 HTML 文档的时候，应当将主要功能的按钮放在 DOM 结构之前，这样可以避免浮动出现的时候，不重要的按钮在主功能按钮之前。
+    另外，在 《Javascript DOM 编程艺术》书中有提及，表单提交即使无法 JS 文件无法加载，也要可以提交数据。
+    下面提供一个原生的解决方法：（摘自《Javascript DOM 编程艺术》）
+```
+function getHTTPObject() {
+    if(typeof XMLHttpRuquest = "undefined")
+      XMLHttpRequest = function() {
+        try { return new ActiveXObject("Msxml2.XMLHTTP.6.0");}
+            catch(e) {}
+         try { return new ActiveXObject("Msxml2.XMLHTTP.3.0");}
+            catch(e) {}
+         try { return new ActiveXObject("Msxml2.XMLHTTP");}
+            catch(e) {}   
+        return false;    
+      }
+      return new XMLHttpRequest();
+}
+function submitFormWithAjax( whichform, thetarget ) {
+
+    var request = getHTTPObject();
+    if(!request) { return false; }
+    displayAjaxLoading(thetarget);
+
+    var dataParts = [];
+    var element;
+    for (var i=0; i<whichform.elements.length; i++) {
+        element = whichform.elements[i];
+        console.log(element.name);
+        console.log(element.value);
+        dataParts[i] = element.name + '=' + encodeURIComponent(element.value);
+        console.log(dataParts);
+    }
+    var data = dataParts.join('&');
+    request.open('POST',whichform.getAttribute("action"),true);
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencode");
+    request.onreadystatechange = function () {
+        if(request.readyState == 4) {
+            if(request.status == 200 || request.status == 0) {
+                var matches = request.responseText.match(/<article>([\s\S]+)<\/article>/);
+                if(matches.length > 0) {
+                    thetarget.innerHTML = matches[1];
+                } else {
+                    thetarget.innerHTML = '<p>Oops, there was an error. Sorry.</p>';
+                }
+            } else {
+                thetarget.innerHTML = '<p>' + request.statusText + '</p>';
+            }
+        }
+    };
+    request.send(data);
+    return true;
+}
+```
+##CSS 文件编写
+###警惕多类症
+新手在开发时，往往知道 ID 的独特性，不敢乱用，从而高频率地使用类来控制样式，过度依赖类与 ID 选择器。
+通常来说，ID，类，标签，通配选择器就可以选择大部分的元素，但是如果你发现你自己文档出现很多不必要的
+类名，这或许是你 HTML 结构欠缺合理性的警告。
+###CSS 文件怎么写才高效？
+如果想要高效编写 CSS 文件，就要保持对属性的敏感性，对一些可以复用的样式抽出，设置为一个类。要求是
+一般的类要非常一般，特殊的类要非常特殊。并且巧妙地使用兄弟相邻选择器，属性选择器等，很多人平时根本
+没有考虑到用这两种选择器，但是很多地方可以使用它们，举个简单的例子，消除列表第一个 li 的 
+margin-top 就可以使用兄弟相邻选择器 (li + li { margin-top: 20px; })。想要达到高效，减少类名，做到
+真正的结构与布局解耦，就要动用层叠继承的知识。
+一般来说，css 文件应该按照一定的次序来编写，这样容易快速找到所需要的属性值。
+css 书写规范：1.位置(margin,padding,float等)  2.大小（width,height等） 3.文字系列（font） 4.背景 （background） 5.其他（animations等）。
+    CSS 命名时，应该用 “-” 来命名，而不是用 “_” 来命名。在简写选择器的名称时，应该简明，并且最好在选择器的前面加上状态，这样可读性会有所增强。可以缩写的属性，比如 font，background 等，应该缩写。
+###CSS 文件模板
+在作者几个月的开发经验中，发现使用单一的 CSS 文件在需要修改和 debug 时候，需要查找某些元素非常困难。
+需要在 Devtools 中找到代码在第几行再去找源文件去修改，这个绝对不是一个高效的 CSS 文件。并且，
+发现使用页面标记进行 CSS 模块划分根本不起什么作用，举个实际开发的栗子：
+![](http://7xns9g.com1.z0.glb.clouddn.com/CSSerror.png)
+![](http://7xns9g.com1.z0.glb.clouddn.com/CSSerror2.png)
+使用这样的标记进行提醒，虽然有的编辑器支持中文，但是不能祈祷所有的编辑器都支持中文，特别是
+在 ubuntu 系统下开发。并且不单只是标记问题，而且样式模块区域也有问题，应该是将一些一般的样式，
+集中到文件前面，将特殊的样式集中到文件后面。
+下面给出一个模板地址供大家参考。
+[CSS 文件模板](https://github.com/zhangxiang958/FrontEnd-UI-Wheel)
+###颜色
+颜色应该使用 16 进制来表示，并用小写字母，不要使用 rgb 模式，因为 16 进制更加简洁，并且避免不同浏览器上出现色差，色调也更为自然。
+##HTML 编写
+###HTML 标签的拆合
+在项目开发中，标签的拆合思想很重要。什么是拆合思想？看下面的例子帮助理解：
+
+![9](http://7xns9g.com1.z0.glb.clouddn.com/code-9.png "9")
+    
+代码如下：
+![8](http://7xns9g.com1.z0.glb.clouddn.com/code-8.png "8")
+
+可以看到代码中图片包在一个 div 标签内，这样可以让日后 UI 修改时，比如在图片下面加上一行文字，只在这一个 div 中修改。
+    而代码中将右边的内容（图片标题与评论框之类的）包在一个 div 里面，这样方便位置等设置的统一管理。
+    在思想上，要有从结构到空间区域上的划分，实现视觉效果。而在实战中，实现的效果无非就是上下，左右，脱离与覆盖的拆合。上下拆合更多地体现在网站整体布局，左右拆分更多地体现在网站的拓展上，而覆盖的典型例子体现在星级评价上，脱离就体现在 fixed 布局上。
+    我们要领会的就是拆——标签独立，效果独立，合——少用或包裹以达统一管理的目的。
+    
+------
+
+作者     张翔
+2015 年 10 月 31 日
+更新于   2016 年 01 月 24日    
+
+
