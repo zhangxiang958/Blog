@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本篇文章是笔者近期对 Promise 的几点思考的总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="promise 杂谈">
+<meta property="og:url" content="http://zhangxiang958.github.io/2019/01/26/promise 杂谈/index.html">
+<meta property="og:site_name" content="Shawn&#39;s blog">
+<meta property="og:description" content="本篇文章是笔者近期对 Promise 的几点思考的总结。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://v8.js.cn/_img/fast-async/doxbee-benchmark.svg">
+<meta property="og:image" content="https://v8.js.cn/_img/fast-async/await-under-the-hood.svg">
+<meta property="og:updated_time" content="2019-01-26T12:27:28.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="promise 杂谈">
+<meta name="twitter:description" content="本篇文章是笔者近期对 Promise 的几点思考的总结。">
+<meta name="twitter:image" content="https://v8.js.cn/_img/fast-async/doxbee-benchmark.svg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangxiang958.github.io/2019/01/26/promise 杂谈/">
+
+
+
+
+
+  <title>promise 杂谈 | Shawn's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shawn's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">大道至简, 悟在天成</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxiang958.github.io/2019/01/26/promise 杂谈/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shawn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://img.ijarvis.cn/916161494.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shawn's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">promise 杂谈</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-26T08:29:24+08:00">
+                2019-01-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇文章是笔者近期对 Promise 的几点思考的总结。<br><a id="more"></a></p>
+<h2 id="Promise-是如何解决回调地狱问题的？"><a href="#Promise-是如何解决回调地狱问题的？" class="headerlink" title="Promise 是如何解决回调地狱问题的？"></a>Promise 是如何解决回调地狱问题的？</h2><p>所谓回调地狱，可能它的危害并不全在于由于过多的嵌套函数导致日渐增长的缩进最终会超过你的屏幕宽度，而是它剥夺了我们编写 try-catch，throw 这样的代码的权利，并且会有调用信任的问题。</p>
+<p>使用回调函数调用第三方服务或者模块，回调函数的执行权会交给了第三方，可能出现的问题就会可能有多次调用，回调时间不稳定(过早或过晚)等等的问题，虽然这些问题我们可能通过其他手段进行解决，比如通过一个 flag 值来控制调用次数的问题:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> called = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">rpc(<span class="string">'https://path/to/service'</span>, (err, res) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (called) <span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// do somthing with res</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>但是这样始终非常不方便，代码中也会出现很多不必要的副作用，往往会给我们代码设计带来麻烦。</p>
+<p>而 Promise 的出现，通过控制反转的方法，让回调函数只做将它本身的返回值返回的操作，然后让 Promise 将这个值存起来，并通知所有需要知道此函数调用成功的函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    rpc(<span class="string">'https://path/to/service'</span>, (err, res) =&gt; &#123;</span><br><span class="line">    	resolve(res);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// do somthing with res</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这样，有利于消除副作用，基于回调函数的返回值与代码逻辑不再全部放在第三方调用的回调中了。</p>
+<p>而对于回调函数执行的时间不稳定问题，由于使用第三方模块的时候，回调函数的执行时机对于我们是一个黑盒，如果模块的设计者不加注意，很容易会导致 <em>release zalgo</em> 问题，也就是如下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> urls = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rpc</span> (<span class="params">url, callback</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (urls[url]) &#123;</span><br><span class="line">        <span class="keyword">return</span> callback(urls[url]);</span><br><span class="line">    &#125;</span><br><span class="line">    request(url, (err, res) =&gt; &#123;</span><br><span class="line">        urls[url] = res;</span><br><span class="line">        callback(err, res);</span><br><span class="line">    &#125;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果这样实现第三方模块，那么这里的回调函数调用时机是不确定的，有可能是同步调用，有可能是异步调用，有时候这里会导致一些难以追踪的 <em>bug</em>。</p>
+<p>但是使用了 Promise 进行包裹，不需要担心这个问题，因为 then 函数始终都是异步执行的。因为我们执行 new Promise 函数中的 resolve 函数的时候，内部实现是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// promise 的简单实现</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_resolve</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (self.state === <span class="string">'pending'</span>) &#123;</span><br><span class="line">       nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123; <span class="comment">// nextTick 代表异步执行，可以是 process.nextTick, 也可以是 setTimeout</span></span><br><span class="line">           self.state = <span class="string">'fulfilled'</span>;</span><br><span class="line">           self.value = value;</span><br><span class="line">           <span class="comment">// 批量执行通过 then 函数添加的成功回调，回调函数存放到一个数组中</span></span><br><span class="line">           self.resolveQueue.forEach(<span class="function"><span class="params">cb</span> =&gt;</span> &#123;</span><br><span class="line">               cb(value);</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以我们在取得回调函数返回值的 then 函数始终是被异步执行的，无需担心 <em>release zalgo</em> 问题。</p>
+<p>并且由于 Promise 的内部实现，不会出现多次调用回调函数的问题，原因在由于 Promise 本身是一个有穷状态机，本身包含 <em>pending, fulfilled, rejected</em> 三种状态，并且从 <em>pending</em> 状态到 <em>fulfilled</em> 状态与 <em>pending</em> 状态到 <em>rejected</em> 状态不可逆，所以上面的回调函数中，即使写成：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">....</span><br><span class="line">rpc(<span class="string">'https://path/to/service'</span>, (err, res) =&gt; &#123;</span><br><span class="line">   	<span class="keyword">if</span> (err) reject(err);</span><br><span class="line">    resolve(res);</span><br><span class="line">&#125;);</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<p>也不会影响实际代码的运行，如果出现了 <em>err</em>, 会先运行 <em>reject</em> 函数, Promise 的状态就会变为 <em>rejected</em> 状态，后面的 <em>resolve</em> 函数执行会被忽略，代码变得可靠很多。</p>
+<p>另外，在 Promise 中，你甚至可以 <em>resolve</em> 一个 PromiseLike 的对象，也就是一个包含 then 方法的对象，根据 Promise/A+ 规范的实现，在执行这种 PromiseLike 对象的 then 方法的时候，会对传入的 resolve，reject 方法的执行次数进行控制：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">....</span><br><span class="line"><span class="comment">// 此为本人根据 Promise/A+ 规范实现部分代码</span></span><br><span class="line"><span class="keyword">let</span> called = <span class="literal">false</span>;</span><br><span class="line"><span class="comment">// x 表示 上一个 Promise resolve 传入的值</span></span><br><span class="line"><span class="keyword">if</span> ((x !== <span class="literal">null</span> &amp;&amp; <span class="keyword">typeof</span> x === <span class="string">'object'</span>) || <span class="keyword">typeof</span> x === <span class="string">'function'</span>) &#123; <span class="comment">// 如果是对象或者是函数</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 这里是鸭子模型，只要有 then 方法就尝试执行</span></span><br><span class="line">    	<span class="keyword">let</span> then = x.then;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> then === <span class="string">'function'</span>) &#123;</span><br><span class="line">             <span class="comment">// 说明是一个 thenable 对象</span></span><br><span class="line">            then.call(x, y =&gt; &#123;</span><br><span class="line">                <span class="comment">// 避免 then 函数中多次执行第一次传入的函数(即此函数)，如多次执行则以第一次执行为准</span></span><br><span class="line">                 <span class="comment">// 而且如果 reject 函数先执行，那么这个函数的执行会被忽略</span></span><br><span class="line">                <span class="keyword">if</span> (called) <span class="keyword">return</span>;</span><br><span class="line">                called = <span class="literal">true</span>;</span><br><span class="line">                resolvePromise(promise, y, resolve, reject);</span><br><span class="line">            &#125;, err =&gt; &#123;</span><br><span class="line">                <span class="comment">// 避免 then 函数中多次执行第二次传入的函数(即此函数)，如多次执行则以第一次执行为准</span></span><br><span class="line">                <span class="comment">// 而且如果 resolve(resolvePromise) 函数先执行，那么这个函数的执行会被忽略</span></span><br><span class="line">                <span class="keyword">if</span> (called) <span class="keyword">return</span>;</span><br><span class="line">                called = <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">return</span> reject(err);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            resolve(x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">        <span class="comment">// 如果 then 方法中有异常，也需要将 promise 置为 reject</span></span><br><span class="line">        <span class="comment">// 但是为了防止前面 then 函数中 resolve(resolvePromise) 与 reject 已经被执行过后</span></span><br><span class="line">        <span class="comment">// then 方法执行又出错，添加 called 值来判断，如果已经执行过 resolvePromise/reject 方法</span></span><br><span class="line">        <span class="comment">// 那么这里 catch 到的错误会被忽略</span></span><br><span class="line">        <span class="comment">// 否则以此错误来 reject Promise</span></span><br><span class="line">        <span class="keyword">if</span> (called) <span class="keyword">return</span>;</span><br><span class="line">        called = <span class="literal">true</span>;</span><br><span class="line">        reject(err);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<p>其实，<em>called</em> 变量判断回调执行与否是为了防范 <em>thenable</em> 对象的实现不符合 Promise 的机制，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    resolve();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">p.then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        then(a, b) &#123;</span><br><span class="line">            a(); <span class="comment">// 会执行一次 reoslve(resolvePromise)</span></span><br><span class="line">            a(); <span class="comment">// 同样会执行 resolve 函数，但是后续逻辑被 called 拦截了，不会真正执行</span></span><br><span class="line">            b(); <span class="comment">// 执行 reject 函数，但是被 called 拦截了</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="string">'real?'</span>; <span class="comment">// 这里会使 try-catch 中 catch 后的代码执行，但是同样被 called 拦截</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>对于超时问题，Promise 还提供了 race 方法，让我们的调用可以方便地添加超时机制，让代码尽可能在可控的范围内。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> rpcSync = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    rpc(<span class="string">'https://path/to/service'</span>, (err, res) =&gt; &#123;</span><br><span class="line">    	<span class="keyword">if</span> (err) <span class="keyword">return</span> reject(err);</span><br><span class="line">        resolve(res);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.race([</span><br><span class="line">    rpcSync(<span class="string">'http://path/to/service'</span>),</span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            resolve();</span><br><span class="line">        &#125;, <span class="number">5000</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<p><em>注：函数副作用指调用函数时除了返回函数值还会修改函数外的变量</em></p>
+<h2 id="composing-Promise"><a href="#composing-Promise" class="headerlink" title="composing Promise"></a>composing Promise</h2><p>我们在使用 Promise 的时候，应当充分利用 Promise 的优势， 不能将 Promise 当成回调函数来使用，避免像以下的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">UserOrm.get(id).then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">	...</span><br><span class="line">	SchoolOrm.get(data.school).then(<span class="function">(<span class="params">school</span>) =&gt;</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">       	ChairManOrm.get(school.chairMan).then(<span class="function">(<span class="params">chairMan</span>) =&gt;</span> &#123;</span><br><span class="line">        	.....</span><br><span class="line">    	&#125;); </span><br><span class="line">	&#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>当然，Promise 通过上面阐释的多种机制优化了很多回调函数存在的问题，上面的代码可能会比单纯使用回调函数要好，但是这样的代码风格很糟糕，如果业务逻辑复杂，会让编写者非常难受，而其实我们可以借助 Promise，让其他 Promise 进行链接。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">UserOrm.get(id)</span><br><span class="line">.then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> SchoolOrm.get(data.school);</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function">(<span class="params">school</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> ChairManOrm.get(school.chairMan);</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function">(<span class="params">chairMan</span>) =&gt;</span> &#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;)</span><br><span class="line">.catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这样的链式调用会比第一个例子中的 then 地狱要好得多，我们只需要在 then 函数里面返回另一个 Promise，那么在下一个链式的 then 函数中就能拿到返回的 Promise 的输出结果。</p>
+<p> 而原理在于，根据 Promise/A+ 规范，then 函数的内部处理中，如果 then 函数传入的第一个函数的返回值是一个 Promise 的时候，会根据 <a href="https://promisesaplus.com/#the-promise-resolution-procedure" target="_blank" rel="noopener">Promise Resolution Procedure</a> 的处理，递归地为返回的 Promise 添加 then 函数处理，直到返回结果不是 Promise 对象，并以此值作为上一层 Promise 的返回结果。</p>
+<p>而对于返回非 Promise 值，then 函数也会直接将这个返回值直接传递给下一个 Promise，这样就有利于我们写出利用缓存结果的函数了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">getUrl().then(<span class="function">(<span class="params">url</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (urls[url]) &#123;</span><br><span class="line">        <span class="keyword">return</span> resolve(urls[url]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> rpc(url); <span class="comment">// rpc 返回一个 promise</span></span><br><span class="line">&#125;).then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// get data</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上面这个函数利用了内存结果缓存而不用担心上面所说的 release zalgo 问题，因为后一个 then 函数一定是异步被执行的。另外由于 Promise 内部对 then 函数传入的函数都添加了 try-catch 处理，所以我们在 then 函数中直接 throw 一个错误，那么这个错误会被捕获到，并以这个错误作为 Promise 的 reject 原因传给下一个 Promise。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">getUrl().then(<span class="function">(<span class="params">url</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/^http|https/</span>.test(url)) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'url Error'</span>);</span><br><span class="line">    <span class="keyword">if</span> (urls[url]) &#123;</span><br><span class="line">        <span class="keyword">return</span> resolve(urls[url]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> rpc(url); <span class="comment">// rpc 返回一个 promise</span></span><br><span class="line">&#125;).then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// get data</span></span><br><span class="line">&#125;)</span><br><span class="line">.catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// get err</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>后面的 catch 函数会得到在 then 函数 throw 出来的错误。</p>
+<p>所以，我们在 then 函数里面，最好显式地 return 一个值或者 throw 一个错误，这样我们可以让 then 函数的行为符合我们的预期。 </p>
+<h2 id="promise-值穿透问题"><a href="#promise-值穿透问题" class="headerlink" title="promise 值穿透问题"></a>promise 值穿透问题</h2><p>所谓 promise 值穿透问题就是当你在调用 then 函数的时候，传入的参数不是一个函数的话，那么传入的参数会被忽略，并返回上一个 Promise 的返回结果。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.resolve(<span class="number">1</span>).then(<span class="built_in">Promise</span>.resolve(<span class="number">2</span>)).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123; <span class="built_in">console</span>.log(res); &#125;); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>这是因为在 Promise 中，then 函数会有传入的值类型判断：</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">then</span> (onFulfilled, onReject) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> onFulfilled !== <span class="string">'function'</span>) onFulfilled = <span class="function"><span class="params">(res)</span> =&gt;</span> res;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> onReject !== <span class="string">'function'</span>) onReject = <span class="function"><span class="params">(err)</span> =&gt;</span> <span class="keyword">throw</span> err;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当传入值非函数的时候，内部会赋予一个默认的返回 Promise 返回结果的函数，因此当我们在调用 then 函数的时候一定需要注意 then 函数是接受函数作为参数的。</p>
+<h2 id="批量-Promise"><a href="#批量-Promise" class="headerlink" title="批量 Promise"></a>批量 Promise</h2><p>在业务场景中，我们会常常遇到需要批量执行一些异步操作，通常数据会存放在一个数组中，但是如果我们直接循环数组，然后希望在这些异步操作都结束之后做某些操作，在编写代码的时候不加注意，会容易写出这样的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">orm.getList().then(<span class="function">(<span class="params">datas</span>) =&gt;</span> &#123;</span><br><span class="line">    datas.forEach(<span class="function">(<span class="params">&#123;id&#125;</span>) =&gt;</span> &#123;</span><br><span class="line">        orm.delete(id);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'all list be deleted'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>实际上，最后一个 then 函数的执行时机并不等于所有列表数据都被删除之后的时刻。按照逻辑，真正的代码应该是：</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">orm.getList().<span class="keyword">then</span>(<span class="function"><span class="params">(datas)</span> =&gt;</span> &#123;</span><br><span class="line">    let promises = datas.map(<span class="function"><span class="params">(&#123;id&#125;)</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> orm.<span class="keyword">delete</span>(id);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> Promise.all(promises);</span><br><span class="line">&#125;)</span><br><span class="line">.<span class="keyword">then</span>(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'all list be deleted'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>借助 Promise.all 来达到批量的 Promise 都执行完后再去执行某些逻辑的目的。</p>
+<p>而如果在服务端，有一些批量异步操作可能由于数据列表过长，不希望如此大量的异步操作同一时间进行，那么我们就需要控制同一时间内可进行的异步操作的数量：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个控制 Promise 并发量的 demo</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parallel</span> (<span class="params">fn, con, thisArg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> jobs = [];</span><br><span class="line">    <span class="keyword">let</span> current = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> next = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      	<span class="keyword">let</span> job = jobs.shift();</span><br><span class="line">        <span class="keyword">if</span> (job) &#123;</span><br><span class="line">            current ++;</span><br><span class="line">            <span class="keyword">let</span> &#123; args, resolve, reject &#125; = job;</span><br><span class="line">            fn.apply(thisArg, args).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">                current --;</span><br><span class="line">                next();</span><br><span class="line">                resolve(res);</span><br><span class="line">            &#125;, (err) =&gt; &#123;</span><br><span class="line">                current --;</span><br><span class="line">                next();</span><br><span class="line">                reject(err);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">...args</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (current &lt; con) &#123;</span><br><span class="line">            current ++;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">               <span class="keyword">return</span> fn.apply(thisArg, args);</span><br><span class="line">            &#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">                current --;</span><br><span class="line">                next();</span><br><span class="line">                <span class="keyword">return</span> res;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">                jobs.push(&#123;</span><br><span class="line">                    resolve,</span><br><span class="line">                    reject,</span><br><span class="line">                    args</span><br><span class="line">                &#125;);    </span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> executor = parallel(<span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// dom something with data</span></span><br><span class="line">    <span class="keyword">return</span> asyncOperation(data); <span class="comment">// asyncOPeration 返回一个 Promise</span></span><br><span class="line">&#125;, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.all(datas.map(executor)).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'all done'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="async-await-时代"><a href="#async-await-时代" class="headerlink" title="async/await 时代"></a>async/await 时代</h2><h3 id="async-await-是谁的语法糖？"><a href="#async-await-是谁的语法糖？" class="headerlink" title="async/await 是谁的语法糖？"></a>async/await 是谁的语法糖？</h3><p>这个问题见仁见智，实现过 co 库的更熟悉 generator 运行机制的也许会说是生成器函数与 yield 操作符的语法糖，但是更熟悉 Promise 运行机制的也许会说是 Promise 的语法糖。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            resolve(<span class="number">1</span>);</span><br><span class="line">        &#125;, <span class="number">5000</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>所谓语法糖，是以某种对功能没有影响的语法，方便程序员调用并使程序更简洁。</p>
+<p>所以在生成器角度来看，async/await 提供了类似 co 库的自动运行 generator 对象的 next 方法的机制，达到异步控制流的目的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_asyncToGenerator</span>(<span class="params">fn</span>) </span>&#123; </span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; </span><br><span class="line">		<span class="keyword">var</span> gen = fn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">			<span class="function"><span class="keyword">function</span> <span class="title">step</span>(<span class="params">key, arg</span>) </span>&#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					<span class="keyword">var</span> info = gen[key](arg);</span><br><span class="line">					<span class="keyword">var</span> value = info.value;</span><br><span class="line">				&#125; <span class="keyword">catch</span> (error) &#123; </span><br><span class="line">					reject(error);</span><br><span class="line">					<span class="keyword">return</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (info.done) &#123; </span><br><span class="line">					resolve(value);</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">					<span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(value).then(<span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">						step(<span class="string">"next"</span>, value);</span><br><span class="line">					&#125;, <span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123; </span><br><span class="line">						step(<span class="string">"throw"</span>, err);</span><br><span class="line">					&#125;);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> step(<span class="string">"next"</span>);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_asyncToGenerator(<span class="function"><span class="keyword">function</span>* (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            resolve(<span class="number">1</span>);</span><br><span class="line">        &#125;, <span class="number">5000</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>*<em>注：以上代码通过 babel 插件 babel-plugin-transform-async-to-generator 进行转化</em></p>
+<p>在 Promise 的角度，async/await 提供了使某个函数统一返回值为 Promise，并且提供 then 方法的方便调用方式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            resolve(<span class="number">1</span>);</span><br><span class="line">        &#125;, <span class="number">5000</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;);</span><br></pre></td></tr></table></figure>
+<p>*<em>注：以上代码通过 babel 插件 babel-plugin-async-to-promises 进行转化</em></p>
+<p>可以看作 async 操作符内部创建了一个 Promise 对象，await 只能在 async 函数中使用，可以理解为 then 方法只能在 Promise 对象之后调用。</p>
+<p>但是模拟与实现是两码事，从实现上来说，个人认为 async/await 更偏向于 Promise 的实现，因为在 node 中原生的 async/await 与 Promise 几乎是一样快的。</p>
+<p><img src="https://v8.js.cn/_img/fast-async/doxbee-benchmark.svg" alt=""></p>
+<h3 id="async-await-内部干了些什么事情？"><a href="#async-await-内部干了些什么事情？" class="headerlink" title="async/await 内部干了些什么事情？"></a>async/await 内部干了些什么事情？</h3><p>对于 async 操作符来说，它基本功能就类似下面的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">test</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 经过转化后</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.resolve(<span class="number">1</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>也就是说，async 操作符执行后会返回一个 Promise。</p>
+<p>那么 await 做了什么事情呢？根据 <a href="https://tc39.github.io/ecmascript-asyncawait/" target="_blank" rel="noopener">tc39 的 async/await 实现规范</a>来讲，它类似于以下这幅图：</p>
+<p><img src="https://v8.js.cn/_img/fast-async/await-under-the-hood.svg" alt=""></p>
+<p>那么我们自行来翻译一下，将左边 foo 函数使用我们 Promise 语法来表达右边的意思：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params">v</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">let</span> implicit_promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">            resolve(v);</span><br><span class="line">        &#125;).then(<span class="function"><span class="params">w</span> =&gt;</span> &#123;</span><br><span class="line">            resolve(w)</span><br><span class="line">        &#125;);</span><br><span class="line">	&#125;);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> implicit_promise;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先，只要使用了 async 声明的函数，内部会创建一个隐式 promise，也就是所谓的 implicit_promise，然后 await 会将传入的 v 包裹成一个新的 Promise，对于 w 的赋值操作与后面返回 return w 这些，都放在了这个新建的 Promise 的 then 函数逻辑中了。</p>
+<p>注意，在翻译实现的时候，故意忽略了一个 Promise 的创建也就是 throwaway Promise 这个 promise，这个 promise 是我们翻译的噪音，不需要理会，因为它本身的作用是底层引擎为了兼容适应 API 的实现，创建出来的一个 Promise，它本身并没有其他作用。</p>
+<p>所以我们知道了，其实 async/await 更多地是给我们提供语法糖，优化了 Promise 的 then 调用链的语法使用，而对于 await 后面，它接受的是一个表达式，至于传入的 v 是一个基本类型的值还是一个 Promise 对象，它都会统一包裹一层 Promise。</p>
+<p>对于传入值 v 为一个 Promise 的时候，我们在调用 resolve 函数的时候传入一个 Promise，最终我们在 then 函数中拿到的是传入的 Promise 的返回结果，这部分的实现逻辑与 Promise A+ 规范有关，这里不再阐述。</p>
+<p>当然，这里是可以进一步优化的，当我们传入的 v 是一个 Promise 的时候，我们其实不需要额外包裹一层 Promise，而这个优化点也就是 node@V8 到 node@V10 的对于 async/await 的优化所在。优化的手段类似如下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> (<span class="params">v</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">let</span> implicit_promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">		<span class="built_in">Promise</span>.resolve(v).then(<span class="function"><span class="params">w</span> =&gt;</span> &#123;</span><br><span class="line">            resolve(w);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> implicit_promise;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>即是用 Promise.resolve(v) 来代替 new Promise(res =&gt; res(v))。因为在 Promise.resolve 中如果传入值为另一个 Promise，会将这个传入的 Promise 直接返回：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">res</span> =&gt;</span> res(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> testP = <span class="built_in">Promise</span>.resolve(p);</span><br><span class="line"></span><br><span class="line">testP === p <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h3 id="多个-async-await-的执行顺序"><a href="#多个-async-await-的执行顺序" class="headerlink" title="多个 async/await 的执行顺序"></a>多个 async/await 的执行顺序</h3><p>曾经看过一个题目，代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">first</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'first start'</span>);</span><br><span class="line">  <span class="keyword">await</span> second();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'first end'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">second</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'second'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'start'</span>);</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'setTimeout'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">first();</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'promise1'</span>);  </span><br><span class="line">  resolve();</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'then'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line"><span class="comment">// start</span></span><br><span class="line"><span class="comment">// first start</span></span><br><span class="line"><span class="comment">// seond</span></span><br><span class="line"><span class="comment">// promise1</span></span><br><span class="line"><span class="comment">// then</span></span><br><span class="line"><span class="comment">// first end</span></span><br><span class="line"><span class="comment">// setTimeout</span></span><br></pre></td></tr></table></figure>
+<p>对于结果来说，如果你已经理解了上面章节所说的 async/await 底层原理，那么就很容易写出类似下面我对上面代码进行翻译的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">first</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> 	<span class="keyword">const</span> implicit_promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'first start'</span>);</span><br><span class="line">        second().then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">            resolve();</span><br><span class="line">        &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'first end'</span>);</span><br><span class="line">        &#125;);</span><br><span class="line"> 	&#125;);</span><br><span class="line"> 	</span><br><span class="line"> 	<span class="keyword">return</span> implicit_promise;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">second</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> implicit_promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'second'</span>);</span><br><span class="line">        resolve();</span><br><span class="line"> 	&#125;);</span><br><span class="line"> 	</span><br><span class="line"> 	<span class="keyword">return</span> implicit_promise;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'start'</span>);</span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'setTimeout'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">first();</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'promise1'</span>);  </span><br><span class="line">  resolve();</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'then'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这两段代码在 chrome 浏览器 71.0.3578.98 下运行结果是一样的。</p>
+<p>以上就是我对于 Promise 以及基于 Promise 的语法的一些思考与见解，希望大家看完都能有所收获。</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><ol>
+<li><a href="https://v8.js.cn/blog/fast-async/" target="_blank" rel="noopener">https://v8.js.cn/blog/fast-async/</a></li>
+<li><a href="https://github.com/xieranmaya/blog/issues/3" target="_blank" rel="noopener">https://github.com/xieranmaya/blog/issues/3</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Shawn
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangxiang958.github.io/2019/01/26/promise 杂谈/" title="promise 杂谈">http://zhangxiang958.github.io/2019/01/26/promise 杂谈/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/01/理解 Node.js Stream 模块/" rel="next" title="理解 Node.js Stream 模块">
+                <i class="fa fa-chevron-left"></i> 理解 Node.js Stream 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjExMy84Njc3"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.ijarvis.cn/916161494.jpg" alt="Shawn">
+            
+              <p class="site-author-name" itemprop="name">Shawn</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zhangxiang958" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:shawncheung702@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Promise-是如何解决回调地狱问题的？"><span class="nav-number">1.</span> <span class="nav-text">Promise 是如何解决回调地狱问题的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#composing-Promise"><span class="nav-number">2.</span> <span class="nav-text">composing Promise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#promise-值穿透问题"><span class="nav-number">3.</span> <span class="nav-text">promise 值穿透问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#批量-Promise"><span class="nav-number">4.</span> <span class="nav-text">批量 Promise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async-await-时代"><span class="nav-number">5.</span> <span class="nav-text">async/await 时代</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#async-await-是谁的语法糖？"><span class="nav-number">5.1.</span> <span class="nav-text">async/await 是谁的语法糖？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#async-await-内部干了些什么事情？"><span class="nav-number">5.2.</span> <span class="nav-text">async/await 内部干了些什么事情？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多个-async-await-的执行顺序"><span class="nav-number">5.3.</span> <span class="nav-text">多个 async/await 的执行顺序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">6.</span> <span class="nav-text">附录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shawn</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
