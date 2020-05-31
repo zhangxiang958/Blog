@@ -36,6 +36,7 @@
 ## Golang
 
 1. [解读 Golang 的 fmt 包](https://github.com/zhangxiang958/zhangxiang958.github.io/issues/53)
+2. [RPC in Golang(一)](https://github.com/zhangxiang958/zhangxiang958.github.io/issues/55)
 
 ## Git
 
