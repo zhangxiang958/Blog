@@ -39,6 +39,10 @@
 1. [解读 Golang 的 fmt 包](https://github.com/zhangxiang958/zhangxiang958.github.io/issues/53)
 2. [RPC in Golang(一)](https://github.com/zhangxiang958/zhangxiang958.github.io/issues/55)
 
+## Golang 包教不包会
+
+1. [Golang 包教不包会(一) Golang 开发环境](https://github.com/zhangxiang958/zhangxiang958.github.io/issues/57)
+
 ## Git
 
 1. [Git 的主干开发工作流](https://github.com/zhangxiang958/zhangxiang958.github.io/issues/52)
