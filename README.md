@@ -30,6 +30,10 @@
 3. [co 源码剖析](https://github.com/zhangxiang958/Blog/issues/33)
 4. [全面理解 koa-router](https://github.com/zhangxiang958/Blog/issues/38)
 
+## 前端相关
+1. [理解 Redux](https://github.com/zhangxiang958/Blog/issues/48)
+2. [理解模板引擎](https://github.com/zhangxiang958/Blog/issues/39)
+
 ## Typescript
 
 1. [IOC in Typescript](https://github.com/zhangxiang958/Blog/issues/51)
@@ -50,11 +54,11 @@
 1. [Git 的主干开发工作流](https://github.com/zhangxiang958/Blog/issues/52)
 2. [Git 小手记](https://github.com/zhangxiang958/Blog/issues/30)
 
+## 网络 & 协议
+1. [解析 SMTP 协议](https://github.com/zhangxiang958/Blog/issues/36)
+
 ## 杂谈
-1. [理解 Redux](https://github.com/zhangxiang958/Blog/issues/48)
-2. [理解模板引擎](https://github.com/zhangxiang958/Blog/issues/39)
-3. [解析 SMTP 协议](https://github.com/zhangxiang958/Blog/issues/36)
-4. [记一次 node 服务高并发 502 错误](https://github.com/zhangxiang958/Blog/issues/29)
+1. [记一次 node 服务高并发 502 错误](https://github.com/zhangxiang958/Blog/issues/29)
 
 ## 个人记录
 1. [Mac 系统初始化记录](https://github.com/zhangxiang958/Blog/issues/60)
