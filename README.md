@@ -56,6 +56,9 @@
 3. [解析 SMTP 协议](https://github.com/zhangxiang958/Blog/issues/36)
 4. [记一次 node 服务高并发 502 错误](https://github.com/zhangxiang958/Blog/issues/29)
 
+## 个人记录
+1. [Mac 系统初始化记录](https://github.com/zhangxiang958/Blog/issues/60)
+
 ## 勘误与鼓励/交流
 
 如果对于博客内容有疑问或者发现错误，欢迎在相应 issues 下面可以进行交流或勘误。
