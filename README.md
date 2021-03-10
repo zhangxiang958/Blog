@@ -1,6 +1,6 @@
 # 阿翔的博客
 
-> 现腾讯前端工程师，直播中台前端团队，欢迎来投简历
+> 腾讯前端工程师，ivweb 团队，直播中台前端团队，欢迎来投简历
 > 联系方式：wechat(zxiang702)
 
 ## Node.js
@@ -33,6 +33,7 @@
 ## 前端相关
 1. [理解 Redux](https://github.com/zhangxiang958/Blog/issues/48)
 2. [理解模板引擎](https://github.com/zhangxiang958/Blog/issues/39)
+3. [JS 开发者写编译器必须懂的编码](https://github.com/zhangxiang958/Blog/issues/61)
 
 ## Typescript
 
