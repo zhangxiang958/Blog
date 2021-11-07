@@ -46,7 +46,7 @@
 3. [Golang Compiler 实现学习](https://github.com/zhangxiang958/Blog/issues/59)
 4. [基于 Kong + Konga 实现接口服务蓝绿部署](https://github.com/zhangxiang958/Blog/issues/62)
 
-## Golang 包教不包会
+## 写给 Node.js 开发者的 Golang 学习书
 
 1. [Golang 包教不包会(一) Golang 开发环境](https://github.com/zhangxiang958/Blog/issues/57)
 2. [Golang 包教不包会(二) Golang 中的包与作用域](https://github.com/zhangxiang958/Blog/issues/58)
