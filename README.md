@@ -45,6 +45,7 @@
 2. [RPC in Golang(一)](https://github.com/zhangxiang958/Blog/issues/55)
 3. [Golang Compiler 实现学习](https://github.com/zhangxiang958/Blog/issues/59)
 4. [基于 Kong + Konga 实现接口服务蓝绿部署](https://github.com/zhangxiang958/Blog/issues/62)
+5. [揭秘 OpenTelemetry-Collector 源码内幕](https://github.com/zhangxiang958/Blog/issues/66)
 
 ## 写给 Node.js 开发者的 Golang 学习书
 
